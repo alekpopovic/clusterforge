@@ -1,0 +1,40 @@
+region      = "us-east-1"
+project     = "clusterforge"
+environment = "dev"
+name        = "clusterforge-dev"
+
+owner       = "platform-team"
+cost_center = "example-dev"
+
+vpc_cidr_block = "10.40.0.0/16"
+
+availability_zones = [
+  "us-east-1a",
+  "us-east-1b"
+]
+
+public_subnet_cidrs = [
+  "10.40.0.0/20",
+  "10.40.16.0/20"
+]
+
+private_subnet_cidrs = [
+  "10.40.128.0/20",
+  "10.40.144.0/20"
+]
+
+enable_nat_gateway = true
+single_nat_gateway = true
+
+kubernetes_version = "1.30"
+
+endpoint_public_access  = true
+endpoint_private_access = true
+public_access_cidrs     = ["0.0.0.0/0"]
+
+default_node_instance_types = ["t3.medium"]
+default_node_capacity_type  = "ON_DEMAND"
+default_node_min_size       = 1
+default_node_desired_size   = 2
+default_node_max_size       = 4
+default_node_disk_size      = 50
