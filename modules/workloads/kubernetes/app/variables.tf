@@ -1,27 +1,210 @@
 variable "name" {
-  description = "Logical name for this module instance."
+  description = "Kubernetes workload name."
   type        = string
-  default     = null
 
   validation {
-    condition     = var.name == null || can(regex("^[a-z][a-z0-9-]{1,62}$", var.name))
-    error_message = "Name must start with a lowercase letter and contain 2-63 lowercase letters, numbers, or hyphens."
+    condition     = length(trimspace(var.name)) > 0
+    error_message = "Name must not be empty."
   }
 }
 
-variable "environment" {
-  description = "Environment identifier such as dev, staging, or prod."
+variable "namespace" {
+  description = "Kubernetes namespace for the workload."
   type        = string
-  default     = null
 
   validation {
-    condition     = var.environment == null || can(regex("^[a-z][a-z0-9-]{1,30}$", var.environment))
-    error_message = "Environment must start with a lowercase letter and contain 2-31 lowercase letters, numbers, or hyphens."
+    condition     = length(trimspace(var.namespace)) > 0
+    error_message = "Namespace must not be empty."
   }
+}
+
+variable "create_namespace" {
+  description = "Whether to create the namespace."
+  type        = bool
+  default     = true
 }
 
 variable "labels" {
-  description = "Labels to apply to resources created by this module once implemented."
+  description = "Additional labels applied to workload resources."
   type        = map(string)
   default     = {}
+}
+
+variable "annotations" {
+  description = "Annotations applied to workload resources."
+  type        = map(string)
+  default     = {}
+}
+
+variable "image" {
+  description = "Container image reference."
+  type        = string
+
+  validation {
+    condition     = length(trimspace(var.image)) > 0
+    error_message = "Image must not be empty."
+  }
+}
+
+variable "image_pull_policy" {
+  description = "Image pull policy for the container."
+  type        = string
+  default     = "IfNotPresent"
+
+  validation {
+    condition     = contains(["Always", "IfNotPresent", "Never"], var.image_pull_policy)
+    error_message = "Image pull policy must be Always, IfNotPresent, or Never."
+  }
+}
+
+variable "image_pull_secrets" {
+  description = "Names of existing image pull secrets."
+  type        = list(string)
+  default     = []
+}
+
+variable "replicas" {
+  description = "Desired number of replicas when autoscaling is disabled."
+  type        = number
+  default     = 1
+
+  validation {
+    condition     = var.replicas >= 0
+    error_message = "Replicas must be greater than or equal to 0."
+  }
+}
+
+variable "command" {
+  description = "Optional container command."
+  type        = list(string)
+  default     = []
+}
+
+variable "args" {
+  description = "Optional container args."
+  type        = list(string)
+  default     = []
+}
+
+variable "env" {
+  description = "Plain environment variables. Do not put secrets here."
+  type        = map(string)
+  default     = {}
+}
+
+variable "secret_env" {
+  description = "Environment variables sourced from existing Kubernetes secrets."
+  type = map(object({
+    secret_name = string
+    secret_key  = string
+  }))
+  default = {}
+}
+
+variable "ports" {
+  description = "Container ports exposed by the workload."
+  type = list(object({
+    name           = string
+    container_port = number
+    protocol       = optional(string, "TCP")
+  }))
+  default = []
+}
+
+variable "resources" {
+  description = "Container resource requests and limits."
+  type = object({
+    cpu_request    = optional(string)
+    memory_request = optional(string)
+    cpu_limit      = optional(string)
+    memory_limit   = optional(string)
+  })
+  default = {}
+}
+
+variable "liveness_probe" {
+  description = "Optional HTTP liveness probe."
+  type = object({
+    path                  = string
+    port                  = string
+    initial_delay_seconds = number
+    period_seconds        = number
+    timeout_seconds       = number
+    failure_threshold     = number
+  })
+  default = null
+}
+
+variable "readiness_probe" {
+  description = "Optional HTTP readiness probe."
+  type = object({
+    path                  = string
+    port                  = string
+    initial_delay_seconds = number
+    period_seconds        = number
+    timeout_seconds       = number
+    failure_threshold     = number
+  })
+  default = null
+}
+
+variable "service" {
+  description = "Service configuration."
+  type = object({
+    enabled          = optional(bool, true)
+    type             = optional(string, "ClusterIP")
+    port             = optional(number, 80)
+    target_port_name = optional(string, "http")
+  })
+  default = {}
+
+  validation {
+    condition     = contains(["ClusterIP", "NodePort", "LoadBalancer"], var.service.type)
+    error_message = "Service type must be ClusterIP, NodePort, or LoadBalancer."
+  }
+}
+
+variable "ingress" {
+  description = "Ingress configuration."
+  type = object({
+    enabled         = bool
+    class_name      = optional(string)
+    host            = optional(string)
+    path            = optional(string, "/")
+    path_type       = optional(string, "Prefix")
+    tls             = optional(bool, true)
+    tls_secret_name = optional(string)
+    annotations     = optional(map(string), {})
+  })
+  default = {
+    enabled = false
+  }
+
+  validation {
+    condition     = !var.ingress.enabled || try(length(trimspace(var.ingress.host)) > 0, false)
+    error_message = "Ingress host is required when ingress is enabled."
+  }
+
+  validation {
+    condition     = !var.ingress.enabled || var.service.enabled
+    error_message = "Service must be enabled when ingress is enabled."
+  }
+}
+
+variable "autoscaling" {
+  description = "Horizontal pod autoscaling configuration."
+  type = object({
+    enabled      = bool
+    min_replicas = optional(number, 1)
+    max_replicas = optional(number, 3)
+    cpu_percent  = optional(number, 70)
+  })
+  default = {
+    enabled = false
+  }
+
+  validation {
+    condition     = !var.autoscaling.enabled || var.autoscaling.min_replicas <= var.autoscaling.max_replicas
+    error_message = "Autoscaling min_replicas must be less than or equal to max_replicas."
+  }
 }

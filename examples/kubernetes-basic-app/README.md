@@ -1,5 +1,13 @@
-# examples/kubernetes-basic-app
+# kubernetes-basic-app
 
-Placeholder root configuration for ClusterForge.
+Example root module for `modules/workloads/kubernetes/app`.
 
-This directory intentionally creates no resources yet. Add provider configuration here when this root becomes a real environment or runnable example.
+The Kubernetes provider is configured in this root module using
+`var.kubeconfig_path`.
+
+```bash
+terraform init
+terraform plan
+```
+
+This example deploys `nginx` as a Deployment and ClusterIP Service.
