@@ -1,8 +1,5 @@
-# kubernetes-basic-app
+# examples/kubernetes-basic-app
 
-Deploys a small Kubernetes Deployment and Service using the workload module.
+Placeholder root configuration for ClusterForge.
 
-```bash
-terraform init
-terraform plan
-```
+This directory intentionally creates no resources yet. Add provider configuration here when this root becomes a real environment or runnable example.

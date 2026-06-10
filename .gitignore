@@ -1,6 +1,7 @@
 .terraform/
 *.tfstate
 *.tfstate.*
+*.tfplan
 *.tfvars
 *.tfvars.json
 crash.log
@@ -9,10 +10,29 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# Lock files are ignored for now while module/provider choices are unsettled.
+# Root modules may commit .terraform.lock.hcl later when providers stabilize.
 .terraform.lock.hcl
 
+# Local kubeconfig and secret material
+kubeconfig
+kubeconfig.*
+*.kubeconfig
+*.kubeconfig.yaml
+.kube/
+.env
+.env.*
+!.env.example
+
+# CLI build artifacts
+cli/bin/
+cli/dist/
+cli/coverage/
+cli/clusterforge
 bin/
 dist/
 coverage/
+
 .DS_Store
 *.swp

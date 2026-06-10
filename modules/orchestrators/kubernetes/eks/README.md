@@ -1,19 +1,15 @@
 # orchestrators/kubernetes/eks
 
-Creates an AWS EKS cluster and one default managed node group.
+Placeholder Terraform module for the ClusterForge `orchestrators/kubernetes/eks` component.
 
-Provider configuration stays in the root module. This module intentionally
-does not configure Kubernetes, Helm, or kubectl providers; platform bootstrap
-belongs in separate platform-layer modules.
+This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
 
-## Example
+## Usage
 
 ```hcl
-module "eks" {
-  source = "../../../../modules/orchestrators/kubernetes/eks"
+module "example" {
+  source = "path/to/modules/orchestrators/kubernetes/eks"
 
-  name       = "clusterforge-dev-eks"
-  subnet_ids = module.network.private_subnet_ids
-  tags       = module.tags.tags
+  name = "example"
 }
 ```

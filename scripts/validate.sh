@@ -3,7 +3,7 @@ set -eu
 
 TERRAFORM_BIN="${TERRAFORM_BIN:-terraform}"
 
-find . -name versions.tf -not -path '*/.terraform/*' -print | while IFS= read -r versions_file; do
+find . -name versions.tf -not -path '*/.terraform/*' -print | sort | while IFS= read -r versions_file; do
   dir="$(dirname "${versions_file}")"
   echo "==> ${dir}"
   (

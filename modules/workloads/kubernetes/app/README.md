@@ -1,17 +1,15 @@
 # workloads/kubernetes/app
 
-Deploys a basic Kubernetes application as a Deployment and ClusterIP Service.
+Placeholder Terraform module for the ClusterForge `workloads/kubernetes/app` component.
 
-Provider configuration must be declared in the root module. Do not pass secrets
-through `env`; use a dedicated secrets module or an external secret controller.
+This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
 
-## Example
+## Usage
 
 ```hcl
-module "app" {
-  source = "../../../modules/workloads/kubernetes/app"
+module "example" {
+  source = "path/to/modules/workloads/kubernetes/app"
 
-  name  = "hello"
-  image = "nginx:1.27"
+  name = "example"
 }
 ```

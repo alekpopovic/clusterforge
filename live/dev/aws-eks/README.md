@@ -1,11 +1,5 @@
 # live/dev/aws-eks
 
-Development AWS EKS environment.
+Placeholder root configuration for ClusterForge.
 
-Provider configuration is intentionally kept in this root module. Review plans
-before applying changes.
-
-```bash
-terraform init
-terraform plan
-```
+This directory intentionally creates no resources yet. Add provider configuration here when this root becomes a real environment or runnable example.

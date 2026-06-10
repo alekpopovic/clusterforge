@@ -1,23 +1,15 @@
 # cloud/aws/network
 
-Creates the AWS networking foundation for a container platform:
+Placeholder Terraform module for the ClusterForge `cloud/aws/network` component.
 
-- VPC
-- Public and private subnets
-- Internet gateway
-- Optional single NAT gateway
-- Public and private route tables
+This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
 
-Provider configuration must be declared in the root module.
-
-## Example
+## Usage
 
 ```hcl
-module "network" {
-  source = "../../../../modules/cloud/aws/network"
+module "example" {
+  source = "path/to/modules/cloud/aws/network"
 
-  name     = "clusterforge-dev"
-  vpc_cidr = "10.40.0.0/16"
-  tags     = module.tags.tags
+  name = "example"
 }
 ```

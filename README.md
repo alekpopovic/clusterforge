@@ -1,90 +1,85 @@
 # ClusterForge
 
-ClusterForge is an opinionated, readable Terraform/OpenTofu framework for
-building container platforms. It is designed to keep infrastructure logic
-visible while still giving teams a consistent module layout for common
-orchestrators and workloads.
+ClusterForge is an early-development Terraform/OpenTofu framework for
+container orchestrators. It is intended to provide an opinionated but readable
+repository structure for composing infrastructure, platform services, and
+application workloads without hiding Terraform behind a black box.
 
-The first production target is AWS EKS. The repository structure leaves room
-for ECS/Fargate, Nomad, Docker Swarm, AKS, GKE, K3s, RKE2, and generic
-Kubernetes without forcing them into one giant module.
-
-## Design Principles
-
-- Keep modules small: one module, one responsibility.
-- Keep provider configuration in `live/` roots and examples.
-- Keep Terraform/OpenTofu readable; generated files must still be reviewable.
-- Use typed variables, validation, clear outputs, and consistent tags/labels.
-- Do not put secrets in plain text `*.tfvars`.
-- Never auto-apply production changes from CI.
+The CLI will be a wrapper and generator for repeatable workflows. It must
+generate readable Terraform/OpenTofu files and must not replace direct
+Terraform review, planning, or validation.
 
 Contributors and AI agents must follow the repository rules in
 [`AGENTS.md`](AGENTS.md).
 
-## Layers
+## Architecture Layers
 
-ClusterForge is split into four layers:
+ClusterForge is organized into four layers:
 
-1. **Foundation**: cloud networking, IAM, DNS, storage, registry, firewalling.
-2. **Orchestrator**: EKS, ECS, Nomad, Docker Swarm, and future targets.
-3. **Platform**: ingress, TLS, DNS automation, observability, logging, secrets,
-   and GitOps.
-4. **Workload**: web apps, workers, cronjobs, services, scheduled tasks,
-   Nomad jobs, and Docker services.
+- **Foundation**: networking, IAM, DNS, storage, registries, and firewalls.
+- **Orchestrator**: Kubernetes, ECS/Fargate, Nomad, Docker Engine, and Docker
+  Swarm.
+- **Platform**: ingress, TLS, DNS automation, observability, logging, secrets,
+  and GitOps.
+- **Workload**: apps, services, workers, cronjobs, scheduled tasks, Nomad jobs,
+  Docker containers, and Docker services.
+
+## Supported Orchestrators
+
+The repository skeleton includes module locations for:
+
+- Kubernetes: EKS first, plus generic Kubernetes for future targets.
+- AWS ECS/Fargate.
+- Nomad.
+- Docker Engine and Docker Swarm.
+
+Future module families may include AKS, GKE, K3s, and RKE2.
+
+## Planned CLI Workflow
+
+The planned Go CLI will help teams:
+
+- Generate new live environment roots from templates.
+- Generate workload module usage files.
+- Run formatting, validation, policy checks, and tests.
+- Require explicit confirmation for destructive operations.
+- Require an existing plan file before production apply.
+
+The CLI source lives under `cli/`; generated infrastructure must remain
+readable Terraform/OpenTofu.
 
 ## Repository Layout
 
 ```text
-modules/
-  core/
-  cloud/
-  orchestrators/
-  platform/
-  workloads/
-live/
-  dev/
-  staging/
-  prod/
-examples/
-policies/
-scripts/
-cli/
+modules/    Reusable Terraform modules
+live/       Real environment compositions
+examples/   Copy-paste friendly examples
+cli/        Go CLI source and templates
+policies/   Conftest and Checkov policy locations
+scripts/    Repeatable local validation scripts
 ```
 
 ## Current Status
 
-This initial scaffold includes:
+ClusterForge is in early development. The current repository focuses on clean
+structure and valid placeholders. Modules intentionally create no real cloud or
+orchestrator resources yet.
 
-- Core naming, tag, and Kubernetes label helper modules.
-- An AWS VPC/network module.
-- An AWS EKS orchestrator module.
-- A Kubernetes app workload module.
-- A `live/dev/aws-eks` root showing provider configuration at the root.
-- Basic formatting, validation, and CI workflows.
+## Validation
 
-## Quick Start
-
-Format all Terraform files:
+Format Terraform files:
 
 ```bash
 ./scripts/lint.sh
 ```
 
-Validate every Terraform root and module:
+Validate Terraform roots and modules:
 
 ```bash
 ./scripts/validate.sh
 ```
 
-Try the development EKS root:
-
-```bash
-cd live/dev/aws-eks
-terraform init
-terraform plan
-```
-
-Use `tofu` instead of `terraform` by setting `TERRAFORM_BIN`:
+Use OpenTofu instead of Terraform:
 
 ```bash
 TERRAFORM_BIN=tofu ./scripts/validate.sh

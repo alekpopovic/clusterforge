@@ -1,9 +1,4 @@
-output "cluster_name" {
-  description = "Development EKS cluster name."
-  value       = module.eks.cluster_name
-}
-
-output "vpc_id" {
-  description = "Development VPC ID."
-  value       = module.network.vpc_id
+output "root_name" {
+  description = "ClusterForge root path."
+  value       = local.root_name
 }

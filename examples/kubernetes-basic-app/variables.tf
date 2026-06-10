@@ -1,5 +1,5 @@
-variable "kubeconfig_path" {
-  description = "Path to the kubeconfig file used by the Kubernetes provider."
+variable "name" {
+  description = "Logical name for this root placeholder."
   type        = string
-  default     = "~/.kube/config"
+  default     = "kubernetes-basic-app"
 }

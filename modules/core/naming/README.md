@@ -1,17 +1,15 @@
 # core/naming
 
-Builds consistent names from `project`, `environment`, and `name`.
+Placeholder Terraform module for the ClusterForge `core/naming` component.
 
-This module creates no infrastructure and has no provider configuration.
+This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
 
-## Example
+## Usage
 
 ```hcl
-module "name" {
-  source = "../../../modules/core/naming"
+module "example" {
+  source = "path/to/modules/core/naming"
 
-  project     = "clusterforge"
-  environment = "dev"
-  name        = "eks"
+  name = "example"
 }
 ```

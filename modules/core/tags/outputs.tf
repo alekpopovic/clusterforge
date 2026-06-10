@@ -1,4 +1,9 @@
-output "tags" {
-  description = "Merged standard and additional tags."
-  value       = local.tags
+output "module_name" {
+  description = "ClusterForge module path."
+  value       = local.module_name
+}
+
+output "enabled" {
+  description = "Whether this module placeholder is enabled."
+  value       = var.enabled
 }
