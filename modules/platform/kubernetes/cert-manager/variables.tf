@@ -1,27 +1,29 @@
-variable "name" {
-  description = "Logical name for this module instance."
+variable "namespace" {
+  description = "Kubernetes namespace for the cert-manager Helm release."
   type        = string
-  default     = null
-
-  validation {
-    condition     = var.name == null || can(regex("^[a-z][a-z0-9-]{1,62}$", var.name))
-    error_message = "Name must start with a lowercase letter and contain 2-63 lowercase letters, numbers, or hyphens."
-  }
+  default     = "cert-manager"
 }
 
-variable "environment" {
-  description = "Environment identifier such as dev, staging, or prod."
+variable "chart_version" {
+  description = "Optional cert-manager chart version. Leave empty to use the latest provider-resolved version."
   type        = string
-  default     = null
+  default     = ""
+}
 
-  validation {
-    condition     = var.environment == null || can(regex("^[a-z][a-z0-9-]{1,30}$", var.environment))
-    error_message = "Environment must start with a lowercase letter and contain 2-31 lowercase letters, numbers, or hyphens."
-  }
+variable "values" {
+  description = "YAML values passed to the Helm release."
+  type        = list(string)
+  default     = []
 }
 
 variable "labels" {
-  description = "Labels to apply to resources created by this module once implemented."
+  description = "Labels applied to the namespace when create_namespace is true."
   type        = map(string)
   default     = {}
+}
+
+variable "create_namespace" {
+  description = "Whether to create the namespace before installing the Helm release."
+  type        = bool
+  default     = true
 }

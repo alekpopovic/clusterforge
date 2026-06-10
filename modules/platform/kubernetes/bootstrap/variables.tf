@@ -1,27 +1,53 @@
-variable "name" {
-  description = "Logical name for this module instance."
+variable "namespace_prefix" {
+  description = "Optional prefix added to each platform add-on namespace."
   type        = string
-  default     = null
-
-  validation {
-    condition     = var.name == null || can(regex("^[a-z][a-z0-9-]{1,62}$", var.name))
-    error_message = "Name must start with a lowercase letter and contain 2-63 lowercase letters, numbers, or hyphens."
-  }
+  default     = ""
 }
 
-variable "environment" {
-  description = "Environment identifier such as dev, staging, or prod."
-  type        = string
-  default     = null
-
-  validation {
-    condition     = var.environment == null || can(regex("^[a-z][a-z0-9-]{1,30}$", var.environment))
-    error_message = "Environment must start with a lowercase letter and contain 2-31 lowercase letters, numbers, or hyphens."
-  }
+variable "enable_ingress_nginx" {
+  description = "Whether to install ingress-nginx."
+  type        = bool
+  default     = true
 }
 
-variable "labels" {
-  description = "Labels to apply to resources created by this module once implemented."
+variable "enable_cert_manager" {
+  description = "Whether to install cert-manager."
+  type        = bool
+  default     = true
+}
+
+variable "enable_external_dns" {
+  description = "Whether to install external-dns."
+  type        = bool
+  default     = false
+}
+
+variable "enable_metrics_server" {
+  description = "Whether to install metrics-server."
+  type        = bool
+  default     = true
+}
+
+variable "enable_prometheus_stack" {
+  description = "Whether to install kube-prometheus-stack."
+  type        = bool
+  default     = false
+}
+
+variable "enable_loki" {
+  description = "Whether to install Loki."
+  type        = bool
+  default     = false
+}
+
+variable "enable_argocd" {
+  description = "Whether to install Argo CD."
+  type        = bool
+  default     = false
+}
+
+variable "common_labels" {
+  description = "Labels applied to namespaces created by enabled platform add-ons."
   type        = map(string)
   default     = {}
 }

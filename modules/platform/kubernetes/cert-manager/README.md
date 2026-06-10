@@ -1,25 +1,6 @@
 # platform/kubernetes/cert-manager
 
-## Purpose
+Installs cert-manager with Helm.
 
-This module will manage the ClusterForge platform/kubernetes/cert-manager component.
-
-## Status
-
-Placeholder. This module currently creates no resources.
-
-## Expected Future Resources
-
-cert-manager installation, issuers, and certificate defaults.
-
-## Usage
-
-```hcl
-module "example" {
-  source = "path/to/modules/platform/kubernetes/cert-manager"
-
-  name        = "example"
-  environment = "dev"
-  labels      = {}
-}
-```
+This module assumes Kubernetes and Helm providers are configured in the root
+module. Review cert-manager CRD lifecycle before upgrades.

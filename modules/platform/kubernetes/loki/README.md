@@ -1,25 +1,6 @@
 # platform/kubernetes/loki
 
-## Purpose
+Installs Loki with Helm.
 
-This module will manage the ClusterForge platform/kubernetes/loki component.
-
-## Status
-
-Placeholder. This module currently creates no resources.
-
-## Expected Future Resources
-
-Loki logging stack installation and retention defaults.
-
-## Usage
-
-```hcl
-module "example" {
-  source = "path/to/modules/platform/kubernetes/loki"
-
-  name        = "example"
-  environment = "dev"
-  labels      = {}
-}
-```
+This module assumes Kubernetes and Helm providers are configured in the root
+module.

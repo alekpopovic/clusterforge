@@ -1,12 +1,23 @@
 locals {
-  module_path     = "platform/kubernetes/external-dns"
-  normalized_name = var.name == null ? null : lower(var.name)
-  environment     = var.environment == null ? "unknown" : lower(var.environment)
-  common_labels = merge(var.labels, {
-    "clusterforge.io/module"      = local.module_path
-    "clusterforge.io/environment" = local.environment
-  })
+  release_name = "external-dns"
 }
 
-# TODO: Implement the platform/kubernetes/external-dns module without adding provider configuration
-# to this reusable child module.
+resource "kubernetes_namespace_v1" "this" {
+  count = var.create_namespace ? 1 : 0
+
+  metadata {
+    name   = var.namespace
+    labels = var.labels
+  }
+}
+
+resource "helm_release" "this" {
+  name       = local.release_name
+  namespace  = var.namespace
+  repository = "https://kubernetes-sigs.github.io/external-dns/"
+  chart      = "external-dns"
+  version    = var.chart_version == "" ? null : var.chart_version
+  values     = var.values
+
+  depends_on = [kubernetes_namespace_v1.this]
+}

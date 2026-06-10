@@ -1,25 +1,16 @@
 # platform/kubernetes/ingress-nginx
 
-## Purpose
+Installs ingress-nginx with Helm.
 
-This module will manage the ClusterForge platform/kubernetes/ingress-nginx component.
-
-## Status
-
-Placeholder. This module currently creates no resources.
-
-## Expected Future Resources
-
-ingress-nginx Helm release values and ingress class defaults.
-
-## Usage
+This module assumes Kubernetes and Helm providers are configured in the root
+module.
 
 ```hcl
-module "example" {
-  source = "path/to/modules/platform/kubernetes/ingress-nginx"
+module "ingress_nginx" {
+  source = "../../../modules/platform/kubernetes/ingress-nginx"
 
-  name        = "example"
-  environment = "dev"
-  labels      = {}
+  namespace        = "ingress-nginx"
+  create_namespace = true
+  values           = []
 }
 ```
