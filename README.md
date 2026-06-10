@@ -18,6 +18,9 @@ Kubernetes without forcing them into one giant module.
 - Do not put secrets in plain text `*.tfvars`.
 - Never auto-apply production changes from CI.
 
+Contributors and AI agents must follow the repository rules in
+[`AGENTS.md`](AGENTS.md).
+
 ## Layers
 
 ClusterForge is split into four layers:
