@@ -1,8 +1,16 @@
 # platform/ecs/alb
 
-Placeholder Terraform module for the ClusterForge `platform/ecs/alb` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge platform/ecs/alb component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+Application Load Balancer, listeners, target groups, and ECS service wiring outputs.
 
 ## Usage
 
@@ -10,6 +18,8 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/platform/ecs/alb"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
+  tags        = {}
 }
 ```

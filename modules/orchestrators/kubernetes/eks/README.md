@@ -1,8 +1,16 @@
 # orchestrators/kubernetes/eks
 
-Placeholder Terraform module for the ClusterForge `orchestrators/kubernetes/eks` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge orchestrators/kubernetes/eks component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+EKS cluster, node groups, IAM integration, control plane logging, and access entries.
 
 ## Usage
 
@@ -10,6 +18,8 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/orchestrators/kubernetes/eks"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
+  labels      = {}
 }
 ```

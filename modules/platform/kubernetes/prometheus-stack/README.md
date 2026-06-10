@@ -1,8 +1,16 @@
 # platform/kubernetes/prometheus-stack
 
-Placeholder Terraform module for the ClusterForge `platform/kubernetes/prometheus-stack` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge platform/kubernetes/prometheus-stack component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+Prometheus stack installation, alerting inputs, and scraping defaults.
 
 ## Usage
 
@@ -10,6 +18,8 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/platform/kubernetes/prometheus-stack"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
+  labels      = {}
 }
 ```

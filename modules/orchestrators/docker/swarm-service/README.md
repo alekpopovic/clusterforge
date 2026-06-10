@@ -1,8 +1,16 @@
 # orchestrators/docker/swarm-service
 
-Placeholder Terraform module for the ClusterForge `orchestrators/docker/swarm-service` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge orchestrators/docker/swarm-service component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+Docker Swarm service orchestration primitives.
 
 ## Usage
 
@@ -10,6 +18,8 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/orchestrators/docker/swarm-service"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
+  labels      = {}
 }
 ```

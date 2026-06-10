@@ -1,8 +1,16 @@
 # orchestrators/kubernetes/generic
 
-Placeholder Terraform module for the ClusterForge `orchestrators/kubernetes/generic` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge orchestrators/kubernetes/generic component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+Generic Kubernetes provider assumptions and cluster metadata helpers.
 
 ## Usage
 
@@ -10,6 +18,8 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/orchestrators/kubernetes/generic"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
+  labels      = {}
 }
 ```

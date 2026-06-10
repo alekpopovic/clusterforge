@@ -1,8 +1,16 @@
 # core/labels
 
-Placeholder Terraform module for the ClusterForge `core/labels` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge core/labels component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+Label normalization and merge helpers.
 
 ## Usage
 
@@ -10,6 +18,8 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/core/labels"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
+  labels      = {}
 }
 ```

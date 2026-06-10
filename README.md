@@ -57,6 +57,7 @@ examples/   Copy-paste friendly examples
 cli/        Go CLI source and templates
 policies/   Conftest and Checkov policy locations
 scripts/    Repeatable local validation scripts
+docs/       Project conventions and design notes
 ```
 
 ## Current Status
@@ -64,6 +65,9 @@ scripts/    Repeatable local validation scripts
 ClusterForge is in early development. The current repository focuses on clean
 structure and valid placeholders. Modules intentionally create no real cloud or
 orchestrator resources yet.
+
+See [docs/conventions.md](docs/conventions.md) for module, provider, state,
+secret, and production safety conventions.
 
 ## Validation
 

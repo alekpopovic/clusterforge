@@ -1,8 +1,16 @@
 # core/naming
 
-Placeholder Terraform module for the ClusterForge `core/naming` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge core/naming component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+Name normalization, prefixes, and resource-safe identifiers.
 
 ## Usage
 
@@ -10,6 +18,7 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/core/naming"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
 }
 ```

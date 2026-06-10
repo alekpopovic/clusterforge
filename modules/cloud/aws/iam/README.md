@@ -1,8 +1,16 @@
 # cloud/aws/iam
 
-Placeholder Terraform module for the ClusterForge `cloud/aws/iam` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge cloud/aws/iam component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+IAM roles, policies, policy attachments, and identity boundaries.
 
 ## Usage
 
@@ -10,6 +18,8 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/cloud/aws/iam"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
+  tags        = {}
 }
 ```

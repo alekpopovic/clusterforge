@@ -1,3 +1,12 @@
 locals {
-  module_name = "orchestrators/kubernetes/eks"
+  module_path     = "orchestrators/kubernetes/eks"
+  normalized_name = var.name == null ? null : lower(var.name)
+  environment     = var.environment == null ? "unknown" : lower(var.environment)
+  common_labels = merge(var.labels, {
+    "clusterforge.io/module"      = local.module_path
+    "clusterforge.io/environment" = local.environment
+  })
 }
+
+# TODO: Implement the orchestrators/kubernetes/eks module without adding provider configuration
+# to this reusable child module.

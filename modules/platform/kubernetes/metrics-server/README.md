@@ -1,8 +1,16 @@
 # platform/kubernetes/metrics-server
 
-Placeholder Terraform module for the ClusterForge `platform/kubernetes/metrics-server` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge platform/kubernetes/metrics-server component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+metrics-server installation and cluster metrics defaults.
 
 ## Usage
 
@@ -10,6 +18,8 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/platform/kubernetes/metrics-server"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
+  labels      = {}
 }
 ```

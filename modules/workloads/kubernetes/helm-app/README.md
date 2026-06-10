@@ -1,8 +1,16 @@
 # workloads/kubernetes/helm-app
 
-Placeholder Terraform module for the ClusterForge `workloads/kubernetes/helm-app` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge workloads/kubernetes/helm-app component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+Helm release workload deployment and values management.
 
 ## Usage
 
@@ -10,6 +18,8 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/workloads/kubernetes/helm-app"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
+  labels      = {}
 }
 ```

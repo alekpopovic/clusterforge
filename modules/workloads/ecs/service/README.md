@@ -1,8 +1,16 @@
 # workloads/ecs/service
 
-Placeholder Terraform module for the ClusterForge `workloads/ecs/service` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge workloads/ecs/service component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+ECS task definition, service, networking, load balancer attachment, and autoscaling hooks.
 
 ## Usage
 
@@ -10,6 +18,8 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/workloads/ecs/service"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
+  tags        = {}
 }
 ```

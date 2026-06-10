@@ -1,8 +1,16 @@
 # workloads/ecs/scheduled-task
 
-Placeholder Terraform module for the ClusterForge `workloads/ecs/scheduled-task` component.
+## Purpose
 
-This module intentionally creates no resources yet. Future work should keep the module focused on one responsibility and keep provider configuration in root modules.
+This module will manage the ClusterForge workloads/ecs/scheduled-task component.
+
+## Status
+
+Placeholder. This module currently creates no resources.
+
+## Expected Future Resources
+
+EventBridge schedule, ECS task definition, and execution roles.
 
 ## Usage
 
@@ -10,6 +18,8 @@ This module intentionally creates no resources yet. Future work should keep the 
 module "example" {
   source = "path/to/modules/workloads/ecs/scheduled-task"
 
-  name = "example"
+  name        = "example"
+  environment = "dev"
+  tags        = {}
 }
 ```
