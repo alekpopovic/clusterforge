@@ -1,12 +1,25 @@
 locals {
-  module_path     = "core/tags"
-  normalized_name = var.name == null ? null : lower(var.name)
-  environment     = var.environment == null ? "unknown" : lower(var.environment)
-  common_tags = merge(var.tags, {
-    Module      = local.module_path
-    Environment = local.environment
-  })
-}
+  standard_tags = {
+    Project     = trimspace(var.project)
+    Environment = trimspace(var.environment)
+    ManagedBy   = trimspace(var.managed_by)
+  }
 
-# TODO: Implement the core/tags module without adding provider configuration
-# to this reusable child module.
+  optional_tags = {
+    Component  = trimspace(var.component)
+    Owner      = trimspace(var.owner)
+    CostCenter = trimspace(var.cost_center)
+  }
+
+  non_empty_optional_tags = {
+    for key, value in local.optional_tags : key => value
+    if length(value) > 0
+  }
+
+  non_empty_extra_tags = {
+    for key, value in var.extra_tags : key => value
+    if length(trimspace(value)) > 0
+  }
+
+  tags = merge(local.standard_tags, local.non_empty_optional_tags, local.non_empty_extra_tags)
+}

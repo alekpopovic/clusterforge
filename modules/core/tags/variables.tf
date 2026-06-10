@@ -1,27 +1,54 @@
-variable "name" {
-  description = "Logical name for this module instance."
+variable "project" {
+  description = "Project name used for the Project cloud tag."
   type        = string
-  default     = null
 
   validation {
-    condition     = var.name == null || can(regex("^[a-z][a-z0-9-]{1,62}$", var.name))
-    error_message = "Name must start with a lowercase letter and contain 2-63 lowercase letters, numbers, or hyphens."
+    condition     = length(trimspace(var.project)) > 0
+    error_message = "Project must not be empty."
   }
 }
 
 variable "environment" {
-  description = "Environment identifier such as dev, staging, or prod."
+  description = "Environment name used for the Environment cloud tag."
   type        = string
-  default     = null
 
   validation {
-    condition     = var.environment == null || can(regex("^[a-z][a-z0-9-]{1,30}$", var.environment))
-    error_message = "Environment must start with a lowercase letter and contain 2-31 lowercase letters, numbers, or hyphens."
+    condition     = length(trimspace(var.environment)) > 0
+    error_message = "Environment must not be empty."
   }
 }
 
-variable "tags" {
-  description = "Tags to apply to resources created by this module once implemented."
+variable "owner" {
+  description = "Optional owner tag value."
+  type        = string
+  default     = ""
+}
+
+variable "cost_center" {
+  description = "Optional cost center tag value."
+  type        = string
+  default     = ""
+}
+
+variable "managed_by" {
+  description = "Tool or workflow responsible for managing these resources."
+  type        = string
+  default     = "terraform"
+
+  validation {
+    condition     = length(trimspace(var.managed_by)) > 0
+    error_message = "Managed_by must not be empty."
+  }
+}
+
+variable "component" {
+  description = "Optional component tag value."
+  type        = string
+  default     = ""
+}
+
+variable "extra_tags" {
+  description = "Additional cloud tags. These are merged last and may override standard tags."
   type        = map(string)
   default     = {}
 }
