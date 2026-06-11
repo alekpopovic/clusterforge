@@ -230,6 +230,7 @@ Common developer commands:
 ```bash
 make help
 make fmt
+make lint
 make validate
 make build-cli
 make security

@@ -1,0 +1,24 @@
+# Trivy config scanning for Terraform and repository configuration.
+# This file intentionally avoids credentials and skips only generated/cache
+# paths that are not source infrastructure.
+
+scan:
+  scanners:
+    - config
+  skip-dirs:
+    - .git
+    - .terraform
+    - .cf
+    - cli/vendor
+    - vendor
+    - node_modules
+    - dist
+    - bin
+    - coverage
+
+severity:
+  - HIGH
+  - CRITICAL
+
+exit-code: 1
+hide-progress: true

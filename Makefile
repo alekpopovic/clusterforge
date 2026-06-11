@@ -41,18 +41,7 @@ build-cli: ## Build the ClusterForge CLI at cli/cf.
 	cd cli && GOCACHE=$(GOCACHE) GOPATH=$(GOPATH) $(GO) build -o cf .
 
 security: ## Run installed security scanners when available.
-	@if command -v checkov >/dev/null 2>&1; then \
-		echo "==> Checkov"; \
-		checkov -d . --framework terraform; \
-	else \
-		echo "==> Checkov not installed; skipping"; \
-	fi
-	@if command -v trivy >/dev/null 2>&1; then \
-		echo "==> Trivy config scan"; \
-		trivy config --severity HIGH,CRITICAL .; \
-	else \
-		echo "==> Trivy not installed; skipping"; \
-	fi
+	./scripts/security.sh
 
 docs: ## Generate module documentation when terraform-docs is installed.
 	./scripts/docs.sh

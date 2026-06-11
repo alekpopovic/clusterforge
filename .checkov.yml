@@ -1,0 +1,24 @@
+# Checkov configuration for credential-free Terraform scanning.
+framework:
+  - terraform
+
+quiet: true
+compact: true
+
+# Exclude generated dependency/cache/state locations. These are not source
+# infrastructure and can contain downloaded provider/module code or local state.
+skip-path:
+  - .terraform
+  - "**/.terraform/**"
+  - ".git"
+  - ".cf"
+  - "cli/vendor"
+  - "vendor"
+  - "node_modules"
+  - "dist"
+  - "bin"
+  - "coverage"
+
+# Do not add broad skip-check suppressions here. If a rule is intentionally not
+# applicable to a placeholder or example, document and suppress it narrowly near
+# the relevant code or in a follow-up policy decision.

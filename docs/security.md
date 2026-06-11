@@ -68,6 +68,9 @@ GitHub Actions run:
 
 These scans do not require real cloud credentials.
 
+See [security-scanning.md](security-scanning.md) for local scanner
+configuration, thresholds, exclusions, and limitations.
+
 ## State
 
 State belongs to root environments. Keep state separate by environment and

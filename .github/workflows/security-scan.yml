@@ -22,9 +22,8 @@ jobs:
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: .
-          quiet: true
+          config_file: .checkov.yml
           soft_fail: false
-          framework: terraform
 
   trivy:
     name: Trivy config scan
@@ -38,6 +37,4 @@ jobs:
         with:
           scan-type: config
           scan-ref: .
-          exit-code: "1"
-          severity: HIGH,CRITICAL
-          hide-progress: true
+          trivy-config: trivy.yaml
