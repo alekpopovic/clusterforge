@@ -1,6 +1,9 @@
 package config
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const DefaultPath = "clusterforge.yaml"
 
@@ -40,53 +43,31 @@ type Policies struct {
 	RequireManualApprovalForProd bool `yaml:"require_manual_approval_for_prod"`
 }
 
-func DefaultConfig(name string) *Config {
-	return &Config{
-		Project: Project{
-			Name:          name,
-			DefaultEngine: "terraform",
-		},
-		Engines: map[string]Engine{
-			"terraform": {Binary: "terraform"},
-			"opentofu":  {Binary: "tofu"},
-		},
-		Defaults: Defaults{
-			Cloud:        "aws",
-			Region:       "eu-central-1",
-			Orchestrator: "eks",
-		},
-		Environments: map[string]Environment{
-			"dev": {
-				Cloud:        "aws",
-				Region:       "eu-central-1",
-				Orchestrator: "eks",
-				Path:         "live/dev/aws-eks",
-			},
-		},
-		Policies: Policies{
-			RequirePlanFileForApply:      true,
-			BlockDestroyInProd:           true,
-			RequireManualApprovalForProd: true,
-		},
-	}
-}
-
 func (c *Config) Validate() error {
-	if c.Project.Name == "" {
+	if strings.TrimSpace(c.Project.Name) == "" {
 		return fmt.Errorf("project.name is required")
 	}
-	if c.Project.DefaultEngine == "" {
-		c.Project.DefaultEngine = "terraform"
+	if _, ok := c.Engines[c.Project.DefaultEngine]; !ok {
+		return fmt.Errorf("project.default_engine %q must exist in engines", c.Project.DefaultEngine)
 	}
-	if c.Engines == nil {
-		c.Engines = map[string]Engine{}
+	if err := validateCloud("defaults.cloud", c.Defaults.Cloud); err != nil {
+		return err
 	}
-	if c.Environments == nil {
-		c.Environments = map[string]Environment{}
+	if err := validateOrchestrator("defaults.orchestrator", c.Defaults.Orchestrator); err != nil {
+		return err
 	}
 	for name, env := range c.Environments {
-		if env.Path == "" {
+		if strings.TrimSpace(name) == "" {
+			return fmt.Errorf("environment name must not be empty")
+		}
+		if strings.TrimSpace(env.Path) == "" {
 			return fmt.Errorf("environment %q path is required", name)
+		}
+		if err := validateCloud(fmt.Sprintf("environment %q cloud", name), env.Cloud); err != nil {
+			return err
+		}
+		if err := validateOrchestrator(fmt.Sprintf("environment %q orchestrator", name), env.Orchestrator); err != nil {
+			return err
 		}
 	}
 	return nil
@@ -107,4 +88,18 @@ func (c *Config) EngineBinary(name string) (string, error) {
 		return "", fmt.Errorf("engine %q binary is empty", name)
 	}
 	return engine.Binary, nil
+}
+
+func validateCloud(field, value string) error {
+	if allowedClouds[strings.ToLower(strings.TrimSpace(value))] {
+		return nil
+	}
+	return fmt.Errorf("%s must be one of aws, azure, gcp, hetzner, local", field)
+}
+
+func validateOrchestrator(field, value string) error {
+	if allowedOrchestrators[strings.ToLower(strings.TrimSpace(value))] {
+		return nil
+	}
+	return fmt.Errorf("%s must be one of eks, ecs, kubernetes, nomad, docker, swarm, k3s, rke2, aks, gke", field)
 }

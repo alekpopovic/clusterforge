@@ -13,6 +13,7 @@ func Write(path string, cfg *Config, force bool) error {
 			return fmt.Errorf("%s already exists; use --force to overwrite it", path)
 		}
 	}
+	cfg.ApplyDefaults()
 	if err := cfg.Validate(); err != nil {
 		return err
 	}
@@ -25,4 +26,8 @@ func Write(path string, cfg *Config, force bool) error {
 		return fmt.Errorf("write config %s: %w", path, err)
 	}
 	return nil
+}
+
+func (c *Config) Save(path string) error {
+	return Write(path, c, true)
 }
