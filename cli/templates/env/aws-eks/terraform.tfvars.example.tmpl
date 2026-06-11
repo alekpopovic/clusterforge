@@ -1,0 +1,24 @@
+{{ .Header }}
+
+region      = "{{ .Region }}"
+project     = "{{ .Project }}"
+environment = "{{ .Environment }}"
+name        = "{{ .Name }}"
+
+vpc_cidr_block      = "10.20.0.0/16"
+availability_zones  = ["{{ .Region }}a", "{{ .Region }}b"]
+public_subnet_cidrs = ["10.20.0.0/20", "10.20.16.0/20"]
+private_subnet_cidrs = [
+  "10.20.128.0/20",
+  "10.20.144.0/20",
+]
+
+enable_nat_gateway = true
+single_nat_gateway = true
+
+kubernetes_version = "1.30"
+
+default_node_instance_types = ["t3.medium"]
+default_node_min_size       = 1
+default_node_desired_size   = 2
+default_node_max_size       = 4

@@ -1,0 +1,29 @@
+{{ .Header }}
+
+# {{ .Environment }} AWS EKS
+
+This root environment composes ClusterForge modules for:
+
+- AWS tags
+- AWS VPC networking
+- AWS EKS with managed node groups
+
+Provider configuration lives in this root. No credentials or secrets are
+generated into Terraform variable files.
+
+## Usage
+
+```sh
+terraform init
+terraform plan
+terraform apply
+```
+
+For reviewed changes, prefer:
+
+```sh
+terraform plan -out .cf/plans/{{ .Environment }}.tfplan
+terraform apply .cf/plans/{{ .Environment }}.tfplan
+```
+
+Do not apply production changes without review.

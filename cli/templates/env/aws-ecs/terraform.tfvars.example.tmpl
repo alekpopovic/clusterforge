@@ -1,0 +1,19 @@
+{{ .Header }}
+
+region      = "{{ .Region }}"
+project     = "{{ .Project }}"
+environment = "{{ .Environment }}"
+name        = "{{ .Name }}"
+
+vpc_cidr_block      = "10.30.0.0/16"
+availability_zones  = ["{{ .Region }}a", "{{ .Region }}b"]
+public_subnet_cidrs = ["10.30.0.0/20", "10.30.16.0/20"]
+private_subnet_cidrs = [
+  "10.30.128.0/20",
+  "10.30.144.0/20",
+]
+
+enable_nat_gateway        = true
+single_nat_gateway        = true
+enable_container_insights = true
+capacity_providers        = ["FARGATE", "FARGATE_SPOT"]
