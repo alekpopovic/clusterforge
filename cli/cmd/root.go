@@ -46,6 +46,7 @@ func init() {
 	rootCmd.AddCommand(projectCmd)
 	rootCmd.AddCommand(envCmd)
 	rootCmd.AddCommand(generateCmd)
+	rootCmd.AddCommand(policyCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)

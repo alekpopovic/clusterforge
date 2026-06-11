@@ -1,0 +1,35 @@
+{
+  "format_version": "1.2",
+  "resource_changes": [
+    {
+      "address": "aws_vpc.main",
+      "change": {
+        "actions": ["create"]
+      }
+    },
+    {
+      "address": "aws_subnet.private[0]",
+      "change": {
+        "actions": ["update"]
+      }
+    },
+    {
+      "address": "aws_nat_gateway.this[0]",
+      "change": {
+        "actions": ["delete"]
+      }
+    },
+    {
+      "address": "aws_eks_node_group.default",
+      "change": {
+        "actions": ["delete", "create"]
+      }
+    },
+    {
+      "address": "aws_iam_role.cluster",
+      "change": {
+        "actions": ["no-op"]
+      }
+    }
+  ]
+}
