@@ -42,6 +42,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&opts.Verbose, "verbose", false, "Enable verbose output")
 
 	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(appCmd)
 	rootCmd.AddCommand(projectCmd)
 	rootCmd.AddCommand(envCmd)
 	rootCmd.AddCommand(generateCmd)

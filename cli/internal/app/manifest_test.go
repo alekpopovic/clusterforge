@@ -1,0 +1,173 @@
+package app
+
+import (
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+
+	"github.com/textracta/clusterforge/cli/internal/config"
+)
+
+func TestAddAppManifest(t *testing.T) {
+	dir := t.TempDir()
+	path, err := Add(dir, "api", AddOptions{
+		Image:    "ghcr.io/company/api:1.0.0",
+		Port:     8080,
+		Replicas: 2,
+		Host:     "api.dev.example.com",
+		Type:     "web",
+	})
+	if err != nil {
+		t.Fatalf("add app: %v", err)
+	}
+	manifest, err := Load(path)
+	if err != nil {
+		t.Fatalf("load app: %v", err)
+	}
+	if manifest.Name != "api" || manifest.Image != "ghcr.io/company/api:1.0.0" {
+		t.Fatalf("manifest = %#v", manifest)
+	}
+	if !manifest.Ingress.Enabled || manifest.Ingress.Host != "api.dev.example.com" {
+		t.Fatalf("ingress = %#v", manifest.Ingress)
+	}
+}
+
+func TestListAppManifests(t *testing.T) {
+	dir := t.TempDir()
+	if _, err := Add(dir, "worker", AddOptions{Image: "busybox:1.36"}); err != nil {
+		t.Fatalf("add worker: %v", err)
+	}
+	if _, err := Add(dir, "api", AddOptions{Image: "nginx:1.27"}); err != nil {
+		t.Fatalf("add api: %v", err)
+	}
+	apps, err := List(dir)
+	if err != nil {
+		t.Fatalf("list apps: %v", err)
+	}
+	if strings.Join(apps, ",") != "api,worker" {
+		t.Fatalf("apps = %#v", apps)
+	}
+}
+
+func TestRenderKubernetesModuleCall(t *testing.T) {
+	dir := t.TempDir()
+	manifest := sampleManifest()
+	env := config.Environment{
+		Cloud:        "aws",
+		Region:       "eu-central-1",
+		Orchestrator: "eks",
+		Path:         filepath.Join(dir, "live", "dev", "aws-eks"),
+	}
+	outPath, err := Render(dir, "dev", env, manifest)
+	if err != nil {
+		t.Fatalf("render kubernetes app: %v", err)
+	}
+	rendered := readFile(t, outPath)
+	for _, want := range []string{
+		`source = "../../../../modules/workloads/kubernetes/app"`,
+		`name      = "api"`,
+		`namespace = "dev"`,
+		`secret_env = {`,
+		`secret_name = "api-secrets"`,
+		`autoscaling = {`,
+	} {
+		if !strings.Contains(rendered, want) {
+			t.Fatalf("rendered Kubernetes app missing %q:\n%s", want, rendered)
+		}
+	}
+}
+
+func TestRenderECSModuleCall(t *testing.T) {
+	dir := t.TempDir()
+	manifest := sampleManifest()
+	env := config.Environment{
+		Cloud:        "aws",
+		Region:       "eu-central-1",
+		Orchestrator: "ecs",
+		Path:         filepath.Join(dir, "live", "dev", "aws-ecs"),
+	}
+	outPath, err := Render(dir, "dev", env, manifest)
+	if err != nil {
+		t.Fatalf("render ecs app: %v", err)
+	}
+	rendered := readFile(t, outPath)
+	for _, want := range []string{
+		`source = "../../../../modules/workloads/ecs/service"`,
+		`cluster_arn        = module.ecs_cluster.cluster_arn`,
+		`security_group_ids = var.app_security_group_ids`,
+		`container_port = 8080`,
+		`Replace value_from with existing SSM Parameter Store or Secrets Manager ARNs`,
+	} {
+		if !strings.Contains(rendered, want) {
+			t.Fatalf("rendered ECS app missing %q:\n%s", want, rendered)
+		}
+	}
+}
+
+func TestRenderUnsupportedOrchestrator(t *testing.T) {
+	dir := t.TempDir()
+	env := config.Environment{
+		Cloud:        "aws",
+		Region:       "eu-central-1",
+		Orchestrator: "nomad",
+		Path:         filepath.Join(dir, "live", "dev", "nomad"),
+	}
+	_, err := Render(dir, "dev", env, sampleManifest())
+	if err == nil {
+		t.Fatal("expected unsupported orchestrator error")
+	}
+	if !strings.Contains(err.Error(), "unsupported orchestrator") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func sampleManifest() Manifest {
+	return Manifest{
+		Name:     "api",
+		Type:     "web",
+		Image:    "ghcr.io/company/api:1.0.0",
+		Replicas: 2,
+		Ports: []Port{{
+			Name:          "http",
+			ContainerPort: 8080,
+			Protocol:      "TCP",
+		}},
+		Env: map[string]string{
+			"NODE_ENV": "production",
+		},
+		SecretEnv: map[string]SecretRef{
+			"DATABASE_URL": {
+				SecretName: "api-secrets",
+				SecretKey:  "database-url",
+			},
+		},
+		Resources: Resources{
+			CPURequest:    "100m",
+			MemoryRequest: "128Mi",
+			CPULimit:      "500m",
+			MemoryLimit:   "512Mi",
+		},
+		Ingress: Ingress{
+			Enabled: true,
+			Host:    "api.dev.example.com",
+			Path:    "/",
+			TLS:     true,
+		},
+		Autoscaling: Autoscaling{
+			Enabled:     true,
+			MinReplicas: 2,
+			MaxReplicas: 5,
+			CPUPercent:  70,
+		},
+	}
+}
+
+func readFile(t *testing.T, path string) string {
+	t.Helper()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read %s: %v", path, err)
+	}
+	return string(data)
+}
