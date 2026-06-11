@@ -61,3 +61,8 @@ module "app" {
   ]
 }
 ```
+
+## Generated Terraform Documentation
+
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS -->

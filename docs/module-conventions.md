@@ -66,14 +66,47 @@ Keep naming logic deterministic and readable.
 
 Each module README should include:
 
+- Title
 - Purpose
 - Status
 - Usage example
-- Inputs and outputs summary
-- Provider notes
-- Safety or lifecycle notes
+- Generated Terraform documentation
+- Notes
+- TODOs when the module is partial or placeholder-only
 
 For placeholder modules, be explicit that no real resources are created yet.
+
+Generated documentation must be wrapped in terraform-docs markers:
+
+```markdown
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS -->
+```
+
+The generated section is managed by `terraform-docs` and should include
+requirements, providers, inputs, and outputs. Keep hand-written context,
+examples, lifecycle notes, and TODOs outside the generated block so useful
+documentation is not lost.
+
+Run module documentation generation from the repository root:
+
+```bash
+make docs
+```
+
+or:
+
+```bash
+./scripts/docs.sh
+```
+
+`scripts/docs.sh` only scans Terraform module directories under `modules/`.
+It does not generate documentation for `live/` roots or examples.
+
+Every implemented module should have at least one practical usage example in
+its README. Prefer a minimal copy-paste friendly example that shows provider
+configuration in the root module and the module call separately when that
+distinction matters.
 
 ## Development Checklist
 

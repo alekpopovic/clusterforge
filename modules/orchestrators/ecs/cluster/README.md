@@ -36,3 +36,8 @@ module "ecs_cluster" {
 By default the module attaches `FARGATE` and `FARGATE_SPOT`, and uses FARGATE
 as the default strategy. Override `default_capacity_provider_strategy` in a
 root module when you want a different default.
+
+## Generated Terraform Documentation
+
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS -->

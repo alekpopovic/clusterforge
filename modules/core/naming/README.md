@@ -88,3 +88,8 @@ module "platform_name" {
   max_length  = 48
 }
 ```
+
+## Generated Terraform Documentation
+
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS -->

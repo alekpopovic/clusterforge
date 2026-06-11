@@ -81,3 +81,8 @@ useful outside the job itself.
 | --- | --- |
 | `job_id` | Nomad job resource ID. |
 | `job_name` | Nomad job name. |
+
+## Generated Terraform Documentation
+
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS -->

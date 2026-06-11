@@ -126,3 +126,8 @@ provider "helm" {
 | `node_group_names` | Managed node group names. |
 | `node_group_arns` | Managed node group ARNs. |
 | `cluster_security_group_id` | EKS cluster security group ID created by EKS. |
+
+## Generated Terraform Documentation
+
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS -->
