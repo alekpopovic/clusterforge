@@ -39,7 +39,7 @@ var destroyCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		return cfterraform.NewRunner(binary, env.Path, opts.Verbose).Run(cmd.Context(), "destroy")
+		return cfterraform.NewRunner(binary, env.Path, opts.Verbose).Destroy(cmd.Context(), nil)
 	},
 }
 

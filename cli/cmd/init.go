@@ -24,6 +24,6 @@ var initCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		return cfterraform.NewRunner(binary, env.Path, opts.Verbose).Run(cmd.Context(), "init")
+		return cfterraform.NewRunner(binary, env.Path, opts.Verbose).Init(cmd.Context())
 	},
 }

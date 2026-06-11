@@ -27,11 +27,7 @@ var planCmd = &cobra.Command{
 			return err
 		}
 
-		tfArgs := []string{"plan"}
-		if planOut != "" {
-			tfArgs = append(tfArgs, "-out", planOut)
-		}
-		return cfterraform.NewRunner(binary, env.Path, opts.Verbose).Run(cmd.Context(), tfArgs...)
+		return cfterraform.NewRunner(binary, env.Path, opts.Verbose).Plan(cmd.Context(), planOut, nil)
 	},
 }
 

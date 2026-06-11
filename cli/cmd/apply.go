@@ -39,11 +39,7 @@ var applyCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		tfArgs := []string{"apply"}
-		if applyPlanFile != "" {
-			tfArgs = append(tfArgs, applyPlanFile)
-		}
-		return cfterraform.NewRunner(binary, env.Path, opts.Verbose).Run(cmd.Context(), tfArgs...)
+		return cfterraform.NewRunner(binary, env.Path, opts.Verbose).Apply(cmd.Context(), applyPlanFile, nil)
 	},
 }
 
