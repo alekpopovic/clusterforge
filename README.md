@@ -200,7 +200,7 @@ cli/
 Run CLI checks locally:
 
 ```bash
-./scripts/test-cli.sh
+make test-cli
 ```
 
 Add new commands under `cli/cmd/`, keep business logic under `cli/internal/`,
@@ -214,15 +214,26 @@ See [docs/cli.md](docs/cli.md).
 Run local checks before opening a pull request:
 
 ```bash
-./scripts/lint.sh
-./scripts/validate.sh
-./scripts/test-cli.sh
+make fmt-check
+make test
+make ci
 ```
 
 Use OpenTofu instead of Terraform:
 
 ```bash
-TERRAFORM_BIN=tofu ./scripts/validate.sh
+TERRAFORM_BIN=tofu make validate
+```
+
+Common developer commands:
+
+```bash
+make help
+make fmt
+make validate
+make build-cli
+make security
+make clean
 ```
 
 ## Roadmap

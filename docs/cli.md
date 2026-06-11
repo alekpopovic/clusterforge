@@ -85,7 +85,19 @@ operator also passes `--allow-destroy`.
 Run all CLI checks:
 
 ```bash
-./scripts/test-cli.sh
+make test-cli
+```
+
+Build the CLI:
+
+```bash
+make build-cli
+```
+
+Run the default local CI checks without cloud credentials:
+
+```bash
+make ci
 ```
 
 When adding CLI behavior:
