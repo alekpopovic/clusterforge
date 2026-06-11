@@ -1,0 +1,60 @@
+job "${name}" {
+  namespace   = ${namespace}
+  datacenters = ${datacenters}
+  type        = ${type}
+
+  group "${name}" {
+    count = ${count}
+
+%{ if length(ports) > 0 ~}
+    network {
+%{ for port in ports ~}
+      port "${port.label}" {
+        to = ${port.to}
+%{ if port.static != null ~}
+        static = ${port.static}
+%{ endif ~}
+      }
+%{ endfor ~}
+    }
+
+%{ endif ~}
+%{ if service.enabled ~}
+    service {
+      name = ${service.name}
+      port = ${service.port_label}
+      tags = ${service.tags}
+    }
+
+%{ endif ~}
+    task "${name}" {
+      driver = "docker"
+
+      config {
+        image = ${image}
+%{ if length(ports) > 0 ~}
+        ports = ${port_labels}
+%{ endif ~}
+%{ if command_enabled ~}
+        command = ${command}
+%{ endif ~}
+%{ if length(args) > 0 ~}
+        args = ${args}
+%{ endif ~}
+      }
+
+%{ if length(env) > 0 ~}
+      env {
+%{ for key, value in env ~}
+        ${key} = ${value}
+%{ endfor ~}
+      }
+
+%{ endif ~}
+      resources {
+        cpu    = ${cpu}
+        memory = ${memory}
+      }
+    }
+  }
+}
