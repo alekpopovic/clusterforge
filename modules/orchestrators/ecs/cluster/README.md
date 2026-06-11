@@ -2,24 +2,37 @@
 
 ## Purpose
 
-This module will manage the ClusterForge orchestrators/ecs/cluster component.
+Creates an AWS ECS cluster suitable for Fargate services. The module manages
+the ECS cluster, Container Insights setting, attached capacity providers, and
+the default capacity provider strategy.
 
-## Status
+Provider configuration belongs in the root module. This module declares the
+AWS provider requirement but does not configure the provider.
 
-Placeholder. This module currently creates no resources.
+Use `modules/workloads/ecs/service` to create ECS task definitions and
+services on top of this cluster.
 
-## Expected Future Resources
-
-ECS clusters, capacity providers, service discovery hooks, and execution defaults.
-
-## Usage
+## Root Usage
 
 ```hcl
-module "example" {
-  source = "path/to/modules/orchestrators/ecs/cluster"
+provider "aws" {
+  region = "us-east-1"
+}
 
-  name        = "example"
+module "ecs_cluster" {
+  source = "../../../modules/orchestrators/ecs/cluster"
+
+  name        = "clusterforge-dev-ecs"
   environment = "dev"
-  tags        = {}
+
+  tags = {
+    Project = "clusterforge"
+  }
 }
 ```
+
+## Capacity Providers
+
+By default the module attaches `FARGATE` and `FARGATE_SPOT`, and uses FARGATE
+as the default strategy. Override `default_capacity_provider_strategy` in a
+root module when you want a different default.

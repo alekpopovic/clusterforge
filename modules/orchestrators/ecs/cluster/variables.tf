@@ -1,27 +1,52 @@
 variable "name" {
-  description = "Logical name for this module instance."
+  description = "ECS cluster name."
   type        = string
-  default     = null
 
   validation {
-    condition     = var.name == null || can(regex("^[a-z][a-z0-9-]{1,62}$", var.name))
-    error_message = "Name must start with a lowercase letter and contain 2-63 lowercase letters, numbers, or hyphens."
+    condition     = length(trimspace(var.name)) > 0
+    error_message = "Name must not be empty."
   }
 }
 
 variable "environment" {
-  description = "Environment identifier such as dev, staging, or prod."
+  description = "Environment name for tagging."
   type        = string
-  default     = null
 
   validation {
-    condition     = var.environment == null || can(regex("^[a-z][a-z0-9-]{1,30}$", var.environment))
-    error_message = "Environment must start with a lowercase letter and contain 2-31 lowercase letters, numbers, or hyphens."
+    condition     = length(trimspace(var.environment)) > 0
+    error_message = "Environment must not be empty."
   }
 }
 
 variable "tags" {
-  description = "Tags to apply to resources created by this module once implemented."
+  description = "Tags applied to supported AWS resources."
   type        = map(string)
   default     = {}
+}
+
+variable "enable_container_insights" {
+  description = "Whether to enable ECS Container Insights for the cluster."
+  type        = bool
+  default     = true
+}
+
+variable "capacity_providers" {
+  description = "Capacity providers attached to the ECS cluster."
+  type        = list(string)
+  default     = ["FARGATE", "FARGATE_SPOT"]
+
+  validation {
+    condition     = length(var.capacity_providers) > 0
+    error_message = "At least one capacity provider is required."
+  }
+}
+
+variable "default_capacity_provider_strategy" {
+  description = "Default capacity provider strategy for ECS services that do not set one explicitly."
+  type = list(object({
+    capacity_provider = string
+    weight            = optional(number)
+    base              = optional(number)
+  }))
+  default = []
 }
