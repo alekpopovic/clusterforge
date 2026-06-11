@@ -2,24 +2,62 @@
 
 ## Purpose
 
-This module will manage the ClusterForge workloads/docker/container component.
+Runs a single Docker container on a local or self-hosted Docker Engine using
+the Terraform Docker provider.
 
-## Status
+Provider configuration belongs in the root module. This module declares the
+`kreuzwerker/docker` provider requirement but does not configure the provider.
 
-Placeholder. This module currently creates no resources.
+This target is useful for development, homelab, edge, or very small
+self-hosted deployments. It is not recommended as the main production target
+when Kubernetes, ECS, or Nomad are available.
 
-## Expected Future Resources
-
-Docker container configuration and host-level runtime options.
-
-## Usage
+## Example
 
 ```hcl
-module "example" {
-  source = "path/to/modules/workloads/docker/container"
+module "web" {
+  source = "../../../modules/workloads/docker/container"
 
-  name        = "example"
-  environment = "dev"
-  labels      = {}
+  name  = "web"
+  image = "nginx:1.27"
+
+  ports = [
+    {
+      internal = 80
+      external = 8080
+    }
+  ]
+
+  labels = {
+    "clusterforge.io/workload" = "web"
+  }
+}
+```
+
+## Example With Env And Volume
+
+```hcl
+module "app" {
+  source = "../../../modules/workloads/docker/container"
+
+  name  = "app"
+  image = "busybox:1.36"
+  command = [
+    "sh",
+    "-c",
+    "while true; do echo hello; sleep 30; done"
+  ]
+
+  env = {
+    APP_ENV = "dev"
+  }
+
+  volumes = [
+    {
+      host_path      = "/srv/app"
+      container_path = "/app"
+      read_only      = true
+    }
+  ]
 }
 ```

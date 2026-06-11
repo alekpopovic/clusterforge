@@ -2,24 +2,51 @@
 
 ## Purpose
 
-This module will manage the ClusterForge workloads/docker/swarm-service component.
+Deploys a Docker Swarm service using the Terraform Docker provider.
 
-## Status
+Provider configuration belongs in the root module. This module declares the
+`kreuzwerker/docker` provider requirement but does not configure the provider.
 
-Placeholder. This module currently creates no resources.
+This target is useful for simple self-hosted clusters and small edge
+deployments. It is not recommended as the main production target when
+Kubernetes, ECS, or Nomad are available.
 
-## Expected Future Resources
-
-Docker Swarm service definition, replicas, networks, and placement inputs.
-
-## Usage
+## Example
 
 ```hcl
-module "example" {
-  source = "path/to/modules/workloads/docker/swarm-service"
+module "web" {
+  source = "../../../modules/workloads/docker/swarm-service"
 
-  name        = "example"
-  environment = "dev"
-  labels      = {}
+  name     = "web"
+  image    = "nginx:1.27"
+  replicas = 2
+
+  ports = [
+    {
+      target_port    = 80
+      published_port = 8080
+    }
+  ]
+
+  labels = {
+    "clusterforge.io/workload" = "web"
+  }
+}
+```
+
+## Example With Environment And Network
+
+```hcl
+module "worker" {
+  source = "../../../modules/workloads/docker/swarm-service"
+
+  name     = "worker"
+  image    = "busybox:1.36"
+  replicas = 1
+  networks = ["app-net"]
+
+  env = {
+    APP_ENV = "dev"
+  }
 }
 ```
