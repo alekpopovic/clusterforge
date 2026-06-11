@@ -30,7 +30,9 @@ cf env list
 cf generate dev
 cf init dev
 cf plan dev --out .cf/plans/dev.tfplan --risk-summary
+cf policy check dev --plan-file .cf/plans/dev.tfplan
 cf apply prod --plan-file .cf/plans/prod.tfplan --confirm-prod
+cf destroy prod --allow-destroy --confirm-prod
 cf doctor
 ```
 
@@ -59,6 +61,24 @@ cf --engine tofu plan dev
 ```
 
 Engine binaries are configured in `clusterforge.yaml`.
+
+## Policy And Risk Summaries
+
+Use risk summaries before applying reviewed plans:
+
+```bash
+cf plan prod --out .cf/plans/prod.tfplan --risk-summary
+cf policy check prod --plan-file .cf/plans/prod.tfplan
+```
+
+Production apply requires a plan file and explicit confirmation:
+
+```bash
+cf apply prod --plan-file .cf/plans/prod.tfplan --confirm-prod
+```
+
+If a production plan contains delete actions, apply is blocked unless the
+operator also passes `--allow-destroy`.
 
 ## Development
 

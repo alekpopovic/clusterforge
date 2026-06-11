@@ -6,6 +6,12 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 export GOCACHE="${GOCACHE:-/tmp/clusterforge-go-cache}"
 export GOPATH="${GOPATH:-/tmp/clusterforge-go}"
 
+cleanup() {
+  rm -f cli/cf
+}
+
+trap cleanup EXIT
+
 echo "==> Go module download"
 (
   cd cli

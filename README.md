@@ -150,6 +150,7 @@ comments where IAM permissions or external secret references must be provided.
 - Production apply requires an existing reviewed plan file.
 - Production destroy is blocked by default.
 - Plan risk summaries highlight creates, updates, deletes, and replacements.
+- Production plans with delete actions require `--allow-destroy`.
 - Real secrets must not be stored in `tfvars`.
 - Secret inputs should reference external secret stores or existing platform
   secrets.

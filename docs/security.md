@@ -40,7 +40,21 @@ Recommended flow:
 
 ```bash
 cf plan prod --out .cf/plans/prod.tfplan --risk-summary
+cf policy check prod --plan-file .cf/plans/prod.tfplan
 cf apply prod --plan-file .cf/plans/prod.tfplan --confirm-prod
+```
+
+If the reviewed production plan intentionally deletes resources, the apply
+command must include `--allow-destroy`:
+
+```bash
+cf apply prod --plan-file .cf/plans/prod.tfplan --confirm-prod --allow-destroy
+```
+
+Production destroy requires both explicit flags:
+
+```bash
+cf destroy prod --allow-destroy --confirm-prod
 ```
 
 ## CI Scans
