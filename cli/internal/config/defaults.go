@@ -26,11 +26,7 @@ func DefaultConfig(name string) *Config {
 		Project: Project{
 			Name: name,
 		},
-		Environments: map[string]Environment{
-			"dev": {
-				Path: "live/dev/aws-eks",
-			},
-		},
+		Environments: map[string]Environment{},
 		Policies: Policies{
 			RequirePlanFileForApply:      true,
 			BlockDestroyInProd:           true,

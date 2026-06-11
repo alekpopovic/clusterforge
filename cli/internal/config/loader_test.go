@@ -105,6 +105,13 @@ func TestAddEnvironmentAndSave(t *testing.T) {
 	}
 }
 
+func TestDefaultConfigStartsWithoutEnvironments(t *testing.T) {
+	cfg := DefaultConfig("demo")
+	if len(cfg.Environments) != 0 {
+		t.Fatalf("environments = %#v", cfg.Environments)
+	}
+}
+
 func TestValidateUnknownOrchestratorFails(t *testing.T) {
 	path := writeConfig(t, `project:
   name: demo

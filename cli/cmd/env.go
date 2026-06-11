@@ -9,6 +9,10 @@ import (
 	"github.com/textracta/clusterforge/cli/internal/config"
 )
 
+var envCreateCloud string
+var envCreateRegion string
+var envCreateOrchestrator string
+
 var envCmd = &cobra.Command{
 	Use:   "env",
 	Short: "Manage ClusterForge environments",
@@ -29,11 +33,14 @@ var envCreateCmd = &cobra.Command{
 			return fmt.Errorf("environment %q already exists", name)
 		}
 
+		cloud := defaultString(envCreateCloud, cfg.Defaults.Cloud)
+		region := defaultString(envCreateRegion, cfg.Defaults.Region)
+		orchestrator := defaultString(envCreateOrchestrator, cfg.Defaults.Orchestrator)
 		env := config.Environment{
-			Cloud:        cfg.Defaults.Cloud,
-			Region:       cfg.Defaults.Region,
-			Orchestrator: cfg.Defaults.Orchestrator,
-			Path:         fmt.Sprintf("live/%s/%s-%s", name, cfg.Defaults.Cloud, cfg.Defaults.Orchestrator),
+			Cloud:        cloud,
+			Region:       region,
+			Orchestrator: orchestrator,
+			Path:         fmt.Sprintf("live/%s/%s-%s", name, cloud, orchestrator),
 		}
 		cfg.Environments[name] = env
 
@@ -73,6 +80,17 @@ var envListCmd = &cobra.Command{
 }
 
 func init() {
+	envCreateCmd.Flags().StringVar(&envCreateCloud, "cloud", "", "Cloud target for the environment")
+	envCreateCmd.Flags().StringVar(&envCreateRegion, "region", "", "Cloud region for the environment")
+	envCreateCmd.Flags().StringVar(&envCreateOrchestrator, "orchestrator", "", "Orchestrator target for the environment")
+
 	envCmd.AddCommand(envCreateCmd)
 	envCmd.AddCommand(envListCmd)
+}
+
+func defaultString(value, fallback string) string {
+	if value == "" {
+		return fallback
+	}
+	return value
 }
