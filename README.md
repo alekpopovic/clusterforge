@@ -12,6 +12,14 @@ Terraform review, planning, or validation.
 Contributors and AI agents must follow the repository rules in
 [`AGENTS.md`](AGENTS.md).
 
+## CI Status
+
+Status badges will be enabled once workflows are active on GitHub:
+
+- Terraform Validate
+- CLI Test
+- Security Scan
+
 ## Architecture Layers
 
 ClusterForge is organized into four layers:
@@ -71,16 +79,30 @@ secret, and production safety conventions.
 
 ## Validation
 
-Format Terraform files:
+Run local checks before opening a pull request:
+
+```bash
+./scripts/lint.sh
+./scripts/validate.sh
+./scripts/test-cli.sh
+```
+
+Format Terraform files only:
 
 ```bash
 ./scripts/lint.sh
 ```
 
-Validate Terraform roots and modules:
+Validate Terraform roots and modules without cloud credentials:
 
 ```bash
 ./scripts/validate.sh
+```
+
+Test the Go CLI:
+
+```bash
+./scripts/test-cli.sh
 ```
 
 Use OpenTofu instead of Terraform:

@@ -10,7 +10,20 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
-      - run: ./scripts/lint.sh
-      - run: ./scripts/validate.sh
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform format check
+        run: ./scripts/lint.sh
+
+      - name: Terraform validate roots and modules
+        run: ./scripts/validate.sh
+        env:
+          AWS_ACCESS_KEY_ID: fake
+          AWS_SECRET_ACCESS_KEY: fake
+          AWS_DEFAULT_REGION: eu-central-1

@@ -27,6 +27,7 @@ kubeconfig.*
 
 # CLI build artifacts
 cli/bin/
+cli/cf
 cli/dist/
 cli/coverage/
 cli/clusterforge
