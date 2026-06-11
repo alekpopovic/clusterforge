@@ -2,12 +2,20 @@
 
 Example root module for `modules/workloads/kubernetes/app`.
 
-The Kubernetes provider is configured in this root module using
-`var.kubeconfig_path`.
+This example deploys `nginx` as a Kubernetes Deployment and ClusterIP Service.
+It assumes the Kubernetes provider can connect to an existing cluster.
+
+## Provider
+
+The provider uses `var.kubeconfig_path`, defaulting to `~/.kube/config`.
 
 ```bash
 terraform init
+terraform validate
 terraform plan
 ```
 
-This example deploys `nginx` as a Deployment and ClusterIP Service.
+Use a test namespace or disposable cluster when experimenting. The module can
+create the namespace and workload resources, so review the plan before apply.
+
+No Kubernetes secrets are created by this example.

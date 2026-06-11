@@ -1,23 +1,37 @@
 # aws-eks-minimal
 
-Minimal example composing:
+Minimal AWS EKS example.
 
+This root composes:
+
+- `modules/core/tags`
 - `modules/cloud/aws/network`
 - `modules/orchestrators/kubernetes/eks`
 
-Provider configuration is intentionally declared in this root module, not in
-the reusable modules.
+No backend is configured. Terraform state is local unless you add a backend in
+this root.
 
-This example defaults to fake AWS credentials so contributors can run a local
-no-refresh plan without real AWS credentials:
+## Safe Local Validation
+
+The example defaults to fake AWS credentials so contributors can run local
+validation and no-refresh plans:
 
 ```bash
 terraform init
+terraform validate
 terraform plan -refresh=false
 ```
 
-Do not apply with fake credentials. To use real AWS credentials, set:
+Do not apply with fake credentials.
+
+## Real AWS Use
+
+To plan against real AWS credentials:
 
 ```bash
 terraform plan -var='use_fake_credentials_for_plan=false'
 ```
+
+Real EKS creation requires AWS credentials with permissions for VPC, IAM, EKS,
+EC2, CloudWatch Logs, and related managed node group resources. Review IAM and
+cost impact before applying.

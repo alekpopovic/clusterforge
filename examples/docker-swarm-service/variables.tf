@@ -1,5 +1,5 @@
-variable "name" {
-  description = "Logical name for this root placeholder."
+variable "docker_host" {
+  description = "Docker daemon endpoint. Use a Swarm manager for docker_service resources."
   type        = string
-  default     = "docker-swarm-service"
+  default     = "unix:///var/run/docker.sock"
 }
