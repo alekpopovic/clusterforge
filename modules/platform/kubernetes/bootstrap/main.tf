@@ -6,6 +6,7 @@ locals {
     cert_manager     = local.namespace_prefix == "" ? "cert-manager" : "${local.namespace_prefix}-cert-manager"
     external_dns     = local.namespace_prefix == "" ? "external-dns" : "${local.namespace_prefix}-external-dns"
     external_secrets = local.namespace_prefix == "" ? "external-secrets" : "${local.namespace_prefix}-external-secrets"
+    karpenter        = local.namespace_prefix == "" ? "karpenter" : "${local.namespace_prefix}-karpenter"
     metrics_server   = local.namespace_prefix == "" ? "metrics-server" : "${local.namespace_prefix}-metrics-server"
     prometheus_stack = local.namespace_prefix == "" ? "monitoring" : "${local.namespace_prefix}-monitoring"
     loki             = local.namespace_prefix == "" ? "loki" : "${local.namespace_prefix}-loki"
@@ -47,6 +48,20 @@ module "external_secrets" {
 
   namespace = local.namespaces.external_secrets
   labels    = var.common_labels
+}
+
+module "karpenter" {
+  count = var.enable_karpenter ? 1 : 0
+
+  source = "../karpenter"
+
+  namespace                = local.namespaces.karpenter
+  chart_version            = var.karpenter_chart_version
+  cluster_name             = var.karpenter_cluster_name
+  cluster_endpoint         = var.karpenter_cluster_endpoint
+  service_account_role_arn = var.karpenter_service_account_role_arn
+  values                   = var.karpenter_values
+  labels                   = var.common_labels
 }
 
 module "metrics_server" {

@@ -52,6 +52,7 @@ Platform modules install cluster-level add-ons:
 - external-dns
 - Metrics and observability
 - Logging
+- Node autoscaling for EKS with Karpenter
 - GitOps tooling such as Argo CD
 
 For Kubernetes, the bootstrap module composes Helm-based child modules. It

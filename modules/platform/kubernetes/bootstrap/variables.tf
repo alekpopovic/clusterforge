@@ -28,6 +28,57 @@ variable "enable_external_secrets" {
   default     = false
 }
 
+variable "enable_karpenter" {
+  description = "Whether to install Karpenter for EKS node autoscaling."
+  type        = bool
+  default     = false
+}
+
+variable "karpenter_chart_version" {
+  description = "Optional Karpenter Helm chart version. Pin this before production use."
+  type        = string
+  default     = ""
+}
+
+variable "karpenter_cluster_name" {
+  description = "EKS cluster name passed to Karpenter when enable_karpenter is true."
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = !var.enable_karpenter || length(trimspace(var.karpenter_cluster_name)) > 0
+    error_message = "karpenter_cluster_name must not be empty when enable_karpenter is true."
+  }
+}
+
+variable "karpenter_cluster_endpoint" {
+  description = "EKS cluster endpoint passed to Karpenter when enable_karpenter is true."
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = !var.enable_karpenter || length(trimspace(var.karpenter_cluster_endpoint)) > 0
+    error_message = "karpenter_cluster_endpoint must not be empty when enable_karpenter is true."
+  }
+}
+
+variable "karpenter_service_account_role_arn" {
+  description = "IAM role ARN annotated on the Karpenter service account when enable_karpenter is true."
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = !var.enable_karpenter || length(trimspace(var.karpenter_service_account_role_arn)) > 0
+    error_message = "karpenter_service_account_role_arn must not be empty when enable_karpenter is true."
+  }
+}
+
+variable "karpenter_values" {
+  description = "Additional YAML values passed to the Karpenter Helm release."
+  type        = list(string)
+  default     = []
+}
+
 variable "enable_metrics_server" {
   description = "Whether to install metrics-server."
   type        = bool

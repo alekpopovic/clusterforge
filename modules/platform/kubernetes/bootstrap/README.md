@@ -35,6 +35,7 @@ module "platform_bootstrap" {
   enable_ingress_nginx    = true
   enable_cert_manager     = true
   enable_external_secrets = true
+  enable_karpenter        = false
   enable_argocd           = true
 
   argocd_enable_app_of_apps   = true
@@ -52,6 +53,10 @@ Enable External Secrets Operator when Kubernetes workloads should consume
 secrets synced from external secret stores such as AWS Secrets Manager or SSM
 Parameter Store. Terraform should manage references and operator configuration,
 not raw secret values.
+
+Enable Karpenter only for EKS clusters where the AWS IRSA role and node class
+strategy have been reviewed. Keep at least one managed node group or equivalent
+bootstrap capacity for system add-ons and the Karpenter controller.
 
 ## Generated Terraform Documentation
 
