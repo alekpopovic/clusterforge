@@ -33,6 +33,9 @@ module "eks" {
   subnet_ids  = module.network.private_subnet_ids
   tags        = module.tags.tags
 
+  enable_irsa                 = true
+  enable_ebs_csi_driver_addon = true
+
   node_groups = {
     default = {
       instance_types = ["t3.medium"]

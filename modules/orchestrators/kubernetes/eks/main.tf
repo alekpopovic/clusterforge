@@ -13,6 +13,11 @@ locals {
     })
   }
 
+  create_ebs_csi_irsa_role = var.enable_ebs_csi_driver_addon && var.create_ebs_csi_irsa_role
+  oidc_provider_url        = try(aws_eks_cluster.this.identity[0].oidc[0].issuer, null)
+  oidc_issuer_hostpath     = local.oidc_provider_url == null ? null : trimsuffix(replace(local.oidc_provider_url, "https://", ""), "/")
+  oidc_provider_arn        = var.enable_irsa ? aws_iam_openid_connect_provider.this[0].arn : null
+
   enabled_addons = merge(
     var.enable_vpc_cni_addon ? {
       vpc-cni = {
@@ -39,7 +44,7 @@ locals {
       aws-ebs-csi-driver = {
         name                     = "aws-ebs-csi-driver"
         before_compute           = false
-        service_account_role_arn = null
+        service_account_role_arn = local.create_ebs_csi_irsa_role ? module.ebs_csi_irsa[0].role_arn : null
       }
     } : {}
   )
@@ -102,6 +107,39 @@ resource "aws_eks_cluster" "this" {
 
   depends_on = [
     aws_iam_role_policy_attachment.cluster
+  ]
+}
+
+data "tls_certificate" "oidc" {
+  count = var.enable_irsa ? 1 : 0
+
+  url = aws_eks_cluster.this.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "this" {
+  count = var.enable_irsa ? 1 : 0
+
+  url             = aws_eks_cluster.this.identity[0].oidc[0].issuer
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.oidc[0].certificates[0].sha1_fingerprint]
+  tags            = local.common_tags
+}
+
+module "ebs_csi_irsa" {
+  count = local.create_ebs_csi_irsa_role ? 1 : 0
+
+  source = "../../../cloud/aws/irsa-role"
+
+  name                 = "${local.name}-ebs-csi"
+  environment          = local.environment
+  oidc_provider_arn    = local.oidc_provider_arn
+  oidc_provider_url    = local.oidc_provider_url
+  namespace            = "kube-system"
+  service_account_name = "ebs-csi-controller-sa"
+  tags                 = local.common_tags
+
+  policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
   ]
 }
 

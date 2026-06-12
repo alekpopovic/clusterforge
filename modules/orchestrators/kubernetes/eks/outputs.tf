@@ -24,6 +24,21 @@ output "cluster_oidc_issuer_url" {
   value       = aws_eks_cluster.this.identity[0].oidc[0].issuer
 }
 
+output "oidc_provider_arn" {
+  description = "IAM OIDC provider ARN when IRSA is enabled."
+  value       = var.enable_irsa ? aws_iam_openid_connect_provider.this[0].arn : null
+}
+
+output "oidc_provider_url" {
+  description = "EKS OIDC provider issuer URL when IRSA is enabled."
+  value       = local.oidc_provider_url
+}
+
+output "oidc_issuer_hostpath" {
+  description = "EKS OIDC issuer URL without the https:// prefix, suitable for IAM condition keys."
+  value       = local.oidc_issuer_hostpath
+}
+
 output "node_group_names" {
   description = "Managed node group names."
   value       = [for key in sort(keys(aws_eks_node_group.this)) : aws_eks_node_group.this[key].node_group_name]

@@ -153,8 +153,25 @@ variable "enable_kube_proxy_addon" {
   default     = true
 }
 
+variable "enable_irsa" {
+  description = "Whether to create an IAM OIDC provider for IAM Roles for Service Accounts."
+  type        = bool
+  default     = true
+}
+
 variable "enable_ebs_csi_driver_addon" {
-  description = "Whether to install or manage the AWS EBS CSI Driver EKS add-on. IRSA is a future enhancement."
+  description = "Whether to install or manage the AWS EBS CSI Driver EKS add-on."
   type        = bool
   default     = false
+}
+
+variable "create_ebs_csi_irsa_role" {
+  description = "Whether to create an IRSA role for the EBS CSI controller service account when the EBS CSI add-on is enabled."
+  type        = bool
+  default     = true
+
+  validation {
+    condition     = !var.enable_ebs_csi_driver_addon || !var.create_ebs_csi_irsa_role || var.enable_irsa
+    error_message = "create_ebs_csi_irsa_role requires enable_irsa to be true when the EBS CSI add-on is enabled."
+  }
 }
