@@ -21,8 +21,7 @@ Override the GitOps repository for your own environment:
 terraform plan \
   -var='enable_app_of_apps=true' \
   -var='gitops_repo_url=https://github.com/example/platform-gitops.git' \
-  -var='gitops_path=gitops/apps' \
-  -var='gitops_revision=main'
+  -var='gitops_path=gitops/apps'
 ```
 
 For private repositories, configure Argo CD repository credentials through an

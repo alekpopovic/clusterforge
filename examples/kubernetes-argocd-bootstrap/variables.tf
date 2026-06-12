@@ -50,14 +50,3 @@ variable "gitops_path" {
     error_message = "gitops_path must not be empty."
   }
 }
-
-variable "gitops_revision" {
-  description = "Git revision for app-of-apps definitions."
-  type        = string
-  default     = "main"
-
-  validation {
-    condition     = length(trimspace(var.gitops_revision)) > 0
-    error_message = "gitops_revision must not be empty."
-  }
-}
