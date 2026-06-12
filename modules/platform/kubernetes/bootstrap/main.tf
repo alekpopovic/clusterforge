@@ -81,6 +81,13 @@ module "argocd" {
 
   source = "../argocd"
 
-  namespace = local.namespaces.argocd
-  labels    = var.common_labels
+  namespace                         = local.namespaces.argocd
+  labels                            = var.common_labels
+  enable_app_of_apps                = var.argocd_enable_app_of_apps
+  app_of_apps_name                  = var.argocd_app_of_apps_name
+  app_of_apps_repo_url              = var.argocd_app_of_apps_repo_url
+  app_of_apps_path                  = var.argocd_app_of_apps_path
+  app_of_apps_revision              = var.argocd_app_of_apps_revision
+  app_of_apps_destination_namespace = var.argocd_app_of_apps_destination_namespace
+  app_of_apps_project               = var.argocd_app_of_apps_project
 }

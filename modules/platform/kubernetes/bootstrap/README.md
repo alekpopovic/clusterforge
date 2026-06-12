@@ -37,6 +37,10 @@ module "platform_bootstrap" {
   enable_external_secrets = true
   enable_argocd           = true
 
+  argocd_enable_app_of_apps   = true
+  argocd_app_of_apps_repo_url = "https://github.com/example/platform-gitops.git"
+  argocd_app_of_apps_path     = "gitops/apps"
+
   common_labels = {
     "clusterforge.io/environment" = "dev"
     "clusterforge.io/managed-by"  = "terraform"

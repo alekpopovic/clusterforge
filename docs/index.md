@@ -71,6 +71,7 @@ make security
 - [Module conventions]({{ '/module-conventions/' | relative_url }})
 - [General conventions]({{ '/conventions/' | relative_url }})
 - [Validation]({{ '/validation/' | relative_url }})
+- [GitOps]({{ '/gitops/' | relative_url }})
 - [Security]({{ '/security/' | relative_url }})
 - [Security scanning]({{ '/security-scanning/' | relative_url }})
 - [Roadmap]({{ '/roadmap/' | relative_url }})

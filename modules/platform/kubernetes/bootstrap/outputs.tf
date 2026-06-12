@@ -30,3 +30,8 @@ output "releases" {
     var.enable_argocd ? { argocd = module.argocd[0].release_name } : {}
   )
 }
+
+output "argocd_app_of_apps_name" {
+  description = "Name of the Argo CD app-of-apps Application when enabled."
+  value       = var.enable_argocd && var.argocd_enable_app_of_apps ? module.argocd[0].app_of_apps_name : null
+}
