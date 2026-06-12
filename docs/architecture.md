@@ -1,3 +1,8 @@
+---
+title: Architecture
+permalink: /architecture/
+---
+
 # Architecture
 
 ClusterForge is organized around four layers. The goal is to keep each layer

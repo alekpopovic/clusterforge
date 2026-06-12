@@ -1,3 +1,8 @@
+---
+title: Security Scanning
+permalink: /security-scanning/
+---
+
 # Security Scanning
 
 ClusterForge uses static security scanners that can run without cloud

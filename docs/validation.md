@@ -1,3 +1,8 @@
+---
+title: Validation
+permalink: /validation/
+---
+
 # Validation
 
 ClusterForge validation is designed to catch formatting, Terraform syntax,
