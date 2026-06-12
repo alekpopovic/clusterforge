@@ -1,3 +1,8 @@
+---
+title: Roadmap
+permalink: /roadmap/
+---
+
 # Roadmap
 
 ClusterForge is being built in practical phases. The order favors a useful AWS

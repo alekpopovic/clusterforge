@@ -10,6 +10,9 @@ but the generated infrastructure remains readable and reviewable.
 Contributors and AI agents must follow the repository rules in
 [`AGENTS.md`](AGENTS.md).
 
+Project documentation lives in [`docs/`](docs/) and is published with the
+GitHub Pages workflow.
+
 ## CI Status
 
 Status badges will be enabled once workflows are active on GitHub:

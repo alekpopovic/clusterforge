@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+    <meta name="description" content="{{ site.description }}">
+    <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="{{ '/' | relative_url }}">ClusterForge</a>
+      <nav class="site-nav" aria-label="Documentation navigation">
+        <a href="{{ '/' | relative_url }}">Home</a>
+        <a href="{{ '/architecture/' | relative_url }}">Architecture</a>
+        <a href="{{ '/cli/' | relative_url }}">CLI</a>
+        <a href="{{ '/module-conventions/' | relative_url }}">Modules</a>
+        <a href="{{ '/security/' | relative_url }}">Security</a>
+        <a href="{{ '/roadmap/' | relative_url }}">Roadmap</a>
+      </nav>
+    </header>
+
+    <main class="page">
+      {{ content }}
+    </main>
+
+    <footer class="site-footer">
+      <span>ClusterForge keeps Terraform visible, reviewable, and boring in the best possible way.</span>
+      <a href="https://github.com/alekpopovic/clusterforge">GitHub</a>
+    </footer>
+  </body>
+</html>

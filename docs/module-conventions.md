@@ -1,3 +1,8 @@
+---
+title: Module Conventions
+permalink: /module-conventions/
+---
+
 # Module Conventions
 
 Reusable Terraform modules live under `modules/`. Each module should do one

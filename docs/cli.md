@@ -1,3 +1,8 @@
+---
+title: CLI
+permalink: /cli/
+---
+
 # CLI
 
 The ClusterForge CLI is a wrapper and generator. It helps create project files,

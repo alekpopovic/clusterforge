@@ -1,3 +1,8 @@
+---
+title: Security
+permalink: /security/
+---
+
 # Security
 
 ClusterForge is designed to make infrastructure changes explicit and

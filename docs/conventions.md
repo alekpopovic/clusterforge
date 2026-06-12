@@ -1,3 +1,8 @@
+---
+title: Conventions
+permalink: /conventions/
+---
+
 # ClusterForge Conventions
 
 ## Module Structure
