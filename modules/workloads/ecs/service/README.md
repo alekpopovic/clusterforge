@@ -52,11 +52,16 @@ module "service" {
 
   load_balancer = {
     enabled          = true
-    target_group_arn = aws_lb_target_group.api.arn
+    target_group_arn = module.alb.target_group_arns["api"]
+    container_name   = "api"
     container_port   = 8080
   }
 }
 ```
+
+The target group can be created by `modules/platform/ecs/alb`. Ensure the ECS
+service security group allows inbound traffic from the ALB security group on
+the container port.
 
 ## Secrets
 
