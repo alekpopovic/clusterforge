@@ -5,6 +5,7 @@ locals {
     ingress_nginx    = local.namespace_prefix == "" ? "ingress-nginx" : "${local.namespace_prefix}-ingress-nginx"
     cert_manager     = local.namespace_prefix == "" ? "cert-manager" : "${local.namespace_prefix}-cert-manager"
     external_dns     = local.namespace_prefix == "" ? "external-dns" : "${local.namespace_prefix}-external-dns"
+    external_secrets = local.namespace_prefix == "" ? "external-secrets" : "${local.namespace_prefix}-external-secrets"
     metrics_server   = local.namespace_prefix == "" ? "metrics-server" : "${local.namespace_prefix}-metrics-server"
     prometheus_stack = local.namespace_prefix == "" ? "monitoring" : "${local.namespace_prefix}-monitoring"
     loki             = local.namespace_prefix == "" ? "loki" : "${local.namespace_prefix}-loki"
@@ -36,6 +37,15 @@ module "external_dns" {
   source = "../external-dns"
 
   namespace = local.namespaces.external_dns
+  labels    = var.common_labels
+}
+
+module "external_secrets" {
+  count = var.enable_external_secrets ? 1 : 0
+
+  source = "../external-secrets"
+
+  namespace = local.namespaces.external_secrets
   labels    = var.common_labels
 }
 

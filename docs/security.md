@@ -31,6 +31,25 @@ Use references to external secret systems instead:
 Be aware that some Terraform resources store sensitive values in state. Avoid
 those patterns unless there is no practical alternative.
 
+## Recommended Kubernetes Secret Strategy
+
+For Kubernetes workloads, prefer this flow:
+
+1. Store secret values in a cloud secret manager such as AWS Secrets Manager or
+   SSM Parameter Store.
+2. Install External Secrets Operator with
+   `modules/platform/kubernetes/external-secrets`.
+3. Configure a `ClusterSecretStore` or `SecretStore` that references the cloud
+   secret manager and uses IRSA or another workload identity mechanism.
+4. Let External Secrets Operator sync values into Kubernetes Secrets.
+5. Configure workload modules with `secret_env` references to Kubernetes Secret
+   names and keys.
+
+Terraform should manage references, IAM roles, service accounts, and External
+Secrets manifests. It should not manage the secret values themselves. Remember
+that Terraform state can contain rendered manifests and references, so state
+still needs encryption and tight access controls.
+
 ## Production Safety
 
 Production operations require deliberate review:

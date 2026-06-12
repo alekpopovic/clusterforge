@@ -22,6 +22,12 @@ variable "enable_external_dns" {
   default     = false
 }
 
+variable "enable_external_secrets" {
+  description = "Whether to install External Secrets Operator."
+  type        = bool
+  default     = false
+}
+
 variable "enable_metrics_server" {
   description = "Whether to install metrics-server."
   type        = bool

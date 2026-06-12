@@ -32,9 +32,10 @@ still require careful manual review.
 module "platform_bootstrap" {
   source = "../../../modules/platform/kubernetes/bootstrap"
 
-  enable_ingress_nginx = true
-  enable_cert_manager  = true
-  enable_argocd        = true
+  enable_ingress_nginx    = true
+  enable_cert_manager     = true
+  enable_external_secrets = true
+  enable_argocd           = true
 
   common_labels = {
     "clusterforge.io/environment" = "dev"
@@ -42,6 +43,11 @@ module "platform_bootstrap" {
   }
 }
 ```
+
+Enable External Secrets Operator when Kubernetes workloads should consume
+secrets synced from external secret stores such as AWS Secrets Manager or SSM
+Parameter Store. Terraform should manage references and operator configuration,
+not raw secret values.
 
 ## Generated Terraform Documentation
 
