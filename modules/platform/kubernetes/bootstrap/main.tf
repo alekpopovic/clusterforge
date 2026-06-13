@@ -51,6 +51,27 @@ module "external_secrets" {
   labels    = var.common_labels
 }
 
+module "pod_security" {
+  count = var.enable_pod_security ? 1 : 0
+
+  source = "../pod-security"
+
+  namespaces = var.pod_security_namespaces
+  labels     = var.common_labels
+}
+
+module "network_policy_baseline" {
+  for_each = var.enable_network_policy_baseline ? toset(var.network_policy_namespaces) : toset([])
+
+  source = "../network-policy-baseline"
+
+  namespace            = each.value
+  default_deny_ingress = var.network_policy_default_deny_ingress
+  default_deny_egress  = var.network_policy_default_deny_egress
+  allow_dns_egress     = var.network_policy_allow_dns_egress
+  labels               = var.common_labels
+}
+
 module "karpenter" {
   count = var.enable_karpenter ? 1 : 0
 

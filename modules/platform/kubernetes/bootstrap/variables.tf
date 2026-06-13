@@ -28,6 +28,62 @@ variable "enable_external_secrets" {
   default     = false
 }
 
+variable "enable_pod_security" {
+  description = "Whether to apply Pod Security Admission labels to configured namespaces."
+  type        = bool
+  default     = false
+}
+
+variable "pod_security_namespaces" {
+  description = "Namespace names and Pod Security Admission levels to apply when enable_pod_security is true."
+  type = map(object({
+    enforce = optional(string, "baseline")
+    audit   = optional(string, "restricted")
+    warn    = optional(string, "restricted")
+  }))
+  default = {}
+
+  validation {
+    condition     = !var.enable_pod_security || length(var.pod_security_namespaces) > 0
+    error_message = "pod_security_namespaces must not be empty when enable_pod_security is true."
+  }
+}
+
+variable "enable_network_policy_baseline" {
+  description = "Whether to create baseline NetworkPolicy resources in configured namespaces."
+  type        = bool
+  default     = false
+}
+
+variable "network_policy_namespaces" {
+  description = "Namespaces where baseline NetworkPolicy resources should be created."
+  type        = list(string)
+  default     = []
+
+  validation {
+    condition     = !var.enable_network_policy_baseline || length(var.network_policy_namespaces) > 0
+    error_message = "network_policy_namespaces must not be empty when enable_network_policy_baseline is true."
+  }
+}
+
+variable "network_policy_default_deny_ingress" {
+  description = "Whether baseline NetworkPolicy should deny ingress by default."
+  type        = bool
+  default     = true
+}
+
+variable "network_policy_default_deny_egress" {
+  description = "Whether baseline NetworkPolicy should deny egress by default."
+  type        = bool
+  default     = false
+}
+
+variable "network_policy_allow_dns_egress" {
+  description = "Whether baseline NetworkPolicy should allow DNS egress when default deny egress is enabled."
+  type        = bool
+  default     = true
+}
+
 variable "enable_karpenter" {
   description = "Whether to install Karpenter for EKS node autoscaling."
   type        = bool

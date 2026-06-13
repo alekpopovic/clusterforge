@@ -5,6 +5,8 @@ output "enabled_addons" {
     var.enable_cert_manager ? "cert-manager" : "",
     var.enable_external_dns ? "external-dns" : "",
     var.enable_external_secrets ? "external-secrets" : "",
+    var.enable_pod_security ? "pod-security" : "",
+    var.enable_network_policy_baseline ? "network-policy-baseline" : "",
     var.enable_karpenter ? "karpenter" : "",
     var.enable_metrics_server ? "metrics-server" : "",
     var.enable_prometheus_stack ? "prometheus-stack" : "",
@@ -33,6 +35,16 @@ output "releases" {
     var.enable_log_agent ? { log_agent = module.log_agent[0].release_name } : {},
     var.enable_argocd ? { argocd = module.argocd[0].release_name } : {}
   )
+}
+
+output "pod_security_namespaces" {
+  description = "Namespaces labeled by the Pod Security module."
+  value       = var.enable_pod_security ? module.pod_security[0].namespaces : []
+}
+
+output "network_policy_baseline_namespaces" {
+  description = "Namespaces where baseline NetworkPolicies are created."
+  value       = var.enable_network_policy_baseline ? keys(module.network_policy_baseline) : []
 }
 
 output "argocd_app_of_apps_name" {

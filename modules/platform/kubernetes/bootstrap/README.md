@@ -35,11 +35,20 @@ module "platform_bootstrap" {
   enable_ingress_nginx    = true
   enable_cert_manager     = true
   enable_external_secrets = true
+  enable_pod_security     = true
   enable_karpenter        = false
   enable_prometheus_stack = true
   enable_loki             = true
   enable_log_agent        = true
   enable_argocd           = true
+
+  pod_security_namespaces = {
+    apps = {
+      enforce = "baseline"
+      audit   = "restricted"
+      warn    = "restricted"
+    }
+  }
 
   argocd_enable_app_of_apps   = true
   argocd_app_of_apps_repo_url = "https://github.com/example/platform-gitops.git"
@@ -63,6 +72,10 @@ bootstrap capacity for system add-ons and the Karpenter controller.
 
 Enable `enable_log_agent` to install Grafana Alloy alongside Loki. Provide
 explicit Alloy values for production log collection rules and destinations.
+
+Pod Security and NetworkPolicy baselines are opt-in. Do not enable default-deny
+network policies globally without testing namespace-specific allow policies and
+confirming the cluster CNI enforces NetworkPolicy.
 
 ## Generated Terraform Documentation
 
