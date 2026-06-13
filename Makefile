@@ -10,7 +10,7 @@ CLI_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
 CLI_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 CLI_LDFLAGS := -s -w -X github.com/textracta/clusterforge/cli/cmd.Version=$(CLI_VERSION) -X github.com/textracta/clusterforge/cli/cmd.Commit=$(CLI_COMMIT) -X github.com/textracta/clusterforge/cli/cmd.Date=$(CLI_DATE)
 
-.PHONY: help fmt fmt-check validate lint test test-cli test-terraform build-cli security docs clean ci
+.PHONY: help fmt fmt-check validate lint test test-cli test-terraform test-terraform-aws build-cli security docs clean ci
 
 help: ## Show available targets.
 	@awk 'BEGIN {FS = ":.*## "; printf "ClusterForge developer targets:\n\n"} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-14s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -44,6 +44,13 @@ test-cli: ## Run CLI unit tests and build check.
 test-terraform: ## Run Terraform native tests for safe provider-free modules.
 	for module in modules/core/naming modules/core/tags modules/core/labels; do \
 		echo "==> terraform test $${module}"; \
+		$(TERRAFORM_BIN) -chdir=$${module} test -no-color; \
+	done
+
+test-terraform-aws: ## Run optional AWS module plan tests; requires working AWS provider plugins, but no apply.
+	for module in modules/cloud/aws/network modules/cloud/aws/tfstate-backend modules/cloud/aws/dns modules/cloud/aws/irsa-role; do \
+		echo "==> terraform test $${module}"; \
+		$(TERRAFORM_BIN) -chdir=$${module} init -backend=false -input=false -no-color; \
 		$(TERRAFORM_BIN) -chdir=$${module} test -no-color; \
 	done
 

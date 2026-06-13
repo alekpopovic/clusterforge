@@ -43,6 +43,21 @@ terraform -chdir=modules/core/labels test -no-color
 
 These tests use plan mode and create no cloud resources.
 
+## Terraform Test Matrix
+
+| Area | Modules | Command | Default CI | Notes |
+| --- | --- | --- | --- | --- |
+| Core metadata | `modules/core/naming`, `modules/core/tags`, `modules/core/labels` | `make test-terraform` | Yes, through `make validate` | Provider-free, fast, and safe. |
+| AWS foundation | `modules/cloud/aws/network`, `modules/cloud/aws/tfstate-backend`, `modules/cloud/aws/dns`, `modules/cloud/aws/irsa-role` | `make test-terraform-aws` | No | Plan-mode tests only. Requires working AWS provider plugins but does not run `apply` or require real AWS credentials. |
+
+AWS module tests use fake provider configuration or Terraform mock providers
+where practical. They are intentionally not part of default CI because provider
+plugin installation and startup can be unavailable in restricted environments.
+
+The Route53 DNS tests cover created-zone and record validation paths. Existing
+hosted-zone lookup is not covered by default because `data.aws_route53_zone`
+requires real AWS API access.
+
 ## Repository Validation
 
 Run repository validation:
