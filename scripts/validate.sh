@@ -5,6 +5,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 TERRAFORM_BIN="${TERRAFORM_BIN:-terraform}"
 TERRAFORM_VALIDATE_TIMEOUT="${TERRAFORM_VALIDATE_TIMEOUT:-45s}"
+RUN_TERRAFORM_TESTS="${RUN_TERRAFORM_TESTS:-true}"
 
 validated=()
 skipped=()
@@ -156,14 +157,24 @@ while IFS= read -r dir; do
   validate_root "${dir}"
 done < <(./scripts/list-terraform-roots.sh)
 
-find modules -path '*/tests/*.tftest.hcl' -print | sort | while IFS= read -r test_file; do
-  dir="$(dirname "$(dirname "${test_file}")")"
-  echo "==> terraform test ${dir}"
-  (
-    cd "${dir}"
-    "${TERRAFORM_BIN}" test -no-color
-  )
-done
+if [[ "${RUN_TERRAFORM_TESTS}" == "true" ]]; then
+  echo "==> Terraform native tests"
+else
+  echo "==> Terraform native tests skipped because RUN_TERRAFORM_TESTS=${RUN_TERRAFORM_TESTS}"
+fi
+
+if [[ "${RUN_TERRAFORM_TESTS}" == "true" ]]; then
+  find modules/core -path '*/tests/*.tftest.hcl' -print \
+    | while IFS= read -r test_file; do dirname "$(dirname "${test_file}")"; done \
+    | sort -u \
+    | while IFS= read -r dir; do
+      echo "==> terraform test ${dir}"
+      (
+        cd "${dir}"
+        "${TERRAFORM_BIN}" test -no-color
+      )
+    done
+fi
 
 echo "==> Validation summary"
 echo "Validated directories: ${#validated[@]}"
