@@ -9,8 +9,6 @@ import (
 	"github.com/textracta/clusterforge/cli/internal/ui"
 )
 
-const version = "dev"
-
 type rootOptions struct {
 	ConfigPath string
 	Engine     string
@@ -42,6 +40,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&opts.Verbose, "verbose", false, "Enable verbose output")
 
 	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(completionCmd)
 	rootCmd.AddCommand(appCmd)
 	rootCmd.AddCommand(projectCmd)
 	rootCmd.AddCommand(envCmd)

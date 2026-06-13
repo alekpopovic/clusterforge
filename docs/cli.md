@@ -29,6 +29,7 @@ cli/
 
 ```bash
 cf version
+cf completion bash
 cf project init demo
 cf env create dev --cloud aws --orchestrator eks --region eu-central-1
 cf env list
@@ -40,6 +41,93 @@ cf apply prod --plan-file .cf/plans/prod.tfplan --confirm-prod
 cf destroy prod --allow-destroy --confirm-prod
 cf doctor
 ```
+
+## Install From Source
+
+Use the install script to build `cf` and install it into `/usr/local/bin`:
+
+```bash
+./scripts/install-cli.sh
+```
+
+Install into a user-writable directory without sudo:
+
+```bash
+INSTALL_DIR="$HOME/.local/bin" ./scripts/install-cli.sh
+```
+
+The script builds `cli/cf`, injects version metadata from Git, installs the
+binary, and prints `cf version`.
+
+## Build Manually
+
+For local development:
+
+```bash
+cd cli
+go build -o cf .
+```
+
+For a metadata-injected build:
+
+```bash
+cd cli
+go build -trimpath \
+  -ldflags "-s -w -X github.com/textracta/clusterforge/cli/cmd.Version=$(git describe --tags --always --dirty) -X github.com/textracta/clusterforge/cli/cmd.Commit=$(git rev-parse --short HEAD) -X github.com/textracta/clusterforge/cli/cmd.Date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  -o cf .
+```
+
+`make build-cli` uses the same ldflags pattern.
+
+## Version Command
+
+```bash
+cf version
+```
+
+The command prints:
+
+- version
+- commit
+- build date
+- Go runtime version
+
+## Shell Completion
+
+Generate completion scripts with:
+
+```bash
+cf completion bash
+cf completion zsh
+cf completion fish
+cf completion powershell
+```
+
+Example bash installation:
+
+```bash
+cf completion bash > ~/.local/share/bash-completion/completions/cf
+```
+
+Example zsh installation:
+
+```bash
+cf completion zsh > "${fpath[1]}/_cf"
+```
+
+## Release Artifacts
+
+Tagged pushes matching `v*` run the CLI release workflow. It cross-compiles:
+
+- `linux amd64`
+- `linux arm64`
+- `darwin amd64`
+- `darwin arm64`
+- `windows amd64`
+
+The workflow uploads binaries and SHA256 checksum files as workflow artifacts
+and GitHub release artifacts. It does not publish packages to external package
+registries.
 
 ## App Manifests
 

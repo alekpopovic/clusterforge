@@ -5,6 +5,10 @@ TERRAFORM_BIN ?= terraform
 GO ?= go
 GOCACHE ?= /tmp/clusterforge-go-cache
 GOPATH ?= /tmp/clusterforge-go
+CLI_VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
+CLI_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
+CLI_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
+CLI_LDFLAGS := -s -w -X github.com/textracta/clusterforge/cli/cmd.Version=$(CLI_VERSION) -X github.com/textracta/clusterforge/cli/cmd.Commit=$(CLI_COMMIT) -X github.com/textracta/clusterforge/cli/cmd.Date=$(CLI_DATE)
 
 .PHONY: help fmt fmt-check validate lint test test-cli build-cli security docs clean ci
 
@@ -38,7 +42,7 @@ test-cli: ## Run CLI unit tests and build check.
 	GOCACHE=$(GOCACHE) GOPATH=$(GOPATH) ./scripts/test-cli.sh
 
 build-cli: ## Build the ClusterForge CLI at cli/cf.
-	cd cli && GOCACHE=$(GOCACHE) GOPATH=$(GOPATH) $(GO) build -o cf .
+	cd cli && GOCACHE=$(GOCACHE) GOPATH=$(GOPATH) $(GO) build -trimpath -ldflags "$(CLI_LDFLAGS)" -o cf .
 
 security: ## Run installed security scanners when available.
 	./scripts/security.sh
