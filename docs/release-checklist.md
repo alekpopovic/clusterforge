@@ -1,0 +1,103 @@
+# Release Checklist
+
+Use this checklist for ClusterForge release candidates.
+
+## Version and Changelog
+
+- Confirm `VERSION` contains the intended release version.
+- Update `CHANGELOG.md` with Added, Changed, Security, and Known Limitations.
+- Confirm release notes do not overstate cloud validation.
+- Confirm known limitations are still accurate.
+
+## Documentation
+
+- Review `README.md` quickstart, safety model, roadmap, and local commands.
+- Review required docs:
+  - `docs/architecture.md`
+  - `docs/cli.md`
+  - `docs/app-manifest.md`
+  - `docs/environments.md`
+  - `docs/backends.md`
+  - `docs/security.md`
+  - `docs/gitops.md`
+  - `docs/roadmap.md`
+- Confirm module READMEs include useful examples.
+- Confirm no example contains real credentials, account IDs, private keys, or
+  secret values.
+
+## Local Checks
+
+Run from the repository root:
+
+```bash
+make fmt
+make lint
+make test
+make validate
+make security
+cd cli && go build -o cf .
+```
+
+Record each command and its result in `FINAL_MVP_REPORT.md` or the release
+notes.
+
+## CLI Smoke Checks
+
+When practical, run CLI smoke checks in a temporary directory:
+
+```bash
+./cli/cf version
+./cli/cf project init demo
+./cli/cf env create dev --cloud aws --orchestrator eks --region eu-central-1
+./cli/cf generate dev
+./cli/cf app add api --image ghcr.io/example/api:1.0.0 --port 8080
+./cli/cf app validate api
+./cli/cf app render api --env dev
+./cli/cf doctor
+```
+
+Do not run `terraform apply` as a release smoke check.
+
+## Terraform Review
+
+- Confirm `terraform fmt -recursive` is clean.
+- Confirm credential-free validation passes where possible.
+- Confirm skip reasons are explicit for roots that require credentials,
+  initialized providers, or remote backends.
+- Confirm child modules do not configure providers.
+- Confirm production examples do not include hardcoded backend buckets,
+  credentials, or account-specific identifiers.
+
+## Security Review
+
+- Confirm `.gitignore` excludes Terraform state, plan files, kubeconfigs,
+  private keys, `.env` files, and local build artifacts.
+- Confirm `git status` does not show generated state, lock, cache, or secret
+  files.
+- Confirm Checkov, Trivy, and TFLint results are reviewed when installed.
+- Confirm production apply/destroy safety rules are documented.
+
+## GitHub Release
+
+- Confirm CI workflows pass on the release branch or tag.
+- Create and push the tag only after local checks are reviewed:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+- Verify GitHub release artifacts are uploaded by the release workflow.
+- Verify generated artifacts match the expected target matrix:
+  - Linux amd64
+  - Linux arm64
+  - macOS amd64
+  - macOS arm64
+  - Windows amd64
+
+## Post-Release
+
+- Open follow-up issues for known limitations.
+- Prioritize real AWS EKS/ECS integration validation.
+- Pin recommended Helm chart versions for production examples.
+- Expand provider-specific hardening guidance.

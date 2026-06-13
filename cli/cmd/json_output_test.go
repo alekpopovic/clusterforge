@@ -87,7 +87,7 @@ environments:
 
 func TestAppListJSONOutputCanBeUnmarshaled(t *testing.T) {
 	dir := t.TempDir()
-	t.Chdir(dir)
+	chdir(t, dir)
 	if err := os.MkdirAll("apps", 0o755); err != nil {
 		t.Fatalf("mkdir apps: %v", err)
 	}
@@ -179,4 +179,21 @@ func testSummary() planjson.Summary {
 		Updates:   1,
 		Addresses: []string{"module.example"},
 	}
+}
+
+func chdir(t *testing.T, dir string) {
+	t.Helper()
+
+	previous, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("get working directory: %v", err)
+	}
+	if err := os.Chdir(dir); err != nil {
+		t.Fatalf("change working directory: %v", err)
+	}
+	t.Cleanup(func() {
+		if err := os.Chdir(previous); err != nil {
+			t.Fatalf("restore working directory: %v", err)
+		}
+	})
 }

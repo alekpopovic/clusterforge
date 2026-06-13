@@ -34,24 +34,18 @@ resource "helm_release" "this" {
   cleanup_on_fail  = var.cleanup_on_fail
   wait             = var.wait
   create_namespace = false
-
-  dynamic "set" {
-    for_each = var.set
-
-    content {
-      name  = set.key
-      value = set.value
+  set = [
+    for name, value in var.set : {
+      name  = name
+      value = value
     }
-  }
-
-  dynamic "set_sensitive" {
-    for_each = var.set_sensitive
-
-    content {
-      name  = set_sensitive.key
-      value = set_sensitive.value
+  ]
+  set_sensitive = [
+    for name, value in var.set_sensitive : {
+      name  = name
+      value = value
     }
-  }
+  ]
 
   depends_on = [kubernetes_namespace_v1.this]
 }
