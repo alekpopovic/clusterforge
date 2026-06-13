@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 )
@@ -24,4 +25,10 @@ func (p Printer) Success(message string) {
 
 func (p Printer) Warn(message string) {
 	fmt.Fprintf(p.err, "warning: %s\n", message)
+}
+
+func WriteJSON(out io.Writer, value any) error {
+	encoder := json.NewEncoder(out)
+	encoder.SetIndent("", "  ")
+	return encoder.Encode(value)
 }

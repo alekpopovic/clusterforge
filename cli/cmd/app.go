@@ -6,11 +6,13 @@ import (
 
 	"github.com/spf13/cobra"
 	cfapp "github.com/textracta/clusterforge/cli/internal/app"
+	"github.com/textracta/clusterforge/cli/internal/ui"
 )
 
 var appAddOptions cfapp.AddOptions
 var appRenderEnv string
 var appValidateAll bool
+var appListJSON bool
 
 var appCmd = &cobra.Command{
 	Use:   "app",
@@ -87,11 +89,18 @@ var appListCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		if appListJSON {
+			return ui.WriteJSON(cmd.OutOrStdout(), appListResponse{Apps: apps})
+		}
 		for _, app := range apps {
 			fmt.Fprintln(cmd.OutOrStdout(), app)
 		}
 		return nil
 	},
+}
+
+type appListResponse struct {
+	Apps []string `json:"apps"`
 }
 
 var appValidateCmd = &cobra.Command{
@@ -192,6 +201,7 @@ func init() {
 
 	appRenderCmd.Flags().StringVar(&appRenderEnv, "env", "", "Environment to render into")
 	appValidateCmd.Flags().BoolVar(&appValidateAll, "all", false, "Validate all app manifests")
+	appListCmd.Flags().BoolVar(&appListJSON, "json", false, "Print app manifests as JSON")
 
 	appCmd.AddCommand(appAddCmd)
 	appCmd.AddCommand(appListCmd)

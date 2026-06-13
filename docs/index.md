@@ -88,6 +88,7 @@ make security
 
 - [Architecture]({{ '/architecture/' | relative_url }})
 - [CLI]({{ '/cli/' | relative_url }})
+- [CLI JSON output]({{ '/cli-json/' | relative_url }})
 - [Environments]({{ '/environments/' | relative_url }})
 - [Backends]({{ '/backends/' | relative_url }})
 - [App manifest]({{ '/app-manifest/' | relative_url }})

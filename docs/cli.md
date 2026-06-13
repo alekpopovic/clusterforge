@@ -197,6 +197,21 @@ The renderer writes Terraform module calls into `env.path/apps/<name>.tf`.
 See [App Manifest]({{ '/app-manifest/' | relative_url }}) for the full schema
 and validation rules.
 
+## JSON Output
+
+Selected commands support JSON output for CI and scripts:
+
+```bash
+cf env list --json
+cf app list --json
+cf doctor --json
+cf policy check dev --json
+cf plan dev --risk-summary --json
+```
+
+See [CLI JSON Output]({{ '/cli-json/' | relative_url }}) for stable response
+schemas.
+
 ## Engine Selection
 
 Terraform is the default engine. Use OpenTofu with:

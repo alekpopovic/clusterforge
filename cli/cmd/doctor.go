@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -15,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/textracta/clusterforge/cli/internal/config"
 	"github.com/textracta/clusterforge/cli/internal/policy"
+	"github.com/textracta/clusterforge/cli/internal/ui"
 )
 
 const terraformMinimumVersion = "1.6.0"
@@ -39,6 +39,7 @@ type doctorReport struct {
 	Version string        `json:"version"`
 	Commit  string        `json:"commit"`
 	Date    string        `json:"date"`
+	Status  doctorStatus  `json:"status"`
 	Checks  []doctorCheck `json:"checks"`
 }
 
@@ -64,9 +65,7 @@ var doctorCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		report := runDoctor(cmd.Context(), opts.ConfigPath, realDoctorRunner{})
 		if doctorJSON {
-			encoder := json.NewEncoder(cmd.OutOrStdout())
-			encoder.SetIndent("", "  ")
-			if err := encoder.Encode(report); err != nil {
+			if err := ui.WriteJSON(cmd.OutOrStdout(), report); err != nil {
 				return err
 			}
 		} else {
@@ -105,6 +104,7 @@ func runDoctor(ctx context.Context, configPath string, runner doctorCommandRunne
 		report.Checks = append(report.Checks, checkSafety(cfg)...)
 	}
 	report.Checks = append(report.Checks, checkGit(ctx, runner)...)
+	report.Status = reportStatus(report.Checks)
 	return report
 }
 
@@ -321,12 +321,20 @@ func printDoctorReport(out interface {
 }
 
 func doctorHasFailure(report doctorReport) bool {
-	for _, check := range report.Checks {
+	return report.Status == doctorFail
+}
+
+func reportStatus(checks []doctorCheck) doctorStatus {
+	status := doctorPass
+	for _, check := range checks {
 		if check.Status == doctorFail {
-			return true
+			return doctorFail
+		}
+		if check.Status == doctorWarn {
+			status = doctorWarn
 		}
 	}
-	return false
+	return status
 }
 
 func sortedEnvironmentNames(cfg *config.Config) []string {

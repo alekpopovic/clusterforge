@@ -7,11 +7,13 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/textracta/clusterforge/cli/internal/config"
+	"github.com/textracta/clusterforge/cli/internal/ui"
 )
 
 var envCreateCloud string
 var envCreateRegion string
 var envCreateOrchestrator string
+var envListJSON bool
 
 var envCmd = &cobra.Command{
 	Use:   "env",
@@ -109,18 +111,44 @@ var envListCmd = &cobra.Command{
 		}
 		sort.Strings(names)
 
+		environments := make([]envListItem, 0, len(names))
 		for _, name := range names {
 			env := cfg.Environments[name]
-			fmt.Fprintf(cmd.OutOrStdout(), "%s\t%s\t%s\t%s\t%s\n", name, env.Cloud, env.Region, env.Orchestrator, env.Path)
+			environments = append(environments, envListItem{
+				Name:         name,
+				Cloud:        env.Cloud,
+				Orchestrator: env.Orchestrator,
+				Region:       env.Region,
+				Path:         env.Path,
+			})
+		}
+		if envListJSON {
+			return ui.WriteJSON(cmd.OutOrStdout(), envListResponse{Environments: environments})
+		}
+		for _, env := range environments {
+			fmt.Fprintf(cmd.OutOrStdout(), "%s\t%s\t%s\t%s\t%s\n", env.Name, env.Cloud, env.Region, env.Orchestrator, env.Path)
 		}
 		return nil
 	},
+}
+
+type envListResponse struct {
+	Environments []envListItem `json:"environments"`
+}
+
+type envListItem struct {
+	Name         string `json:"name"`
+	Cloud        string `json:"cloud"`
+	Orchestrator string `json:"orchestrator"`
+	Region       string `json:"region"`
+	Path         string `json:"path"`
 }
 
 func init() {
 	envCreateCmd.Flags().StringVar(&envCreateCloud, "cloud", "", "Cloud target for the environment")
 	envCreateCmd.Flags().StringVar(&envCreateRegion, "region", "", "Cloud region for the environment")
 	envCreateCmd.Flags().StringVar(&envCreateOrchestrator, "orchestrator", "", "Orchestrator target for the environment")
+	envListCmd.Flags().BoolVar(&envListJSON, "json", false, "Print environments as JSON")
 
 	envCmd.AddCommand(envCreateCmd)
 	envCmd.AddCommand(envListCmd)
