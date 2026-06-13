@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/textracta/clusterforge/cli/internal/policy"
@@ -12,6 +13,7 @@ import (
 var applyPlanFile string
 var applyConfirmProd bool
 var applyAllowDestroy bool
+var applyStack string
 
 var applyCmd = &cobra.Command{
 	Use:   "apply <env>",
@@ -41,7 +43,14 @@ var applyCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		runner := cfterraform.NewRunner(binary, env.Path, opts.Verbose)
+		paths, err := resolveStackPaths(env, applyStack)
+		if err != nil {
+			return err
+		}
+		if applyPlanFile != "" && len(paths) > 1 {
+			return fmt.Errorf("--plan-file requires --stack when applying multiple stacks")
+		}
+		runner := cfterraform.NewRunner(binary, paths[0], opts.Verbose)
 		if applyPlanFile != "" {
 			data, err := runner.ShowPlanJSON(cmd.Context(), applyPlanFile)
 			if err != nil {
@@ -80,7 +89,15 @@ var applyCmd = &cobra.Command{
 				}
 			}
 		}
-		return runner.Apply(cmd.Context(), applyPlanFile, nil)
+		for _, path := range paths {
+			if label := stackLabel(path, len(paths)); label != "" {
+				fmt.Fprintln(os.Stdout, label)
+			}
+			if err := cfterraform.NewRunner(binary, path, opts.Verbose).Apply(cmd.Context(), applyPlanFile, nil); err != nil {
+				return err
+			}
+		}
+		return nil
 	},
 }
 
@@ -88,4 +105,5 @@ func init() {
 	applyCmd.Flags().StringVar(&applyPlanFile, "plan-file", "", "Existing plan file to apply")
 	applyCmd.Flags().BoolVar(&applyConfirmProd, "confirm-prod", false, "Explicitly confirm a production apply")
 	applyCmd.Flags().BoolVar(&applyAllowDestroy, "allow-destroy", false, "Allow applying prod plans that contain delete actions")
+	applyCmd.Flags().StringVar(&applyStack, "stack", "", "Stack to apply for stacked environments")
 }

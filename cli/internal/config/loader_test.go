@@ -80,6 +80,40 @@ environments:
 	if cfg.Environments["dev"].Cloud != "aws" || cfg.Environments["dev"].Orchestrator != "eks" {
 		t.Fatalf("dev environment defaults = %#v", cfg.Environments["dev"])
 	}
+	if cfg.Environments["dev"].Layout != "simple" {
+		t.Fatalf("dev layout = %q", cfg.Environments["dev"].Layout)
+	}
+}
+
+func TestLoadStackedEnvironmentDefaultsStackPaths(t *testing.T) {
+	path := writeConfig(t, `project:
+  name: demo
+environments:
+  dev:
+    path: live/dev/aws-eks
+    layout: stacked
+`)
+
+	cfg, err := Load(path)
+	if err != nil {
+		t.Fatalf("load config: %v", err)
+	}
+	env := cfg.Environments["dev"]
+	paths, err := env.StackPaths("")
+	if err != nil {
+		t.Fatalf("stack paths: %v", err)
+	}
+	want := []string{
+		"live/dev/aws-eks/network",
+		"live/dev/aws-eks/cluster",
+		"live/dev/aws-eks/platform",
+		"live/dev/aws-eks/apps",
+	}
+	for i := range want {
+		if paths[i] != want[i] {
+			t.Fatalf("paths[%d] = %q, want %q", i, paths[i], want[i])
+		}
+	}
 }
 
 func TestAddEnvironmentAndSave(t *testing.T) {
@@ -123,6 +157,23 @@ environments:
 
 	if _, err := Load(path); err == nil {
 		t.Fatal("expected unknown orchestrator to fail")
+	}
+}
+
+func TestUnknownStackFails(t *testing.T) {
+	env := Environment{
+		Path:   "live/dev/aws-eks",
+		Layout: "stacked",
+		Stacks: Stacks{
+			"network":  {Path: "live/dev/aws-eks/network"},
+			"cluster":  {Path: "live/dev/aws-eks/cluster"},
+			"platform": {Path: "live/dev/aws-eks/platform"},
+			"apps":     {Path: "live/dev/aws-eks/apps"},
+		},
+	}
+
+	if _, err := env.StackPaths("database"); err == nil {
+		t.Fatal("expected unknown stack to fail")
 	}
 }
 

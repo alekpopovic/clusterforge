@@ -37,8 +37,10 @@ cf env create
 cf app validate api
 cf app validate --all
 cf env list
-cf generate dev
+cf generate dev --layout simple
+cf generate dev --layout stacked
 cf init dev
+cf plan dev --stack network
 cf plan dev --out .cf/plans/dev.tfplan --risk-summary
 cf policy check dev --plan-file .cf/plans/dev.tfplan
 cf apply prod --plan-file .cf/plans/prod.tfplan --confirm-prod
@@ -201,6 +203,33 @@ cf --engine tofu plan dev
 ```
 
 Engine binaries are configured in `clusterforge.yaml`.
+
+## Environment Layouts
+
+ClusterForge supports simple and stacked environment layouts:
+
+```bash
+cf generate dev --layout simple
+cf generate dev --layout stacked
+```
+
+Simple layout writes one Terraform root at `env.path`. Stacked layout writes
+separate roots under `network`, `cluster`, `platform`, and `apps`.
+
+For stacked environments, stack-aware commands accept `--stack`:
+
+```bash
+cf plan dev
+cf plan dev --stack network
+cf apply dev --stack cluster
+cf output dev --stack network --json
+```
+
+Without `--stack`, `plan`, `init`, and `apply` run stacks in dependency order:
+`network`, `cluster`, `platform`, then `apps`. Destroy runs the reverse order.
+
+See [Environments]({{ '/environments/' | relative_url }}) for layout details
+and production recommendations.
 
 ## Policy And Risk Summaries
 

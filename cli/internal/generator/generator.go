@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"sort"
+	"strings"
 	"text/template"
 
 	"github.com/textracta/clusterforge/cli/internal/config"
@@ -31,6 +32,7 @@ type Options struct {
 	DryRun       bool
 	Cloud        string
 	Orchestrator string
+	Layout       string
 	Project      string
 	RootDir      string
 	TemplatesDir string
@@ -56,6 +58,8 @@ type templateData struct {
 	Project      string
 	Name         string
 	ModulesPath  string
+	Stack        string
+	StateComment string
 }
 
 func Generate(name string, env config.Environment, opts Options) (*Result, error) {
@@ -68,9 +72,18 @@ func Generate(name string, env config.Environment, opts Options) (*Result, error
 	if opts.Orchestrator != "" {
 		env.Orchestrator = opts.Orchestrator
 	}
+	if opts.Layout != "" {
+		env.Layout = opts.Layout
+	}
+	if env.Layout == "" {
+		env.Layout = "simple"
+	}
 	target := fmt.Sprintf("%s-%s", env.Cloud, env.Orchestrator)
 	if target != "aws-eks" && target != "aws-ecs" {
 		return nil, fmt.Errorf("unsupported generate target %q; supported targets are aws-eks and aws-ecs", target)
+	}
+	if env.Layout != "simple" && env.Layout != "stacked" {
+		return nil, fmt.Errorf("unsupported layout %q; expected simple or stacked", env.Layout)
 	}
 
 	rootDir := opts.RootDir
@@ -84,6 +97,10 @@ func Generate(name string, env config.Environment, opts Options) (*Result, error
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	if env.Layout == "stacked" {
+		return generateStacked(name, env, opts, rootDir)
 	}
 
 	modulesPath, err := relativeModulesPath(rootDir, env.Path)
@@ -135,6 +152,100 @@ func Generate(name string, env config.Environment, opts Options) (*Result, error
 		}
 	}
 	return result, nil
+}
+
+func generateStacked(name string, env config.Environment, opts Options, rootDir string) (*Result, error) {
+	result := &Result{Target: fmt.Sprintf("%s-%s-stacked", env.Cloud, env.Orchestrator)}
+	stacks := env.Stacks
+	if stacks == nil {
+		stacks = config.Stacks{}
+	}
+	for _, stackName := range config.StackOrder() {
+		stack := stacks[stackName]
+		if stack.Path == "" {
+			stack.Path = filepath.Join(env.Path, stackName)
+		}
+		modulesPath, err := relativeModulesPath(rootDir, stack.Path)
+		if err != nil {
+			return nil, err
+		}
+		data := templateData{
+			Header:       header,
+			Environment:  name,
+			Cloud:        env.Cloud,
+			Region:       env.Region,
+			Orchestrator: env.Orchestrator,
+			Project:      defaultString(opts.Project, "clusterforge"),
+			Name:         fmt.Sprintf("clusterforge-%s-%s", name, env.Orchestrator),
+			ModulesPath:  modulesPath,
+			Stack:        stackName,
+			StateComment: remoteStateComment(stackName),
+		}
+		for _, file := range environmentFiles {
+			path := filepath.Join(stack.Path, file)
+			_, statErr := os.Stat(path)
+			exists := statErr == nil
+			if exists && !opts.Force && !opts.DryRun {
+				return nil, fmt.Errorf("%s already exists; use --force to overwrite it", path)
+			}
+			if statErr != nil && !os.IsNotExist(statErr) {
+				return nil, fmt.Errorf("stat %s: %w", path, statErr)
+			}
+			result.Actions = append(result.Actions, Action{Path: path, Exists: exists})
+			if opts.DryRun {
+				continue
+			}
+			rendered := renderStackFile(file, data)
+			if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+				return nil, fmt.Errorf("create stack path %s: %w", filepath.Dir(path), err)
+			}
+			if err := os.WriteFile(path, []byte(rendered), 0o644); err != nil {
+				return nil, fmt.Errorf("write %s: %w", path, err)
+			}
+		}
+	}
+	if opts.DryRun {
+		printDryRun(opts.Stdout, result.Actions)
+	}
+	return result, nil
+}
+
+func renderStackFile(file string, data templateData) string {
+	switch file {
+	case "versions.tf":
+		return fmt.Sprintf("%s\n\nterraform {\n  required_version = \">= 1.6.0\"\n}\n", data.Header)
+	case "backend.tf":
+		return fmt.Sprintf("%s\n\n# Configure a backend per stack before production use.\n# Local backend is acceptable for examples only.\n", data.Header)
+	case "providers.tf":
+		return fmt.Sprintf("%s\n\n# Configure providers for the %s stack here.\n", data.Header, data.Stack)
+	case "variables.tf":
+		return fmt.Sprintf("%s\n\nvariable \"region\" {\n  description = \"Cloud region for this stack.\"\n  type        = string\n  default     = %q\n}\n", data.Header, data.Region)
+	case "outputs.tf":
+		return fmt.Sprintf("%s\n\n# Export only values that downstream stacks need.\n", data.Header)
+	case "terraform.tfvars.example":
+		return fmt.Sprintf("region = %q\n", data.Region)
+	case "README.md":
+		return fmt.Sprintf("# %s %s stack\n\n%s\n\nStack order: `network`, `cluster`, `platform`, `apps`.\n\nUse `terraform_remote_state` or another explicit output handoff between stacks. For local examples, local backend remote state can be used carefully; production should use a remote backend with locking.\n", data.Environment, data.Stack, data.StateComment)
+	case "main.tf":
+		return fmt.Sprintf("%s\n\n# %s stack for %s (%s/%s).\n%s\n\n# TODO: compose focused ClusterForge modules for this stack.\n# modules path from here: %s\n", data.Header, title(data.Stack), data.Environment, data.Cloud, data.Orchestrator, data.StateComment, data.ModulesPath)
+	default:
+		return data.Header + "\n"
+	}
+}
+
+func remoteStateComment(stack string) string {
+	switch stack {
+	case "network":
+		return "This stack owns foundational networking outputs such as VPC and subnet IDs."
+	case "cluster":
+		return "Read network outputs from the network stack before creating the orchestrator."
+	case "platform":
+		return "Read cluster connection outputs from the cluster stack before installing platform add-ons."
+	case "apps":
+		return "Read platform or cluster outputs before rendering workload modules."
+	default:
+		return "Use explicit stack outputs for cross-stack dependencies."
+	}
 }
 
 func renderFile(templateDir, file string, data templateData) ([]byte, error) {
@@ -200,4 +311,11 @@ func defaultString(value, fallback string) string {
 		return fallback
 	}
 	return value
+}
+
+func title(value string) string {
+	if value == "" {
+		return ""
+	}
+	return strings.ToUpper(value[:1]) + value[1:]
 }

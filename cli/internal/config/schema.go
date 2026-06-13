@@ -35,6 +35,14 @@ type Environment struct {
 	Region       string `yaml:"region"`
 	Orchestrator string `yaml:"orchestrator"`
 	Path         string `yaml:"path"`
+	Layout       string `yaml:"layout,omitempty"`
+	Stacks       Stacks `yaml:"stacks,omitempty"`
+}
+
+type Stacks map[string]Stack
+
+type Stack struct {
+	Path string `yaml:"path"`
 }
 
 type Policies struct {
@@ -63,6 +71,21 @@ func (c *Config) Validate() error {
 		if strings.TrimSpace(env.Path) == "" {
 			return fmt.Errorf("environment %q path is required", name)
 		}
+		layout := env.Layout
+		if layout == "" {
+			layout = "simple"
+		}
+		if layout != "simple" && layout != "stacked" {
+			return fmt.Errorf("environment %q layout must be simple or stacked", name)
+		}
+		if layout == "stacked" {
+			for _, stackName := range StackOrder() {
+				stack, ok := env.Stacks[stackName]
+				if !ok || strings.TrimSpace(stack.Path) == "" {
+					return fmt.Errorf("environment %q stack %q path is required", name, stackName)
+				}
+			}
+		}
 		if err := validateCloud(fmt.Sprintf("environment %q cloud", name), env.Cloud); err != nil {
 			return err
 		}
@@ -71,6 +94,53 @@ func (c *Config) Validate() error {
 		}
 	}
 	return nil
+}
+
+func StackOrder() []string {
+	return []string{"network", "cluster", "platform", "apps"}
+}
+
+func (e Environment) EffectiveLayout() string {
+	if e.Layout == "" {
+		return "simple"
+	}
+	return e.Layout
+}
+
+func (e Environment) StackPaths(stack string) ([]string, error) {
+	if e.EffectiveLayout() == "simple" {
+		if stack != "" {
+			return nil, fmt.Errorf("environment uses simple layout; stack %q is not available", stack)
+		}
+		return []string{e.Path}, nil
+	}
+	if stack != "" {
+		resolved, ok := e.Stacks[stack]
+		if !ok || strings.TrimSpace(resolved.Path) == "" {
+			return nil, fmt.Errorf("unknown stack %q; expected one of network, cluster, platform, apps", stack)
+		}
+		return []string{resolved.Path}, nil
+	}
+	paths := make([]string, 0, len(StackOrder()))
+	for _, name := range StackOrder() {
+		resolved, ok := e.Stacks[name]
+		if !ok || strings.TrimSpace(resolved.Path) == "" {
+			return nil, fmt.Errorf("stack %q path is required", name)
+		}
+		paths = append(paths, resolved.Path)
+	}
+	return paths, nil
+}
+
+func (e Environment) StackPath(stack string) (string, error) {
+	paths, err := e.StackPaths(stack)
+	if err != nil {
+		return "", err
+	}
+	if len(paths) != 1 {
+		return "", fmt.Errorf("stack must be specified")
+	}
+	return paths[0], nil
 }
 
 func (c *Config) EngineBinary(name string) (string, error) {

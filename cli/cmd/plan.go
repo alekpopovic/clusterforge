@@ -13,6 +13,7 @@ import (
 
 var planOut string
 var planRiskSummary bool
+var planStack string
 
 var planCmd = &cobra.Command{
 	Use:   "plan <env>",
@@ -32,47 +33,62 @@ var planCmd = &cobra.Command{
 			return err
 		}
 
+		paths, err := resolveStackPaths(env, planStack)
+		if err != nil {
+			return err
+		}
+		if planOut != "" && len(paths) > 1 {
+			return fmt.Errorf("--out requires --stack when planning multiple stacks")
+		}
 		outFile := planOut
 		if planRiskSummary && outFile == "" {
 			outFile = filepath.Join(".cf", "plans", args[0]+".tfplan")
 		}
-		if outFile != "" {
-			if err := os.MkdirAll(filepath.Join(env.Path, filepath.Dir(outFile)), 0o755); err != nil {
-				return fmt.Errorf("create plan directory: %w", err)
+		for index, path := range paths {
+			currentOut := outFile
+			if planRiskSummary && planOut == "" && len(paths) > 1 {
+				currentOut = filepath.Join(".cf", "plans", fmt.Sprintf("%s-%d.tfplan", args[0], index+1))
 			}
-		}
-
-		runner := cfterraform.NewRunner(binary, env.Path, opts.Verbose)
-		if err := runner.Plan(cmd.Context(), outFile, nil); err != nil {
-			return err
-		}
-		if !planRiskSummary {
-			return nil
-		}
-		data, err := runner.ShowPlanJSON(cmd.Context(), outFile)
-		if err != nil {
-			evaluation, evalErr := policy.EvaluatePlanParseError(args[0], err)
-			for _, warning := range evaluation.Warnings {
-				printer.Warn(warning)
+			if currentOut != "" {
+				if err := os.MkdirAll(filepath.Join(path, filepath.Dir(currentOut)), 0o755); err != nil {
+					return fmt.Errorf("create plan directory: %w", err)
+				}
 			}
-			if evalErr != nil {
+			if label := stackLabel(path, len(paths)); label != "" {
+				fmt.Fprintln(cmd.OutOrStdout(), label)
+			}
+			runner := cfterraform.NewRunner(binary, path, opts.Verbose)
+			if err := runner.Plan(cmd.Context(), currentOut, nil); err != nil {
+				return err
+			}
+			if !planRiskSummary {
+				continue
+			}
+			data, err := runner.ShowPlanJSON(cmd.Context(), currentOut)
+			if err != nil {
+				evaluation, evalErr := policy.EvaluatePlanParseError(args[0], err)
+				for _, warning := range evaluation.Warnings {
+					printer.Warn(warning)
+				}
+				if evalErr != nil {
+					return evalErr
+				}
+				continue
+			}
+			summary, err := planjson.Parse(data)
+			if err != nil {
+				evaluation, evalErr := policy.EvaluatePlanParseError(args[0], err)
+				planjson.Print(cmd.OutOrStdout(), args[0], planjson.Summary{}, evaluation.Risk, evaluation.Policy)
+				for _, warning := range evaluation.Warnings {
+					printer.Warn(warning)
+				}
 				return evalErr
 			}
-			return nil
-		}
-		summary, err := planjson.Parse(data)
-		if err != nil {
-			evaluation, evalErr := policy.EvaluatePlanParseError(args[0], err)
-			planjson.Print(cmd.OutOrStdout(), args[0], planjson.Summary{}, evaluation.Risk, evaluation.Policy)
+			evaluation := policy.EvaluatePlan(args[0], summary)
+			planjson.Print(cmd.OutOrStdout(), args[0], summary, evaluation.Risk, evaluation.Policy)
 			for _, warning := range evaluation.Warnings {
 				printer.Warn(warning)
 			}
-			return evalErr
-		}
-		evaluation := policy.EvaluatePlan(args[0], summary)
-		planjson.Print(cmd.OutOrStdout(), args[0], summary, evaluation.Risk, evaluation.Policy)
-		for _, warning := range evaluation.Warnings {
-			printer.Warn(warning)
 		}
 		return nil
 	},
@@ -81,4 +97,5 @@ var planCmd = &cobra.Command{
 func init() {
 	planCmd.Flags().StringVar(&planOut, "out", "", "Write a plan file")
 	planCmd.Flags().BoolVar(&planRiskSummary, "risk-summary", false, "Show a risk summary from Terraform plan JSON")
+	planCmd.Flags().StringVar(&planStack, "stack", "", "Stack to plan for stacked environments")
 }

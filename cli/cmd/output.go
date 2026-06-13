@@ -2,17 +2,17 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 	cfterraform "github.com/textracta/clusterforge/cli/internal/terraform"
 )
 
-var initStack string
+var outputStack string
+var outputJSON bool
 
-var initCmd = &cobra.Command{
-	Use:   "init <env>",
-	Short: "Run Terraform/OpenTofu init for an environment",
+var outputCmd = &cobra.Command{
+	Use:   "output <env>",
+	Short: "Run Terraform/OpenTofu output for an environment or stack",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, err := loadConfig()
@@ -23,19 +23,19 @@ var initCmd = &cobra.Command{
 		if !ok {
 			return fmt.Errorf("environment %q not found", args[0])
 		}
-		binary, err := engineBinary(cfg)
+		paths, err := resolveStackPaths(env, outputStack)
 		if err != nil {
 			return err
 		}
-		paths, err := resolveStackPaths(env, initStack)
+		binary, err := engineBinary(cfg)
 		if err != nil {
 			return err
 		}
 		for _, path := range paths {
 			if label := stackLabel(path, len(paths)); label != "" {
-				fmt.Fprintln(os.Stdout, label)
+				fmt.Fprintln(cmd.OutOrStdout(), label)
 			}
-			if err := cfterraform.NewRunner(binary, path, opts.Verbose).Init(cmd.Context()); err != nil {
+			if err := cfterraform.NewRunner(binary, path, opts.Verbose).Output(cmd.Context(), outputJSON); err != nil {
 				return err
 			}
 		}
@@ -44,5 +44,6 @@ var initCmd = &cobra.Command{
 }
 
 func init() {
-	initCmd.Flags().StringVar(&initStack, "stack", "", "Stack to initialize for stacked environments")
+	outputCmd.Flags().StringVar(&outputStack, "stack", "", "Stack to read outputs from for stacked environments")
+	outputCmd.Flags().BoolVar(&outputJSON, "json", false, "Print outputs as JSON")
 }

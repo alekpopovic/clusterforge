@@ -78,6 +78,15 @@ func (c *Config) ApplyDefaults() {
 		if env.Orchestrator == "" {
 			env.Orchestrator = c.Defaults.Orchestrator
 		}
+		if env.Layout == "" {
+			env.Layout = "simple"
+		}
+		if env.Layout == "stacked" && env.Stacks == nil {
+			env.Stacks = Stacks{}
+			for _, stack := range StackOrder() {
+				env.Stacks[stack] = Stack{Path: env.Path + "/" + stack}
+			}
+		}
 		c.Environments[name] = env
 	}
 }

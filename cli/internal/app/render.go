@@ -39,6 +39,13 @@ func Render(rootDir, envName string, env config.Environment, manifest Manifest) 
 		return "", fmt.Errorf("unsupported orchestrator %q for app rendering; supported targets are Kubernetes variants and ecs", env.Orchestrator)
 	}
 	outDir := filepath.Join(env.Path, "apps")
+	if env.EffectiveLayout() == "stacked" {
+		stackPath, err := env.StackPath("apps")
+		if err != nil {
+			return "", err
+		}
+		outDir = stackPath
+	}
 	modulesPath, err := relativeModulesPath(rootDir, outDir)
 	if err != nil {
 		return "", err

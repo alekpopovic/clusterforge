@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/textracta/clusterforge/cli/internal/policy"
@@ -10,6 +11,7 @@ import (
 
 var allowDestroy bool
 var destroyConfirmProd bool
+var destroyStack string
 
 var destroyCmd = &cobra.Command{
 	Use:   "destroy <env>",
@@ -39,11 +41,29 @@ var destroyCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		return cfterraform.NewRunner(binary, env.Path, opts.Verbose).Destroy(cmd.Context(), nil)
+		paths, err := resolveStackPaths(env, destroyStack)
+		if err != nil {
+			return err
+		}
+		if destroyStack == "" && env.EffectiveLayout() == "stacked" {
+			for i, j := 0, len(paths)-1; i < j; i, j = i+1, j-1 {
+				paths[i], paths[j] = paths[j], paths[i]
+			}
+		}
+		for _, path := range paths {
+			if label := stackLabel(path, len(paths)); label != "" {
+				fmt.Fprintln(os.Stdout, label)
+			}
+			if err := cfterraform.NewRunner(binary, path, opts.Verbose).Destroy(cmd.Context(), nil); err != nil {
+				return err
+			}
+		}
+		return nil
 	},
 }
 
 func init() {
 	destroyCmd.Flags().BoolVar(&allowDestroy, "allow-destroy", false, "Allow destroy in protected environments")
 	destroyCmd.Flags().BoolVar(&destroyConfirmProd, "confirm-prod", false, "Explicitly confirm a production destroy")
+	destroyCmd.Flags().StringVar(&destroyStack, "stack", "", "Stack to destroy for stacked environments")
 }

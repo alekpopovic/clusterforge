@@ -52,6 +52,7 @@ func init() {
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)
 	rootCmd.AddCommand(destroyCmd)
+	rootCmd.AddCommand(outputCmd)
 	rootCmd.AddCommand(doctorCmd)
 }
 

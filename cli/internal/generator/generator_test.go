@@ -44,6 +44,43 @@ func TestGenerateAWSEKS(t *testing.T) {
 	}
 }
 
+func TestGenerateStackedAWSEKS(t *testing.T) {
+	dir := t.TempDir()
+	env := config.Environment{
+		Cloud:        "aws",
+		Region:       "eu-central-1",
+		Orchestrator: "eks",
+		Path:         filepath.Join(dir, "live", "dev", "aws-eks"),
+		Layout:       "stacked",
+	}
+
+	result, err := Generate("dev", env, Options{
+		RootDir: dir,
+		Project: "demo",
+	})
+	if err != nil {
+		t.Fatalf("generate stacked: %v", err)
+	}
+	if result.Target != "aws-eks-stacked" {
+		t.Fatalf("target = %q", result.Target)
+	}
+	for _, stack := range config.StackOrder() {
+		for _, file := range environmentFiles {
+			path := filepath.Join(env.Path, stack, file)
+			if _, err := os.Stat(path); err != nil {
+				t.Fatalf("expected %s to exist: %v", path, err)
+			}
+		}
+	}
+	mainTF := readFile(t, filepath.Join(env.Path, "network", "main.tf"))
+	if !strings.Contains(mainTF, "Network stack") {
+		t.Fatalf("network stack main.tf missing stack title:\n%s", mainTF)
+	}
+	if !strings.Contains(mainTF, "../../../../modules") {
+		t.Fatalf("network stack main.tf has wrong relative module path:\n%s", mainTF)
+	}
+}
+
 func TestGenerateRefusesOverwriteWithoutForce(t *testing.T) {
 	dir := t.TempDir()
 	env := config.Environment{

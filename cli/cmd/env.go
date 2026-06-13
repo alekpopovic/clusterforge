@@ -71,6 +71,7 @@ var envCreateCmd = &cobra.Command{
 			Region:       region,
 			Orchestrator: orchestrator,
 			Path:         path,
+			Layout:       "simple",
 		}
 
 		printer.Info(fmt.Sprintf("environment: %s", name))
