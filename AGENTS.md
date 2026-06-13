@@ -74,11 +74,15 @@ agents working in this repository.
 
 ## 9. Codex Workflow Rules
 
-- After every prompt that changes repository files, Codex must run `git status`,
-  stage the completed changes with `git add`, create a commit, and push it.
-- After pushing completed changes, Codex must check out `main` and pull the
-  latest remote changes before ending the turn, unless doing so would overwrite
-  or discard uncommitted user work.
+- For every prompt that changes repository files, Codex must create and check
+  out a new branch before making edits. The branch name should be based on a
+  short, sanitized slug of the prompt, such as `codex/update-agent-rules`.
+- After completing changes, Codex must run `git status`, stage the completed
+  changes with `git add`, create a commit, push the branch, and open a pull
+  request when the required GitHub tooling and authentication are available.
+- After pushing the branch and opening the pull request, Codex must check out
+  `main` and pull the latest remote changes before ending the turn, unless
+  doing so would overwrite or discard uncommitted user work.
 - Do not create empty commits when no repository files changed.
 - Do not commit or push secrets, credentials, kubeconfig files, private keys,
   tfstate files, or other sensitive artifacts.
