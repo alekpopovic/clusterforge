@@ -1,19 +1,21 @@
-variable "region" {
-  description = "AWS region for backend bootstrap resources."
-  type        = string
-  default     = "eu-central-1"
-}
-
 variable "name" {
-  description = "Logical name for the Terraform state backend resources."
+  description = "Logical name for the Terraform state backend."
   type        = string
-  default     = "clusterforge-tfstate"
+
+  validation {
+    condition     = length(trimspace(var.name)) > 0
+    error_message = "name must not be empty."
+  }
 }
 
 variable "environment" {
-  description = "Environment label for backend bootstrap resources."
+  description = "Environment name for tagging and metadata."
   type        = string
-  default     = "bootstrap"
+
+  validation {
+    condition     = length(trimspace(var.environment)) > 0
+    error_message = "environment must not be empty."
+  }
 }
 
 variable "bucket_name" {
@@ -29,7 +31,11 @@ variable "bucket_name" {
 variable "dynamodb_table_name" {
   description = "DynamoDB table name for Terraform state locking."
   type        = string
-  default     = "clusterforge-terraform-locks"
+
+  validation {
+    condition     = length(trimspace(var.dynamodb_table_name)) > 0
+    error_message = "dynamodb_table_name must not be empty."
+  }
 }
 
 variable "force_destroy" {
@@ -51,10 +57,7 @@ variable "enable_encryption" {
 }
 
 variable "tags" {
-  description = "Tags to apply to backend bootstrap resources."
+  description = "Additional tags to apply to backend resources."
   type        = map(string)
-  default = {
-    Project   = "clusterforge"
-    ManagedBy = "terraform"
-  }
+  default     = {}
 }

@@ -54,7 +54,8 @@ cf backend show prod
 ## S3 Backend Bootstrap Flow
 
 Do not create the backend bucket in the same Terraform root that uses it.
-Bootstrap it separately:
+Bootstrap it separately with the `modules/cloud/aws/tfstate-backend` module or
+the included example:
 
 ```bash
 cd examples/aws-tfstate-backend

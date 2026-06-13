@@ -1,3 +1,6 @@
 region              = "eu-central-1"
+name                = "clusterforge-tfstate"
+environment         = "bootstrap"
 bucket_name         = "example-clusterforge-terraform-state"
 dynamodb_table_name = "example-clusterforge-terraform-locks"
+force_destroy       = false
