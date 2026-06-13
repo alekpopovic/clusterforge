@@ -48,6 +48,7 @@ cf policy check dev --plan-file .cf/plans/dev.tfplan
 cf apply prod --plan-file .cf/plans/prod.tfplan --confirm-prod
 cf destroy prod --allow-destroy --confirm-prod
 cf doctor
+cf doctor --json
 ```
 
 ## Interactive Wizard Mode
@@ -271,6 +272,30 @@ cf apply prod --plan-file .cf/plans/prod.tfplan --confirm-prod
 
 If a production plan contains delete actions, apply is blocked unless the
 operator also passes `--allow-destroy`.
+
+## Doctor
+
+Use `doctor` to check local tooling, project config, safety settings, and common
+Git hygiene issues:
+
+```bash
+cf doctor
+```
+
+The command prints a pass/warn/fail table and exits non-zero only for hard
+failures such as missing required binaries, invalid config, or missing
+environment paths.
+
+JSON output is useful for CI or support bundles:
+
+```bash
+cf doctor --json
+```
+
+`doctor` warns when optional tools such as `tofu`, `kubectl`, `helm`, or `go`
+are missing. It also warns if production environments use a local backend, if
+production safety policies are disabled, or if sensitive files such as
+`tfstate`, `.env`, or kubeconfig files are tracked by Git.
 
 ## Development
 
