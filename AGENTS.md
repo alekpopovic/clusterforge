@@ -76,6 +76,9 @@ agents working in this repository.
 
 - After every prompt that changes repository files, Codex must run `git status`,
   stage the completed changes with `git add`, create a commit, and push it.
+- After pushing completed changes, Codex must check out `main` and pull the
+  latest remote changes before ending the turn, unless doing so would overwrite
+  or discard uncommitted user work.
 - Do not create empty commits when no repository files changed.
 - Do not commit or push secrets, credentials, kubeconfig files, private keys,
   tfstate files, or other sensitive artifacts.
