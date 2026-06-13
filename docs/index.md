@@ -73,6 +73,7 @@ make security
 
 - [Architecture]({{ '/architecture/' | relative_url }})
 - [CLI]({{ '/cli/' | relative_url }})
+- [App manifest]({{ '/app-manifest/' | relative_url }})
 - [Module conventions]({{ '/module-conventions/' | relative_url }})
 - [General conventions]({{ '/conventions/' | relative_url }})
 - [Validation]({{ '/validation/' | relative_url }})

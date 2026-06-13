@@ -10,6 +10,7 @@ import (
 
 var appAddOptions cfapp.AddOptions
 var appRenderEnv string
+var appValidateAll bool
 
 var appCmd = &cobra.Command{
 	Use:   "app",
@@ -93,6 +94,51 @@ var appListCmd = &cobra.Command{
 	},
 }
 
+var appValidateCmd = &cobra.Command{
+	Use:           "validate [name]",
+	Short:         "Validate app manifest files",
+	Args:          cobra.MaximumNArgs(1),
+	SilenceUsage:  true,
+	SilenceErrors: true,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if appValidateAll && len(args) > 0 {
+			return fmt.Errorf("use either app validate <name> or app validate --all, not both")
+		}
+		if !appValidateAll && len(args) == 0 {
+			return fmt.Errorf("app name is required unless --all is set")
+		}
+
+		names := args
+		if appValidateAll {
+			apps, err := cfapp.List(".")
+			if err != nil {
+				return err
+			}
+			names = apps
+		}
+
+		var failed bool
+		for _, name := range names {
+			path := cfapp.ManifestPath(".", name)
+			if err := cfapp.ValidateFile(path); err != nil {
+				failed = true
+				for _, line := range strings.Split(err.Error(), "\n") {
+					if strings.TrimSpace(line) == "" {
+						continue
+					}
+					fmt.Fprintf(cmd.ErrOrStderr(), "%s: %s\n", path, line)
+				}
+				continue
+			}
+			fmt.Fprintf(cmd.OutOrStdout(), "%s: ok\n", path)
+		}
+		if failed {
+			return fmt.Errorf("app manifest validation failed")
+		}
+		return nil
+	},
+}
+
 var appRenderCmd = &cobra.Command{
 	Use:   "render <name>",
 	Short: "Render an app manifest into an environment Terraform module call",
@@ -145,9 +191,11 @@ func init() {
 	appAddCmd.Flags().BoolVar(&appAddOptions.Force, "force", false, "Overwrite an existing app manifest")
 
 	appRenderCmd.Flags().StringVar(&appRenderEnv, "env", "", "Environment to render into")
+	appValidateCmd.Flags().BoolVar(&appValidateAll, "all", false, "Validate all app manifests")
 
 	appCmd.AddCommand(appAddCmd)
 	appCmd.AddCommand(appListCmd)
+	appCmd.AddCommand(appValidateCmd)
 	appCmd.AddCommand(appRenderCmd)
 	appCmd.AddCommand(appRemoveCmd)
 }

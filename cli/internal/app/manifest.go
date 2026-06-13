@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -12,17 +13,19 @@ import (
 
 const AppsDir = "apps"
 
+var appNamePattern = regexp.MustCompile(`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`)
+
 type Manifest struct {
 	Name        string               `yaml:"name"`
 	Type        string               `yaml:"type"`
 	Image       string               `yaml:"image"`
 	Replicas    int                  `yaml:"replicas"`
-	Ports       []Port               `yaml:"ports"`
-	Env         map[string]string    `yaml:"env"`
-	SecretEnv   map[string]SecretRef `yaml:"secret_env"`
-	Resources   Resources            `yaml:"resources"`
-	Ingress     Ingress              `yaml:"ingress"`
-	Autoscaling Autoscaling          `yaml:"autoscaling"`
+	Ports       []Port               `yaml:"ports,omitempty"`
+	Env         map[string]string    `yaml:"env,omitempty"`
+	SecretEnv   map[string]SecretRef `yaml:"secret_env,omitempty"`
+	Resources   Resources            `yaml:"resources,omitempty"`
+	Ingress     Ingress              `yaml:"ingress,omitempty"`
+	Autoscaling Autoscaling          `yaml:"autoscaling,omitempty"`
 }
 
 type Port struct {
@@ -37,24 +40,24 @@ type SecretRef struct {
 }
 
 type Resources struct {
-	CPURequest    string `yaml:"cpu_request"`
-	MemoryRequest string `yaml:"memory_request"`
-	CPULimit      string `yaml:"cpu_limit"`
-	MemoryLimit   string `yaml:"memory_limit"`
+	CPURequest    string `yaml:"cpu_request,omitempty"`
+	MemoryRequest string `yaml:"memory_request,omitempty"`
+	CPULimit      string `yaml:"cpu_limit,omitempty"`
+	MemoryLimit   string `yaml:"memory_limit,omitempty"`
 }
 
 type Ingress struct {
 	Enabled bool   `yaml:"enabled"`
-	Host    string `yaml:"host"`
-	Path    string `yaml:"path"`
-	TLS     bool   `yaml:"tls"`
+	Host    string `yaml:"host,omitempty"`
+	Path    string `yaml:"path,omitempty"`
+	TLS     bool   `yaml:"tls,omitempty"`
 }
 
 type Autoscaling struct {
 	Enabled     bool `yaml:"enabled"`
-	MinReplicas int  `yaml:"min_replicas"`
-	MaxReplicas int  `yaml:"max_replicas"`
-	CPUPercent  int  `yaml:"cpu_percent"`
+	MinReplicas int  `yaml:"min_replicas,omitempty"`
+	MaxReplicas int  `yaml:"max_replicas,omitempty"`
+	CPUPercent  int  `yaml:"cpu_percent,omitempty"`
 }
 
 type AddOptions struct {
@@ -132,6 +135,9 @@ func Load(path string) (Manifest, error) {
 	if err != nil {
 		return Manifest{}, fmt.Errorf("read app manifest %s: %w", path, err)
 	}
+	if err := validateRawManifestYAML(data); err != nil {
+		return Manifest{}, err
+	}
 	var manifest Manifest
 	if err := yaml.Unmarshal(data, &manifest); err != nil {
 		return Manifest{}, fmt.Errorf("parse app manifest %s: %w", path, err)
@@ -141,6 +147,11 @@ func Load(path string) (Manifest, error) {
 		return Manifest{}, err
 	}
 	return manifest, nil
+}
+
+func ValidateFile(path string) error {
+	_, err := Load(path)
+	return err
 }
 
 func Save(path string, manifest Manifest) error {
@@ -228,31 +239,225 @@ func (m *Manifest) ApplyDefaults() {
 }
 
 func (m Manifest) Validate() error {
+	var errs ValidationErrors
 	if strings.TrimSpace(m.Name) == "" {
-		return fmt.Errorf("app name is required")
+		errs.Add("name is required")
+	} else if len(m.Name) > 63 || !appNamePattern.MatchString(m.Name) {
+		errs.Add("name must be DNS/Kubernetes-name compatible")
 	}
 	if strings.TrimSpace(m.Type) == "" {
-		return fmt.Errorf("app type is required")
+		errs.Add("type is required")
+	} else if !isAllowedAppType(m.Type) {
+		errs.Add("type must be one of web, worker, cronjob, service")
 	}
 	if strings.TrimSpace(m.Image) == "" {
-		return fmt.Errorf("app image is required")
+		errs.Add("image is required")
 	}
 	if m.Replicas < 0 {
-		return fmt.Errorf("app replicas must be greater than or equal to 0")
+		errs.Add("replicas must be greater than or equal to 0")
 	}
-	for _, port := range m.Ports {
+	for index, port := range m.Ports {
 		if strings.TrimSpace(port.Name) == "" {
-			return fmt.Errorf("app port name is required")
+			errs.Add(fmt.Sprintf("ports[%d].name is required", index))
 		}
 		if port.ContainerPort <= 0 || port.ContainerPort > 65535 {
-			return fmt.Errorf("app port %q container_port must be between 1 and 65535", port.Name)
+			errs.Add(fmt.Sprintf("ports[%d].container_port must be between 1 and 65535", index))
+		}
+		if !isAllowedProtocol(port.Protocol) {
+			errs.Add(fmt.Sprintf("ports[%d].protocol must be TCP or UDP", index))
 		}
 	}
 	if m.Ingress.Enabled && strings.TrimSpace(m.Ingress.Host) == "" {
-		return fmt.Errorf("ingress.host is required when ingress is enabled")
+		errs.Add("ingress.host is required when ingress.enabled=true")
+	}
+	if m.Ingress.Path != "" && !strings.HasPrefix(m.Ingress.Path, "/") {
+		errs.Add("ingress.path must start with /")
 	}
 	if m.Autoscaling.Enabled && m.Autoscaling.MinReplicas > m.Autoscaling.MaxReplicas {
-		return fmt.Errorf("autoscaling.min_replicas must be less than or equal to max_replicas")
+		errs.Add("autoscaling.min_replicas must be less than or equal to max_replicas")
+	}
+	if m.Autoscaling.Enabled && m.Autoscaling.MaxReplicas <= 0 {
+		errs.Add("autoscaling.max_replicas must be greater than 0")
+	}
+	for key, ref := range m.SecretEnv {
+		if strings.TrimSpace(ref.SecretName) == "" {
+			errs.Add(fmt.Sprintf("secret_env.%s.secret_name is required", key))
+		}
+		if strings.TrimSpace(ref.SecretKey) == "" {
+			errs.Add(fmt.Sprintf("secret_env.%s.secret_key is required", key))
+		}
+	}
+	if len(errs) > 0 {
+		return errs
 	}
 	return nil
+}
+
+type ValidationErrors []string
+
+func (v *ValidationErrors) Add(message string) {
+	*v = append(*v, message)
+}
+
+func (v ValidationErrors) Error() string {
+	return strings.Join(v, "\n")
+}
+
+func isAllowedAppType(value string) bool {
+	switch strings.ToLower(strings.TrimSpace(value)) {
+	case "web", "worker", "cronjob", "service":
+		return true
+	default:
+		return false
+	}
+}
+
+func isAllowedProtocol(value string) bool {
+	switch strings.ToUpper(strings.TrimSpace(value)) {
+	case "TCP", "UDP":
+		return true
+	default:
+		return false
+	}
+}
+
+func validateRawManifestYAML(data []byte) error {
+	var root yaml.Node
+	if err := yaml.Unmarshal(data, &root); err != nil {
+		return fmt.Errorf("parse app manifest: %w", err)
+	}
+	if len(root.Content) == 0 {
+		return nil
+	}
+	doc := root.Content[0]
+	if doc.Kind != yaml.MappingNode {
+		return ValidationErrors{"manifest must be a YAML mapping"}
+	}
+	var errs ValidationErrors
+	for i := 0; i < len(doc.Content)-1; i += 2 {
+		key := doc.Content[i].Value
+		value := doc.Content[i+1]
+		switch key {
+		case "ingress":
+			validateIngressNode(value, &errs)
+		case "ports":
+			validatePortsNode(value, &errs)
+		case "resources":
+			validateResourceNode(value, &errs)
+		case "autoscaling":
+			validateAutoscalingNode(value, &errs)
+		case "secret_env":
+			validateSecretEnvNode(value, &errs)
+		}
+	}
+	if len(errs) > 0 {
+		return errs
+	}
+	return nil
+}
+
+func validateIngressNode(node *yaml.Node, errs *ValidationErrors) {
+	if node.Kind != yaml.MappingNode {
+		errs.Add("ingress must be a mapping")
+		return
+	}
+	for i := 0; i < len(node.Content)-1; i += 2 {
+		key := node.Content[i].Value
+		value := node.Content[i+1]
+		if key == "path" && !strings.HasPrefix(value.Value, "/") {
+			errs.Add("ingress.path must start with /")
+		}
+	}
+}
+
+func validatePortsNode(node *yaml.Node, errs *ValidationErrors) {
+	if node.Kind != yaml.SequenceNode {
+		errs.Add("ports must be a list")
+		return
+	}
+	for index, port := range node.Content {
+		if port.Kind != yaml.MappingNode {
+			errs.Add(fmt.Sprintf("ports[%d] must be a mapping", index))
+			continue
+		}
+		for i := 0; i < len(port.Content)-1; i += 2 {
+			key := port.Content[i].Value
+			value := port.Content[i+1]
+			if key == "protocol" && strings.TrimSpace(value.Value) != "" && !isAllowedProtocol(value.Value) {
+				errs.Add(fmt.Sprintf("ports[%d].protocol must be TCP or UDP", index))
+			}
+		}
+	}
+}
+
+func validateResourceNode(node *yaml.Node, errs *ValidationErrors) {
+	if node.Kind != yaml.MappingNode {
+		errs.Add("resources must be a mapping")
+		return
+	}
+	allowed := map[string]bool{
+		"cpu_request":    true,
+		"memory_request": true,
+		"cpu_limit":      true,
+		"memory_limit":   true,
+	}
+	for i := 0; i < len(node.Content)-1; i += 2 {
+		key := node.Content[i].Value
+		value := node.Content[i+1]
+		if !allowed[key] {
+			continue
+		}
+		if strings.TrimSpace(value.Value) == "" {
+			errs.Add(fmt.Sprintf("resources.%s must be a non-empty string when provided", key))
+		}
+	}
+}
+
+func validateAutoscalingNode(node *yaml.Node, errs *ValidationErrors) {
+	if node.Kind != yaml.MappingNode {
+		errs.Add("autoscaling must be a mapping")
+		return
+	}
+	for i := 0; i < len(node.Content)-1; i += 2 {
+		key := node.Content[i].Value
+		value := node.Content[i+1]
+		if key != "max_replicas" {
+			continue
+		}
+		if value.Value == "" {
+			errs.Add("autoscaling.max_replicas must be greater than 0")
+			continue
+		}
+		var parsed int
+		if err := value.Decode(&parsed); err != nil || parsed <= 0 {
+			errs.Add("autoscaling.max_replicas must be greater than 0")
+		}
+	}
+}
+
+func validateSecretEnvNode(node *yaml.Node, errs *ValidationErrors) {
+	if node.Kind != yaml.MappingNode {
+		errs.Add("secret_env must be a mapping")
+		return
+	}
+	for i := 0; i < len(node.Content)-1; i += 2 {
+		envName := node.Content[i].Value
+		ref := node.Content[i+1]
+		if ref.Kind != yaml.MappingNode {
+			errs.Add(fmt.Sprintf("secret_env.%s must reference secret_name and secret_key", envName))
+			continue
+		}
+		for j := 0; j < len(ref.Content)-1; j += 2 {
+			key := ref.Content[j].Value
+			value := ref.Content[j+1]
+			switch key {
+			case "secret_name", "secret_key":
+				if strings.TrimSpace(value.Value) == "" {
+					errs.Add(fmt.Sprintf("secret_env.%s.%s is required", envName, key))
+				}
+			default:
+				errs.Add(fmt.Sprintf("secret_env.%s.%s is not allowed; use secret_name and secret_key references only", envName, key))
+			}
+		}
+	}
 }

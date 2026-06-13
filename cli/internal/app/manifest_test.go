@@ -47,6 +47,48 @@ func TestNewManifestWithAutoscaling(t *testing.T) {
 	}
 }
 
+func TestValidManifestPassesValidation(t *testing.T) {
+	if err := sampleManifest().Validate(); err != nil {
+		t.Fatalf("valid manifest failed validation: %v", err)
+	}
+}
+
+func TestMissingImageFailsValidation(t *testing.T) {
+	manifest := sampleManifest()
+	manifest.Image = ""
+	assertValidationError(t, manifest.Validate(), "image is required")
+}
+
+func TestBadPortFailsValidation(t *testing.T) {
+	manifest := sampleManifest()
+	manifest.Ports[0].ContainerPort = 70000
+	assertValidationError(t, manifest.Validate(), "ports[0].container_port must be between 1 and 65535")
+}
+
+func TestIngressEnabledWithoutHostFailsValidation(t *testing.T) {
+	manifest := sampleManifest()
+	manifest.Ingress.Host = ""
+	assertValidationError(t, manifest.Validate(), "ingress.host is required when ingress.enabled=true")
+}
+
+func TestSecretValueFailsValidation(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "api.yaml")
+	data := []byte(`
+name: api
+type: web
+image: nginx:1.27
+replicas: 1
+secret_env:
+  DATABASE_URL:
+    value: postgres://example
+`)
+	if err := os.WriteFile(path, data, 0o644); err != nil {
+		t.Fatalf("write manifest: %v", err)
+	}
+	assertValidationError(t, ValidateFile(path), "secret_env.DATABASE_URL.value is not allowed")
+}
+
 func TestListAppManifests(t *testing.T) {
 	dir := t.TempDir()
 	if _, err := Add(dir, "worker", AddOptions{Image: "busybox:1.36"}); err != nil {
@@ -184,4 +226,14 @@ func readFile(t *testing.T, path string) string {
 		t.Fatalf("read %s: %v", path, err)
 	}
 	return string(data)
+}
+
+func assertValidationError(t *testing.T, err error, want string) {
+	t.Helper()
+	if err == nil {
+		t.Fatalf("expected validation error containing %q", want)
+	}
+	if !strings.Contains(err.Error(), want) {
+		t.Fatalf("expected validation error containing %q, got %v", want, err)
+	}
 }

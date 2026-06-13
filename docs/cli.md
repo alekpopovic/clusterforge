@@ -34,6 +34,8 @@ cf project init demo
 cf project init
 cf env create dev --cloud aws --orchestrator eks --region eu-central-1
 cf env create
+cf app validate api
+cf app validate --all
 cf env list
 cf generate dev
 cf init dev
@@ -172,6 +174,13 @@ Create one with prompts:
 cf app add
 ```
 
+Validate manifests before rendering:
+
+```bash
+cf app validate api
+cf app validate --all
+```
+
 Render it into an environment:
 
 ```bash
@@ -179,6 +188,9 @@ cf app render api --env dev
 ```
 
 The renderer writes Terraform module calls into `env.path/apps/<name>.tf`.
+
+See [App Manifest]({{ '/app-manifest/' | relative_url }}) for the full schema
+and validation rules.
 
 ## Engine Selection
 
