@@ -9,6 +9,7 @@ output "enabled_addons" {
     var.enable_metrics_server ? "metrics-server" : "",
     var.enable_prometheus_stack ? "prometheus-stack" : "",
     var.enable_loki ? "loki" : "",
+    var.enable_log_agent ? "alloy" : "",
     var.enable_argocd ? "argocd" : ""
   ])
 }
@@ -29,6 +30,7 @@ output "releases" {
     var.enable_metrics_server ? { metrics_server = module.metrics_server[0].release_name } : {},
     var.enable_prometheus_stack ? { prometheus_stack = module.prometheus_stack[0].release_name } : {},
     var.enable_loki ? { loki = module.loki[0].release_name } : {},
+    var.enable_log_agent ? { log_agent = module.log_agent[0].release_name } : {},
     var.enable_argocd ? { argocd = module.argocd[0].release_name } : {}
   )
 }

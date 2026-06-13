@@ -36,6 +36,9 @@ module "platform_bootstrap" {
   enable_cert_manager     = true
   enable_external_secrets = true
   enable_karpenter        = false
+  enable_prometheus_stack = true
+  enable_loki             = true
+  enable_log_agent        = true
   enable_argocd           = true
 
   argocd_enable_app_of_apps   = true
@@ -57,6 +60,9 @@ not raw secret values.
 Enable Karpenter only for EKS clusters where the AWS IRSA role and node class
 strategy have been reviewed. Keep at least one managed node group or equivalent
 bootstrap capacity for system add-ons and the Karpenter controller.
+
+Enable `enable_log_agent` to install Grafana Alloy alongside Loki. Provide
+explicit Alloy values for production log collection rules and destinations.
 
 ## Generated Terraform Documentation
 

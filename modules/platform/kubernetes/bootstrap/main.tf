@@ -9,7 +9,8 @@ locals {
     karpenter        = local.namespace_prefix == "" ? "karpenter" : "${local.namespace_prefix}-karpenter"
     metrics_server   = local.namespace_prefix == "" ? "metrics-server" : "${local.namespace_prefix}-metrics-server"
     prometheus_stack = local.namespace_prefix == "" ? "monitoring" : "${local.namespace_prefix}-monitoring"
-    loki             = local.namespace_prefix == "" ? "loki" : "${local.namespace_prefix}-loki"
+    loki             = local.namespace_prefix == "" ? "logging" : "${local.namespace_prefix}-logging"
+    log_agent        = local.namespace_prefix == "" ? "logging" : "${local.namespace_prefix}-logging"
     argocd           = local.namespace_prefix == "" ? "argocd" : "${local.namespace_prefix}-argocd"
   }
 }
@@ -89,6 +90,18 @@ module "loki" {
 
   namespace = local.namespaces.loki
   labels    = var.common_labels
+}
+
+module "log_agent" {
+  count = var.enable_log_agent ? 1 : 0
+
+  source = "../alloy"
+
+  namespace        = local.namespaces.log_agent
+  chart_version    = var.log_agent_chart_version
+  values           = var.log_agent_values
+  labels           = var.common_labels
+  create_namespace = !var.enable_loki
 }
 
 module "argocd" {

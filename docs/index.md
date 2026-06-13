@@ -50,6 +50,11 @@ infrastructure logic remains visible in root environments and reusable modules.
     <p><a href="{{ '/autoscaling/' | relative_url }}">Review autoscaling</a></p>
   </div>
   <div class="card">
+    <h3>Observability</h3>
+    <p>Install metrics, logging, and telemetry agents with conservative defaults.</p>
+    <p><a href="{{ '/observability/' | relative_url }}">Plan observability</a></p>
+  </div>
+  <div class="card">
     <h3>Security</h3>
     <p>Review production safety rules, secret handling, and static scanning.</p>
     <p><a href="{{ '/security/' | relative_url }}">Review security</a></p>
@@ -91,6 +96,7 @@ make security
 - [Validation]({{ '/validation/' | relative_url }})
 - [GitOps]({{ '/gitops/' | relative_url }})
 - [Node autoscaling]({{ '/autoscaling/' | relative_url }})
+- [Observability]({{ '/observability/' | relative_url }})
 - [Security]({{ '/security/' | relative_url }})
 - [Security scanning]({{ '/security-scanning/' | relative_url }})
 - [Roadmap]({{ '/roadmap/' | relative_url }})

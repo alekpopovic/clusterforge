@@ -97,6 +97,24 @@ variable "enable_loki" {
   default     = false
 }
 
+variable "enable_log_agent" {
+  description = "Whether to install Grafana Alloy as the Kubernetes log/telemetry agent."
+  type        = bool
+  default     = false
+}
+
+variable "log_agent_chart_version" {
+  description = "Optional Grafana Alloy Helm chart version. Pin this before production use."
+  type        = string
+  default     = ""
+}
+
+variable "log_agent_values" {
+  description = "Additional YAML values passed to the Grafana Alloy Helm release."
+  type        = list(string)
+  default     = []
+}
+
 variable "enable_argocd" {
   description = "Whether to install Argo CD."
   type        = bool
