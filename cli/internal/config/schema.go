@@ -12,6 +12,7 @@ type Config struct {
 	Engines      map[string]Engine      `yaml:"engines"`
 	Defaults     Defaults               `yaml:"defaults"`
 	Environments map[string]Environment `yaml:"environments"`
+	Backends     map[string]Backend     `yaml:"backends,omitempty"`
 	Policies     Policies               `yaml:"policies"`
 }
 
@@ -43,6 +44,14 @@ type Stacks map[string]Stack
 
 type Stack struct {
 	Path string `yaml:"path"`
+}
+
+type Backend struct {
+	Type          string `yaml:"type"`
+	Bucket        string `yaml:"bucket,omitempty"`
+	Region        string `yaml:"region,omitempty"`
+	DynamoDBTable string `yaml:"dynamodb_table,omitempty"`
+	KeyPrefix     string `yaml:"key_prefix,omitempty"`
 }
 
 type Policies struct {
@@ -93,7 +102,57 @@ func (c *Config) Validate() error {
 			return err
 		}
 	}
+	for name, backend := range c.Backends {
+		if strings.TrimSpace(name) == "" {
+			return fmt.Errorf("backend environment name must not be empty")
+		}
+		if err := backend.Validate(name); err != nil {
+			return err
+		}
+	}
 	return nil
+}
+
+func (b Backend) Validate(environment string) error {
+	backendType := strings.ToLower(strings.TrimSpace(b.Type))
+	if backendType == "" {
+		backendType = "local"
+	}
+	switch backendType {
+	case "local", "azurerm", "gcs":
+		return nil
+	case "s3":
+		if strings.TrimSpace(b.Bucket) == "" {
+			return fmt.Errorf("backends.%s.bucket is required for s3 backend", environment)
+		}
+		if strings.TrimSpace(b.Region) == "" {
+			return fmt.Errorf("backends.%s.region is required for s3 backend", environment)
+		}
+		return nil
+	default:
+		return fmt.Errorf("backends.%s.type must be one of local, s3, azurerm, gcs", environment)
+	}
+}
+
+func (b Backend) EffectiveType() string {
+	if strings.TrimSpace(b.Type) == "" {
+		return "local"
+	}
+	return strings.ToLower(strings.TrimSpace(b.Type))
+}
+
+func (c *Config) BackendFor(environment string) Backend {
+	if c.Backends == nil {
+		return Backend{Type: "local"}
+	}
+	backend, ok := c.Backends[environment]
+	if !ok {
+		return Backend{Type: "local"}
+	}
+	if backend.Type == "" {
+		backend.Type = "local"
+	}
+	return backend
 }
 
 func StackOrder() []string {

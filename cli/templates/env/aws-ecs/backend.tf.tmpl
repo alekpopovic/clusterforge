@@ -1,12 +1,1 @@
-{{ .Header }}
-
-# Example remote backend. Uncomment and replace with real values when ready.
-# terraform {
-#   backend "s3" {
-#     bucket         = "replace-me-clusterforge-state"
-#     key            = "{{ .Environment }}/aws-ecs/terraform.tfstate"
-#     region         = "{{ .Region }}"
-#     dynamodb_table = "replace-me-clusterforge-locks"
-#     encrypt        = true
-#   }
-# }
+{{ .BackendBlock }}

@@ -35,6 +35,11 @@ infrastructure logic remains visible in root environments and reusable modules.
     <p><a href="{{ '/environments/' | relative_url }}">Plan environments</a></p>
   </div>
   <div class="card">
+    <h3>Backends</h3>
+    <p>Generate local or remote state backend configuration safely.</p>
+    <p><a href="{{ '/backends/' | relative_url }}">Configure backends</a></p>
+  </div>
+  <div class="card">
     <h3>Modules</h3>
     <p>Follow module conventions for provider placement, inputs, outputs, and docs.</p>
     <p><a href="{{ '/module-conventions/' | relative_url }}">Build modules</a></p>
@@ -79,6 +84,7 @@ make security
 - [Architecture]({{ '/architecture/' | relative_url }})
 - [CLI]({{ '/cli/' | relative_url }})
 - [Environments]({{ '/environments/' | relative_url }})
+- [Backends]({{ '/backends/' | relative_url }})
 - [App manifest]({{ '/app-manifest/' | relative_url }})
 - [Module conventions]({{ '/module-conventions/' | relative_url }})
 - [General conventions]({{ '/conventions/' | relative_url }})

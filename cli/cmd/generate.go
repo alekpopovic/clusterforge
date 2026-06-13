@@ -36,12 +36,14 @@ var generateCmd = &cobra.Command{
 			}
 			env = updated
 		}
+		backend := cfg.BackendFor(args[0])
 		result, err := generator.Generate(args[0], env, generator.Options{
 			Force:        generateForce,
 			DryRun:       generateDryRun,
 			Cloud:        generateCloud,
 			Orchestrator: generateOrchestrator,
 			Layout:       generateLayout,
+			Backend:      backend,
 			Project:      cfg.Project.Name,
 			RootDir:      ".",
 			Stdout:       os.Stdout,

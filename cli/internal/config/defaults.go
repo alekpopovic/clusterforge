@@ -68,6 +68,15 @@ func (c *Config) ApplyDefaults() {
 	if c.Environments == nil {
 		c.Environments = map[string]Environment{}
 	}
+	if c.Backends == nil {
+		c.Backends = map[string]Backend{}
+	}
+	for name, backend := range c.Backends {
+		if backend.Type == "" {
+			backend.Type = "local"
+		}
+		c.Backends[name] = backend
+	}
 	for name, env := range c.Environments {
 		if env.Cloud == "" {
 			env.Cloud = c.Defaults.Cloud

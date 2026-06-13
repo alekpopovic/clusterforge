@@ -34,6 +34,8 @@ cf project init demo
 cf project init
 cf env create dev --cloud aws --orchestrator eks --region eu-central-1
 cf env create
+cf backend configure dev --backend local
+cf backend show dev
 cf app validate api
 cf app validate --all
 cf env list
@@ -230,6 +232,27 @@ Without `--stack`, `plan`, `init`, and `apply` run stacks in dependency order:
 
 See [Environments]({{ '/environments/' | relative_url }}) for layout details
 and production recommendations.
+
+## Backend Configuration
+
+Configure backend generation before running `cf generate`:
+
+```bash
+cf backend configure dev --backend local
+cf backend configure prod \
+  --backend s3 \
+  --bucket my-terraform-state-bucket \
+  --region eu-central-1 \
+  --dynamodb-table my-terraform-locks \
+  --key-prefix clusterforge/prod
+cf backend show prod
+cf generate prod --force
+```
+
+The CLI never asks for or writes cloud credentials into backend configuration.
+Production environments should use a remote backend with locking.
+
+See [Backends]({{ '/backends/' | relative_url }}) for bootstrap guidance.
 
 ## Policy And Risk Summaries
 

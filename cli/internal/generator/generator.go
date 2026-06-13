@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 	"path/filepath"
 	"runtime"
 	"sort"
@@ -33,6 +34,7 @@ type Options struct {
 	Cloud        string
 	Orchestrator string
 	Layout       string
+	Backend      config.Backend
 	Project      string
 	RootDir      string
 	TemplatesDir string
@@ -58,6 +60,7 @@ type templateData struct {
 	Project      string
 	Name         string
 	ModulesPath  string
+	BackendBlock string
 	Stack        string
 	StateComment string
 }
@@ -85,6 +88,16 @@ func Generate(name string, env config.Environment, opts Options) (*Result, error
 	if env.Layout != "simple" && env.Layout != "stacked" {
 		return nil, fmt.Errorf("unsupported layout %q; expected simple or stacked", env.Layout)
 	}
+	backend := opts.Backend
+	if backend.Type == "" {
+		backend.Type = "local"
+	}
+	if err := backend.Validate(name); err != nil {
+		return nil, err
+	}
+	if isProd(name) && backend.EffectiveType() == "local" {
+		fmt.Fprintf(defaultWriter(opts.Stdout), "warning: prod environment %q is configured with local backend\n", name)
+	}
 
 	rootDir := opts.RootDir
 	if rootDir == "" {
@@ -100,7 +113,7 @@ func Generate(name string, env config.Environment, opts Options) (*Result, error
 	}
 
 	if env.Layout == "stacked" {
-		return generateStacked(name, env, opts, rootDir)
+		return generateStacked(name, env, opts, rootDir, backend)
 	}
 
 	modulesPath, err := relativeModulesPath(rootDir, env.Path)
@@ -116,6 +129,7 @@ func Generate(name string, env config.Environment, opts Options) (*Result, error
 		Project:      defaultString(opts.Project, "clusterforge"),
 		Name:         fmt.Sprintf("clusterforge-%s-%s", name, env.Orchestrator),
 		ModulesPath:  modulesPath,
+		BackendBlock: renderBackendBlock(name, "", backend),
 	}
 
 	targetDir := filepath.Join(templatesDir, "env", target)
@@ -154,7 +168,7 @@ func Generate(name string, env config.Environment, opts Options) (*Result, error
 	return result, nil
 }
 
-func generateStacked(name string, env config.Environment, opts Options, rootDir string) (*Result, error) {
+func generateStacked(name string, env config.Environment, opts Options, rootDir string, backend config.Backend) (*Result, error) {
 	result := &Result{Target: fmt.Sprintf("%s-%s-stacked", env.Cloud, env.Orchestrator)}
 	stacks := env.Stacks
 	if stacks == nil {
@@ -178,6 +192,7 @@ func generateStacked(name string, env config.Environment, opts Options, rootDir 
 			Project:      defaultString(opts.Project, "clusterforge"),
 			Name:         fmt.Sprintf("clusterforge-%s-%s", name, env.Orchestrator),
 			ModulesPath:  modulesPath,
+			BackendBlock: renderBackendBlock(name, stackName, backend),
 			Stack:        stackName,
 			StateComment: remoteStateComment(stackName),
 		}
@@ -215,7 +230,7 @@ func renderStackFile(file string, data templateData) string {
 	case "versions.tf":
 		return fmt.Sprintf("%s\n\nterraform {\n  required_version = \">= 1.6.0\"\n}\n", data.Header)
 	case "backend.tf":
-		return fmt.Sprintf("%s\n\n# Configure a backend per stack before production use.\n# Local backend is acceptable for examples only.\n", data.Header)
+		return data.BackendBlock
 	case "providers.tf":
 		return fmt.Sprintf("%s\n\n# Configure providers for the %s stack here.\n", data.Header, data.Stack)
 	case "variables.tf":
@@ -246,6 +261,47 @@ func remoteStateComment(stack string) string {
 	default:
 		return "Use explicit stack outputs for cross-stack dependencies."
 	}
+}
+
+func renderBackendBlock(environment, stack string, backend config.Backend) string {
+	switch backend.EffectiveType() {
+	case "s3":
+		lines := []string{
+			header,
+			"",
+			"terraform {",
+			"  backend \"s3\" {",
+			fmt.Sprintf("    bucket         = %q", backend.Bucket),
+			fmt.Sprintf("    key            = %q", backendKey(environment, stack, backend.KeyPrefix)),
+			fmt.Sprintf("    region         = %q", backend.Region),
+		}
+		if backend.DynamoDBTable != "" {
+			lines = append(lines, fmt.Sprintf("    dynamodb_table = %q", backend.DynamoDBTable))
+		}
+		lines = append(lines,
+			"    encrypt        = true",
+			"  }",
+			"}",
+			"",
+		)
+		return strings.Join(lines, "\n")
+	case "azurerm":
+		return fmt.Sprintf("%s\n\n# TODO: configure azurerm backend settings before use.\nterraform {\n  backend \"azurerm\" {}\n}\n", header)
+	case "gcs":
+		return fmt.Sprintf("%s\n\n# TODO: configure gcs backend settings before use.\nterraform {\n  backend \"gcs\" {}\n}\n", header)
+	default:
+		return fmt.Sprintf("%s\n\nterraform {\n  backend \"local\" {}\n}\n", header)
+	}
+}
+
+func backendKey(environment, stack, prefix string) string {
+	if prefix == "" {
+		prefix = path.Join("clusterforge", environment)
+	}
+	if stack == "" {
+		return path.Join(prefix, "terraform.tfstate")
+	}
+	return path.Join(prefix, stack, "terraform.tfstate")
 }
 
 func renderFile(templateDir, file string, data templateData) ([]byte, error) {
@@ -290,9 +346,7 @@ func defaultTemplatesDir() (string, error) {
 }
 
 func printDryRun(out io.Writer, actions []Action) {
-	if out == nil {
-		out = os.Stdout
-	}
+	out = defaultWriter(out)
 	sorted := append([]Action{}, actions...)
 	sort.Slice(sorted, func(i, j int) bool {
 		return sorted[i].Path < sorted[j].Path
@@ -304,6 +358,13 @@ func printDryRun(out io.Writer, actions []Action) {
 		}
 		fmt.Fprintf(out, "%s %s\n", verb, action.Path)
 	}
+}
+
+func defaultWriter(out io.Writer) io.Writer {
+	if out == nil {
+		return os.Stdout
+	}
+	return out
 }
 
 func defaultString(value, fallback string) string {
@@ -318,4 +379,9 @@ func title(value string) string {
 		return ""
 	}
 	return strings.ToUpper(value[:1]) + value[1:]
+}
+
+func isProd(environment string) bool {
+	env := strings.ToLower(environment)
+	return env == "prod" || env == "production"
 }

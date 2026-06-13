@@ -160,6 +160,23 @@ environments:
 	}
 }
 
+func TestValidateMissingS3BackendBucketFails(t *testing.T) {
+	path := writeConfig(t, `project:
+  name: demo
+environments:
+  prod:
+    path: live/prod/aws-eks
+backends:
+  prod:
+    type: s3
+    region: eu-central-1
+`)
+
+	if _, err := Load(path); err == nil {
+		t.Fatal("expected missing s3 backend bucket to fail")
+	}
+}
+
 func TestUnknownStackFails(t *testing.T) {
 	env := Environment{
 		Path:   "live/dev/aws-eks",

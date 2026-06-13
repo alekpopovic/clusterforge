@@ -42,6 +42,89 @@ func TestGenerateAWSEKS(t *testing.T) {
 	if !strings.Contains(mainTF, "../../../modules/orchestrators/kubernetes/eks") {
 		t.Fatalf("main.tf has wrong relative module path:\n%s", mainTF)
 	}
+	backendTF := readFile(t, filepath.Join(env.Path, "backend.tf"))
+	if !strings.Contains(backendTF, `backend "local"`) {
+		t.Fatalf("backend.tf does not include local backend:\n%s", backendTF)
+	}
+}
+
+func TestGenerateS3Backend(t *testing.T) {
+	dir := t.TempDir()
+	env := config.Environment{
+		Cloud:        "aws",
+		Region:       "eu-central-1",
+		Orchestrator: "eks",
+		Path:         filepath.Join(dir, "live", "prod", "aws-eks"),
+	}
+
+	_, err := Generate("prod", env, Options{
+		RootDir: dir,
+		Backend: config.Backend{
+			Type:          "s3",
+			Bucket:        "example-terraform-state",
+			Region:        "eu-central-1",
+			DynamoDBTable: "example-terraform-locks",
+			KeyPrefix:     "clusterforge/prod",
+		},
+	})
+	if err != nil {
+		t.Fatalf("generate s3 backend: %v", err)
+	}
+	backendTF := readFile(t, filepath.Join(env.Path, "backend.tf"))
+	for _, expected := range []string{
+		`backend "s3"`,
+		`bucket         = "example-terraform-state"`,
+		`key            = "clusterforge/prod/terraform.tfstate"`,
+		`region         = "eu-central-1"`,
+		`dynamodb_table = "example-terraform-locks"`,
+		`encrypt        = true`,
+	} {
+		if !strings.Contains(backendTF, expected) {
+			t.Fatalf("backend.tf missing %q:\n%s", expected, backendTF)
+		}
+	}
+}
+
+func TestGenerateMissingS3BucketFails(t *testing.T) {
+	dir := t.TempDir()
+	env := config.Environment{
+		Cloud:        "aws",
+		Region:       "eu-central-1",
+		Orchestrator: "eks",
+		Path:         filepath.Join(dir, "live", "prod", "aws-eks"),
+	}
+
+	_, err := Generate("prod", env, Options{
+		RootDir: dir,
+		Backend: config.Backend{
+			Type:   "s3",
+			Region: "eu-central-1",
+		},
+	})
+	if err == nil {
+		t.Fatal("expected missing s3 bucket to fail")
+	}
+}
+
+func TestGenerateProdLocalBackendWarns(t *testing.T) {
+	dir := t.TempDir()
+	env := config.Environment{
+		Cloud:        "aws",
+		Region:       "eu-central-1",
+		Orchestrator: "eks",
+		Path:         filepath.Join(dir, "live", "prod", "aws-eks"),
+	}
+	var out bytes.Buffer
+
+	if _, err := Generate("prod", env, Options{
+		RootDir: dir,
+		Stdout:  &out,
+	}); err != nil {
+		t.Fatalf("generate prod local backend: %v", err)
+	}
+	if !strings.Contains(out.String(), "local backend") {
+		t.Fatalf("expected local backend warning, got %q", out.String())
+	}
 }
 
 func TestGenerateStackedAWSEKS(t *testing.T) {
@@ -78,6 +161,10 @@ func TestGenerateStackedAWSEKS(t *testing.T) {
 	}
 	if !strings.Contains(mainTF, "../../../../modules") {
 		t.Fatalf("network stack main.tf has wrong relative module path:\n%s", mainTF)
+	}
+	backendTF := readFile(t, filepath.Join(env.Path, "network", "backend.tf"))
+	if !strings.Contains(backendTF, `backend "local"`) {
+		t.Fatalf("stack backend.tf does not include local backend:\n%s", backendTF)
 	}
 }
 
