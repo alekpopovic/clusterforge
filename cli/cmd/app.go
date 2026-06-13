@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/spf13/cobra"
 	cfapp "github.com/textracta/clusterforge/cli/internal/app"
@@ -16,11 +17,59 @@ var appCmd = &cobra.Command{
 }
 
 var appAddCmd = &cobra.Command{
-	Use:   "add <name>",
+	Use:   "add [name]",
 	Short: "Create an app manifest",
-	Args:  cobra.ExactArgs(1),
+	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		path, err := cfapp.Add(".", args[0], appAddOptions)
+		prompts := newPromptSession(cmd)
+		name, err := requireValueWithPrompt(optionalArg(args, 0), "app name", prompts)
+		if err != nil {
+			return err
+		}
+		options := appAddOptions
+		if strings.TrimSpace(options.Image) == "" {
+			if opts.NonInteractive {
+				return fmt.Errorf("--image is required in non-interactive mode")
+			}
+			options.Type, err = prompts.String("app type", defaultString(options.Type, "web"))
+			if err != nil {
+				return err
+			}
+			options.Image, err = prompts.String("image", "")
+			if err != nil {
+				return err
+			}
+			options.Port, err = prompts.Int("container port", options.Port)
+			if err != nil {
+				return err
+			}
+			options.Replicas, err = prompts.Int("replicas", options.Replicas)
+			if err != nil {
+				return err
+			}
+			options.Host, err = prompts.String("ingress host", options.Host)
+			if err != nil {
+				return err
+			}
+			options.Autoscaling, err = prompts.Bool("enable autoscaling", false)
+			if err != nil {
+				return err
+			}
+		}
+		manifest := cfapp.NewManifest(name, options)
+		printer.Info(fmt.Sprintf("app: %s", manifest.Name))
+		printer.Info(fmt.Sprintf("type: %s", manifest.Type))
+		printer.Info(fmt.Sprintf("image: %s", manifest.Image))
+		printer.Info(fmt.Sprintf("replicas: %d", manifest.Replicas))
+		if len(manifest.Ports) > 0 {
+			printer.Info(fmt.Sprintf("port: %d", manifest.Ports[0].ContainerPort))
+		}
+		if manifest.Ingress.Enabled {
+			printer.Info(fmt.Sprintf("ingress host: %s", manifest.Ingress.Host))
+		}
+		printer.Info(fmt.Sprintf("autoscaling: %t", manifest.Autoscaling.Enabled))
+
+		path, err := cfapp.Add(".", name, options)
 		if err != nil {
 			return err
 		}
@@ -92,6 +141,7 @@ func init() {
 	appAddCmd.Flags().IntVar(&appAddOptions.Replicas, "replicas", 1, "Replica count")
 	appAddCmd.Flags().StringVar(&appAddOptions.Host, "host", "", "Optional ingress host")
 	appAddCmd.Flags().StringVar(&appAddOptions.Type, "type", "web", "App type")
+	appAddCmd.Flags().BoolVar(&appAddOptions.Autoscaling, "autoscaling", false, "Enable default autoscaling settings")
 	appAddCmd.Flags().BoolVar(&appAddOptions.Force, "force", false, "Overwrite an existing app manifest")
 
 	appRenderCmd.Flags().StringVar(&appRenderEnv, "env", "", "Environment to render into")

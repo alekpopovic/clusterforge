@@ -17,17 +17,24 @@ var projectCmd = &cobra.Command{
 }
 
 var projectInitCmd = &cobra.Command{
-	Use:   "init <name>",
+	Use:   "init [name]",
 	Short: "Initialize a ClusterForge project",
-	Args:  cobra.ExactArgs(1),
+	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		name := args[0]
+		name, err := requireValueWithPrompt(optionalArg(args, 0), "project name", newPromptSession(cmd))
+		if err != nil {
+			return err
+		}
 		cfgPath := opts.ConfigPath
 		if !projectForce {
 			if _, err := os.Stat(cfgPath); err == nil {
 				return fmt.Errorf("%s already exists; use --force to overwrite it", cfgPath)
 			}
 		}
+
+		printer.Info(fmt.Sprintf("project: %s", name))
+		printer.Info(fmt.Sprintf("config: %s", filepath.Clean(cfgPath)))
+		printer.Info("directories: apps, live, .cf")
 
 		for _, dir := range []string{"apps", "live", ".cf"} {
 			if err := os.MkdirAll(dir, 0o755); err != nil {

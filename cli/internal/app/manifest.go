@@ -58,12 +58,13 @@ type Autoscaling struct {
 }
 
 type AddOptions struct {
-	Force    bool
-	Image    string
-	Port     int
-	Replicas int
-	Host     string
-	Type     string
+	Force       bool
+	Image       string
+	Port        int
+	Replicas    int
+	Host        string
+	Type        string
+	Autoscaling bool
 }
 
 func NewManifest(name string, opts AddOptions) Manifest {
@@ -93,6 +94,14 @@ func NewManifest(name string, opts AddOptions) Manifest {
 			Host:    opts.Host,
 			Path:    "/",
 			TLS:     true,
+		}
+	}
+	if opts.Autoscaling {
+		manifest.Autoscaling = Autoscaling{
+			Enabled:     true,
+			MinReplicas: max(1, opts.Replicas),
+			MaxReplicas: max(3, opts.Replicas),
+			CPUPercent:  70,
 		}
 	}
 	return manifest

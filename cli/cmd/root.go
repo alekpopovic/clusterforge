@@ -10,9 +10,10 @@ import (
 )
 
 type rootOptions struct {
-	ConfigPath string
-	Engine     string
-	Verbose    bool
+	ConfigPath     string
+	Engine         string
+	Verbose        bool
+	NonInteractive bool
 }
 
 var opts = rootOptions{
@@ -38,6 +39,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&opts.ConfigPath, "config", config.DefaultPath, "Path to the ClusterForge config file")
 	rootCmd.PersistentFlags().StringVar(&opts.Engine, "engine", "", "Override IaC engine: terraform or tofu")
 	rootCmd.PersistentFlags().BoolVar(&opts.Verbose, "verbose", false, "Enable verbose output")
+	rootCmd.PersistentFlags().BoolVar(&opts.NonInteractive, "non-interactive", false, "Disable prompts and fail when required values are missing")
 
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(completionCmd)

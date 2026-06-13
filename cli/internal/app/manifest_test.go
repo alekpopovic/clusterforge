@@ -33,6 +33,20 @@ func TestAddAppManifest(t *testing.T) {
 	}
 }
 
+func TestNewManifestWithAutoscaling(t *testing.T) {
+	manifest := NewManifest("api", AddOptions{
+		Image:       "nginx:1.27",
+		Replicas:    2,
+		Autoscaling: true,
+	})
+	if !manifest.Autoscaling.Enabled {
+		t.Fatal("autoscaling should be enabled")
+	}
+	if manifest.Autoscaling.MinReplicas != 2 || manifest.Autoscaling.MaxReplicas != 3 {
+		t.Fatalf("autoscaling = %#v", manifest.Autoscaling)
+	}
+}
+
 func TestListAppManifests(t *testing.T) {
 	dir := t.TempDir()
 	if _, err := Add(dir, "worker", AddOptions{Image: "busybox:1.36"}); err != nil {

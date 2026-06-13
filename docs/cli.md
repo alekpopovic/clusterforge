@@ -31,7 +31,9 @@ cli/
 cf version
 cf completion bash
 cf project init demo
+cf project init
 cf env create dev --cloud aws --orchestrator eks --region eu-central-1
+cf env create
 cf env list
 cf generate dev
 cf init dev
@@ -40,6 +42,33 @@ cf policy check dev --plan-file .cf/plans/dev.tfplan
 cf apply prod --plan-file .cf/plans/prod.tfplan --confirm-prod
 cf destroy prod --allow-destroy --confirm-prod
 cf doctor
+```
+
+## Interactive Wizard Mode
+
+ClusterForge prompts for missing required values when running interactively:
+
+```bash
+cf project init
+cf env create
+cf app add
+```
+
+Wizard prompts are intentionally limited to non-secret project metadata,
+environment settings, and app shape. They never ask for credentials, token
+values, private keys, or secret contents.
+
+Each wizard flow prints a summary before writing files.
+
+## Non-Interactive Mode
+
+Use `--non-interactive` in scripts and CI so missing required values fail
+instead of prompting:
+
+```bash
+cf --non-interactive project init demo
+cf --non-interactive env create dev --cloud aws --orchestrator eks --region eu-central-1
+cf --non-interactive app add api --image ghcr.io/company/api:1.0.0 --port 8080 --autoscaling
 ```
 
 ## Install From Source
@@ -134,7 +163,13 @@ registries.
 Create an app manifest:
 
 ```bash
-cf app add api --image ghcr.io/company/api:1.0.0 --port 8080 --replicas 2
+cf app add api --image ghcr.io/company/api:1.0.0 --port 8080 --replicas 2 --autoscaling
+```
+
+Create one with prompts:
+
+```bash
+cf app add
 ```
 
 Render it into an environment:
