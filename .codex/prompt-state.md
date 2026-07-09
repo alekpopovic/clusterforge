@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `091-aws-vpc-endpoints-module` |
-| Next prompt to execute | `092-ecr-registry-module` |
+| Last executed prompt | `092-ecr-registry-module` |
+| Next prompt to execute | `093-container-image-security-workflow` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -142,5 +142,14 @@ Title: AWS VPC endpoints module
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/vpc-endpoints and examples/aws-vpc-endpoints-private-eks; git diff --check passed
 Evidence: modules/cloud/aws/vpc-endpoints; examples/aws-vpc-endpoints-private-eks
+Commit: pending
+```
+
+```text
+Prompt: 092-ecr-registry-module
+Title: ECR registry module
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/ecr and examples/aws-ecr-repositories; git diff --check passed
+Evidence: modules/cloud/aws/ecr; examples/aws-ecr-repositories
 Commit: pending
 ```
