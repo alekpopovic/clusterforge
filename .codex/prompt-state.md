@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `085-golden-tests-for-cli-generators` |
-| Next prompt to execute | `086-cli-end-to-end-non-cloud-tests` |
+| Last executed prompt | `086-cli-end-to-end-non-cloud-tests` |
+| Next prompt to execute | `087-module-conformance-checker` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -88,5 +88,14 @@ Title: Golden tests for CLI generators
 Result: completed
 Validation: CLUSTERFORGE_UPDATE_GOLDEN=true go test ./internal/generator ./internal/app passed; cd cli && go test ./... passed; rg secret/path scan over cli/testdata/golden passed
 Evidence: cli/testdata/golden; cli/internal/generator/golden_test.go; cli/internal/app/render_golden_test.go; docs/testing-generators.md
+Commit: pending
+```
+
+```text
+Prompt: 086-cli-end-to-end-non-cloud-tests
+Title: CLI end-to-end non-cloud tests
+Result: completed
+Validation: gofmt passed; cd cli && go test ./... passed
+Evidence: cli/e2e/project_init_test.go; cli/e2e/env_create_test.go; cli/e2e/generate_test.go; cli/e2e/app_flow_test.go; cli/e2e/policy_test.go
 Commit: pending
 ```
