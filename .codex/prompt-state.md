@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `097-cert-manager-route53-dns01-iam-module` |
-| Next prompt to execute | `098-aws-rds-postgresql-module` |
+| Last executed prompt | `098-aws-rds-postgresql-module` |
+| Next prompt to execute | `099-aws-elasticache-redis-module` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -196,5 +196,14 @@ Title: Cert-manager Route53 DNS01 IAM module
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/cert-manager-route53-irsa, modules/platform/kubernetes/cert-manager, modules/platform/kubernetes/cert-manager-issuer, and examples/aws-eks-cert-manager-dns01; make check-modules passed with warning status; git diff --check passed
 Evidence: modules/cloud/aws/cert-manager-route53-irsa; docs/tls-cert-manager.md; examples/aws-eks-cert-manager-dns01
+Commit: pending
+```
+
+```text
+Prompt: 098-aws-rds-postgresql-module
+Title: AWS RDS PostgreSQL module
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/rds-postgres and examples/aws-rds-postgres; make check-modules passed with warning status; git diff --check passed
+Evidence: modules/cloud/aws/rds-postgres; examples/aws-rds-postgres
 Commit: pending
 ```
