@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `086-cli-end-to-end-non-cloud-tests` |
-| Next prompt to execute | `087-module-conformance-checker` |
+| Last executed prompt | `087-module-conformance-checker` |
+| Next prompt to execute | `088-platform-conformance-tests-for-kubernetes-add-ons` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -97,5 +97,14 @@ Title: CLI end-to-end non-cloud tests
 Result: completed
 Validation: gofmt passed; cd cli && go test ./... passed
 Evidence: cli/e2e/project_init_test.go; cli/e2e/env_create_test.go; cli/e2e/generate_test.go; cli/e2e/app_flow_test.go; cli/e2e/policy_test.go
+Commit: pending
+```
+
+```text
+Prompt: 087-module-conformance-checker
+Title: Module conformance checker
+Result: completed
+Validation: gofmt passed; cd cli && go test ./... passed; make check-modules passed with warning status; cf module check --json verified
+Evidence: cli/internal/modulecheck; cli/cmd/module.go; .github/workflows/module-conformance.yml; docs/module-conformance.md
 Commit: pending
 ```

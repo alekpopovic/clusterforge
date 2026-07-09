@@ -10,7 +10,7 @@ CLI_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
 CLI_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 CLI_LDFLAGS := -s -w -X github.com/textracta/clusterforge/cli/cmd.Version=$(CLI_VERSION) -X github.com/textracta/clusterforge/cli/cmd.Commit=$(CLI_COMMIT) -X github.com/textracta/clusterforge/cli/cmd.Date=$(CLI_DATE)
 
-.PHONY: help fmt fmt-check validate lint test test-cli test-terraform test-terraform-aws build-cli security docs docs-serve docs-build clean ci
+.PHONY: help fmt fmt-check validate lint test test-cli test-terraform test-terraform-aws check-modules build-cli security docs docs-serve docs-build clean ci
 
 help: ## Show available targets.
 	@awk 'BEGIN {FS = ":.*## "; printf "ClusterForge developer targets:\n\n"} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-14s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -53,6 +53,9 @@ test-terraform-aws: ## Run optional AWS module plan tests; requires working AWS 
 		$(TERRAFORM_BIN) -chdir=$${module} init -backend=false -input=false -no-color; \
 		$(TERRAFORM_BIN) -chdir=$${module} test -no-color; \
 	done
+
+check-modules: ## Check Terraform module repository conventions.
+	cd cli && GOCACHE=$(GOCACHE) GOPATH=$(GOPATH) $(GO) run . module check --path ../modules
 
 build-cli: ## Build the ClusterForge CLI at cli/cf.
 	cd cli && GOCACHE=$(GOCACHE) GOPATH=$(GOPATH) $(GO) build -trimpath -ldflags "$(CLI_LDFLAGS)" -o cf .

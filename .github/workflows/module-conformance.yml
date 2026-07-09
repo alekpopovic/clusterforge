@@ -1,0 +1,25 @@
+name: Module Conformance
+
+on:
+  pull_request:
+    paths:
+      - "modules/**"
+      - "cli/**"
+      - "MODULE_CATALOG.md"
+      - ".terraform-docs.yml"
+      - ".github/workflows/module-conformance.yml"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: cli/go.mod
+          cache-dependency-path: cli/go.sum
+
+      - name: Check modules
+        run: make check-modules
