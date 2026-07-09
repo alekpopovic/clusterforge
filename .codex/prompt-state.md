@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `083-existing-kubernetes-environment-support` |
-| Next prompt to execute | `084-provider-compatibility-matrix-ci` |
+| Last executed prompt | `084-provider-compatibility-matrix-ci` |
+| Next prompt to execute | `085-golden-tests-for-cli-generators` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -70,5 +70,14 @@ Title: Existing Kubernetes environment support
 Result: completed
 Validation: terraform fmt -recursive examples/existing-kubernetes-basic-app examples/existing-kubernetes-platform-bootstrap passed; gofmt passed; cd cli && go test ./... passed
 Evidence: docs/existing-kubernetes.md; cli/templates/env/existing-kubernetes; examples/existing-kubernetes-basic-app; examples/existing-kubernetes-platform-bootstrap
+Commit: pending
+```
+
+```text
+Prompt: 084-provider-compatibility-matrix-ci
+Title: Provider compatibility matrix CI
+Result: completed
+Validation: git diff --check passed; YAML reviewed
+Evidence: docs/provider-compatibility.md; .github/workflows/provider-compatibility.yml
 Commit: pending
 ```
