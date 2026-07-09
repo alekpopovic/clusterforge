@@ -37,6 +37,18 @@ enable_cluster_encryption = true
 kms_key_arn               = var.eks_secrets_kms_key_arn
 ```
 
+You can create that key with `modules/cloud/aws/kms-key`:
+
+```hcl
+module "eks_secrets_key" {
+  source = "../modules/cloud/aws/kms-key"
+
+  name        = "clusterforge-prod-eks-secrets"
+  environment = "prod"
+  alias_name  = "clusterforge-prod-eks-secrets"
+}
+```
+
 ## Control Plane Logs
 
 Enable the full control plane log set and retain logs deliberately:

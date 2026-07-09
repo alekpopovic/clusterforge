@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `089-eks-production-hardening-options` |
-| Next prompt to execute | `090-aws-kms-reusable-module` |
+| Last executed prompt | `090-aws-kms-reusable-module` |
+| Next prompt to execute | `091-aws-vpc-endpoints-module` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -124,5 +124,14 @@ Title: EKS production hardening options
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for modules/orchestrators/kubernetes/eks and examples/aws-eks-production-hardened; git diff --check passed
 Evidence: modules/orchestrators/kubernetes/eks; docs/aws-eks-production.md; examples/aws-eks-production-hardened
+Commit: pending
+```
+
+```text
+Prompt: 090-aws-kms-reusable-module
+Title: AWS KMS reusable module
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/kms-key and modules/cloud/aws/tfstate-backend; make check-modules passed with warning status; git diff --check passed
+Evidence: modules/cloud/aws/kms-key; modules/cloud/aws/tfstate-backend; docs/aws-eks-production.md
 Commit: pending
 ```

@@ -26,3 +26,8 @@ output "backend_config_example" {
     dynamodb_table = aws_dynamodb_table.locks.name
   }
 }
+
+output "kms_key_arn" {
+  description = "KMS key ARN used for S3 state bucket encryption, when configured."
+  value       = var.kms_key_arn == "" ? null : var.kms_key_arn
+}

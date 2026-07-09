@@ -51,6 +51,9 @@ enable_cluster_encryption = true
 create_kms_key            = true
 ```
 
+For shared or centrally managed keys, create a key with
+`modules/cloud/aws/kms-key` and pass its `key_arn` as `kms_key_arn`.
+
 Control plane log retention:
 
 ```hcl

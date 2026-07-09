@@ -56,6 +56,12 @@ variable "enable_encryption" {
   default     = true
 }
 
+variable "kms_key_arn" {
+  description = "Optional KMS key ARN for S3 state bucket encryption. When empty, AES256 SSE is used."
+  type        = string
+  default     = ""
+}
+
 variable "tags" {
   description = "Additional tags to apply to backend resources."
   type        = map(string)
