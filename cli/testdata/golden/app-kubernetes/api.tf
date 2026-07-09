@@ -25,10 +25,10 @@ module "api" {
     }
   }
   resources = {
-    cpu_request = "100m"
+    cpu_request    = "100m"
     memory_request = "128Mi"
-    cpu_limit = "500m"
-    memory_limit = "512Mi"
+    cpu_limit      = "500m"
+    memory_limit   = "512Mi"
   }
   ingress = {
     enabled = true

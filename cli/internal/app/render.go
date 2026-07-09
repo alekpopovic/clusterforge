@@ -314,16 +314,16 @@ func hclResources(resources Resources, indent int) string {
 	var out strings.Builder
 	out.WriteString("{\n")
 	if resources.CPURequest != "" {
-		out.WriteString(fmt.Sprintf("%s  cpu_request = %s\n", pad, strconv.Quote(resources.CPURequest)))
+		out.WriteString(fmt.Sprintf("%s  cpu_request    = %s\n", pad, strconv.Quote(resources.CPURequest)))
 	}
 	if resources.MemoryRequest != "" {
 		out.WriteString(fmt.Sprintf("%s  memory_request = %s\n", pad, strconv.Quote(resources.MemoryRequest)))
 	}
 	if resources.CPULimit != "" {
-		out.WriteString(fmt.Sprintf("%s  cpu_limit = %s\n", pad, strconv.Quote(resources.CPULimit)))
+		out.WriteString(fmt.Sprintf("%s  cpu_limit      = %s\n", pad, strconv.Quote(resources.CPULimit)))
 	}
 	if resources.MemoryLimit != "" {
-		out.WriteString(fmt.Sprintf("%s  memory_limit = %s\n", pad, strconv.Quote(resources.MemoryLimit)))
+		out.WriteString(fmt.Sprintf("%s  memory_limit   = %s\n", pad, strconv.Quote(resources.MemoryLimit)))
 	}
 	out.WriteString(pad + "}")
 	return out.String()

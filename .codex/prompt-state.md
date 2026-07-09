@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `087-module-conformance-checker` |
-| Next prompt to execute | `088-platform-conformance-tests-for-kubernetes-add-ons` |
+| Last executed prompt | `088-platform-conformance-tests-for-kubernetes-add-ons` |
+| Next prompt to execute | `089-eks-production-hardening-options` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -106,5 +106,14 @@ Title: Module conformance checker
 Result: completed
 Validation: gofmt passed; cd cli && go test ./... passed; make check-modules passed with warning status; cf module check --json verified
 Evidence: cli/internal/modulecheck; cli/cmd/module.go; .github/workflows/module-conformance.yml; docs/module-conformance.md
+Commit: pending
+```
+
+```text
+Prompt: 088-platform-conformance-tests-for-kubernetes-add-ons
+Title: Platform conformance tests for Kubernetes add-ons
+Result: completed
+Validation: scripts/check-platform-modules.sh passed with bootstrap pass-through warnings; terraform fmt -recursive passed; git diff --check passed; cd cli && go test ./... passed
+Evidence: scripts/check-platform-modules.sh; docs/platform-module-conventions.md
 Commit: pending
 ```
