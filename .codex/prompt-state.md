@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `099-aws-elasticache-redis-module` |
-| Next prompt to execute | `100-aws-messaging-modules-sqs-and-sns` |
+| Last executed prompt | `100-aws-messaging-modules-sqs-and-sns` |
+| Next prompt to execute | `101-workload-cloud-identity-abstraction` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -214,5 +214,14 @@ Title: AWS ElastiCache Redis module
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/elasticache-redis and examples/aws-elasticache-redis; make check-modules passed with warning status; git diff --check passed
 Evidence: modules/cloud/aws/elasticache-redis; examples/aws-elasticache-redis
+Commit: pending
+```
+
+```text
+Prompt: 100-aws-messaging-modules-sqs-and-sns
+Title: AWS messaging modules: SQS and SNS
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/sqs, modules/cloud/aws/sns, examples/aws-sqs-worker, and examples/aws-sns-topic; make check-modules passed with warning status; git diff --check passed
+Evidence: modules/cloud/aws/sqs; modules/cloud/aws/sns; examples/aws-sqs-worker; examples/aws-sns-topic
 Commit: pending
 ```
