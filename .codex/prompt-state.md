@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `084-provider-compatibility-matrix-ci` |
-| Next prompt to execute | `085-golden-tests-for-cli-generators` |
+| Last executed prompt | `085-golden-tests-for-cli-generators` |
+| Next prompt to execute | `086-cli-end-to-end-non-cloud-tests` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -79,5 +79,14 @@ Title: Provider compatibility matrix CI
 Result: completed
 Validation: git diff --check passed; YAML reviewed
 Evidence: docs/provider-compatibility.md; .github/workflows/provider-compatibility.yml
+Commit: pending
+```
+
+```text
+Prompt: 085-golden-tests-for-cli-generators
+Title: Golden tests for CLI generators
+Result: completed
+Validation: CLUSTERFORGE_UPDATE_GOLDEN=true go test ./internal/generator ./internal/app passed; cd cli && go test ./... passed; rg secret/path scan over cli/testdata/golden passed
+Evidence: cli/testdata/golden; cli/internal/generator/golden_test.go; cli/internal/app/render_golden_test.go; docs/testing-generators.md
 Commit: pending
 ```
