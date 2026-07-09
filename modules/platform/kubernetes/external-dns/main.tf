@@ -1,5 +1,11 @@
 locals {
   release_name = "external-dns"
+
+  default_values = yamlencode({
+    serviceAccount = {
+      annotations = var.service_account_annotations
+    }
+  })
 }
 
 resource "kubernetes_namespace_v1" "this" {
@@ -17,7 +23,7 @@ resource "helm_release" "this" {
   repository = "https://kubernetes-sigs.github.io/external-dns/"
   chart      = "external-dns"
   version    = var.chart_version == "" ? null : var.chart_version
-  values     = var.values
+  values     = concat([local.default_values], var.values)
 
   depends_on = [kubernetes_namespace_v1.this]
 }

@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `095-disaster-recovery-runbooks` |
-| Next prompt to execute | `096-cost-visibility-for-aws-modules` |
+| Last executed prompt | `096-external-dns-production-hardening` |
+| Next prompt to execute | `097-cert-manager-route53-dns01-iam-module` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -178,5 +178,14 @@ Title: Disaster recovery runbooks
 Result: completed
 Validation: git diff --check passed; DR section coverage scan passed for all runbooks; no real account IDs or fake RTO/RPO guarantees added
 Evidence: docs/dr; docs/operations.md; docs/security.md; README.md
+Commit: pending
+```
+
+```text
+Prompt: 096-external-dns-production-hardening
+Title: External DNS production hardening
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/external-dns-irsa, modules/platform/kubernetes/external-dns, and examples/aws-eks-external-dns; make check-modules passed with warning status; git diff --check passed
+Evidence: modules/cloud/aws/external-dns-irsa; modules/platform/kubernetes/external-dns; examples/aws-eks-external-dns
 Commit: pending
 ```
