@@ -59,6 +59,44 @@ func TestMissingImageFailsValidation(t *testing.T) {
 	assertValidationError(t, manifest.Validate(), "image is required")
 }
 
+func TestImagePolicyWarnsForLatestTag(t *testing.T) {
+	manifest := sampleManifest()
+	manifest.Image = "nginx:latest"
+
+	warnings := ImagePolicyWarnings(manifest, "dev")
+	if len(warnings) != 1 || !strings.Contains(warnings[0], "latest tag") {
+		t.Fatalf("warnings = %#v", warnings)
+	}
+}
+
+func TestImagePolicyAcceptsDigest(t *testing.T) {
+	manifest := sampleManifest()
+	manifest.Image = "nginx@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+	if warnings := ImagePolicyWarnings(manifest, "prod"); len(warnings) != 0 {
+		t.Fatalf("warnings = %#v", warnings)
+	}
+}
+
+func TestImagePolicyAcceptsVersionTag(t *testing.T) {
+	manifest := sampleManifest()
+	manifest.Image = "nginx:1.27"
+
+	if warnings := ImagePolicyWarnings(manifest, "prod"); len(warnings) != 0 {
+		t.Fatalf("warnings = %#v", warnings)
+	}
+}
+
+func TestImagePolicyWarnsForUnpinnedProdImage(t *testing.T) {
+	manifest := sampleManifest()
+	manifest.Image = "nginx"
+
+	warnings := ImagePolicyWarnings(manifest, "prod")
+	if len(warnings) != 1 || !strings.Contains(warnings[0], "not pinned") {
+		t.Fatalf("warnings = %#v", warnings)
+	}
+}
+
 func TestBadPortFailsValidation(t *testing.T) {
 	manifest := sampleManifest()
 	manifest.Ports[0].ContainerPort = 70000

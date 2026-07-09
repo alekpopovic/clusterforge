@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `092-ecr-registry-module` |
-| Next prompt to execute | `093-container-image-security-workflow` |
+| Last executed prompt | `093-container-image-security-workflow` |
+| Next prompt to execute | `094-velero-backup-module` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -151,5 +151,14 @@ Title: ECR registry module
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/ecr and examples/aws-ecr-repositories; git diff --check passed
 Evidence: modules/cloud/aws/ecr; examples/aws-ecr-repositories
+Commit: pending
+```
+
+```text
+Prompt: 093-container-image-security-workflow
+Title: Container image security workflow
+Result: completed
+Validation: gofmt passed; cd cli && go test ./... passed; git diff --check passed
+Evidence: docs/image-security.md; .github/workflows/image-security-example.yml; cli/internal/app image policy warnings
 Commit: pending
 ```

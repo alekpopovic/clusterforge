@@ -154,6 +154,21 @@ func ValidateFile(path string) error {
 	return err
 }
 
+func ImagePolicyWarnings(manifest Manifest, environment string) []string {
+	image := strings.TrimSpace(manifest.Image)
+	if image == "" {
+		return nil
+	}
+	var warnings []string
+	if imageUsesLatestTag(image) {
+		warnings = append(warnings, fmt.Sprintf("image %q uses the latest tag; use a version tag or digest for repeatable deploys", image))
+	}
+	if isProdEnvironment(environment) && !imageIsPinned(image) {
+		warnings = append(warnings, fmt.Sprintf("prod image %q is not pinned by tag or digest", image))
+	}
+	return warnings
+}
+
 func Save(path string, manifest Manifest) error {
 	manifest.ApplyDefaults()
 	if err := manifest.Validate(); err != nil {
@@ -319,6 +334,37 @@ func isAllowedProtocol(value string) bool {
 	default:
 		return false
 	}
+}
+
+func imageUsesLatestTag(image string) bool {
+	tag, ok := imageTag(image)
+	return ok && tag == "latest"
+}
+
+func imageIsPinned(image string) bool {
+	if strings.Contains(image, "@sha256:") {
+		return true
+	}
+	_, ok := imageTag(image)
+	return ok
+}
+
+func imageTag(image string) (string, bool) {
+	if strings.Contains(image, "@") {
+		return "", false
+	}
+	lastSlash := strings.LastIndex(image, "/")
+	lastColon := strings.LastIndex(image, ":")
+	if lastColon <= lastSlash {
+		return "", false
+	}
+	tag := strings.TrimSpace(image[lastColon+1:])
+	return tag, tag != ""
+}
+
+func isProdEnvironment(environment string) bool {
+	env := strings.ToLower(strings.TrimSpace(environment))
+	return env == "prod" || env == "production"
 }
 
 func validateRawManifestYAML(data []byte) error {

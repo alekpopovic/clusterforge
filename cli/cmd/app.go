@@ -130,7 +130,8 @@ var appValidateCmd = &cobra.Command{
 		var failed bool
 		for _, name := range names {
 			path := cfapp.ManifestPath(".", name)
-			if err := cfapp.ValidateFile(path); err != nil {
+			manifest, err := cfapp.Load(path)
+			if err != nil {
 				failed = true
 				for _, line := range strings.Split(err.Error(), "\n") {
 					if strings.TrimSpace(line) == "" {
@@ -139,6 +140,9 @@ var appValidateCmd = &cobra.Command{
 					fmt.Fprintf(cmd.ErrOrStderr(), "%s: %s\n", path, line)
 				}
 				continue
+			}
+			for _, warning := range cfapp.ImagePolicyWarnings(manifest, "") {
+				printer.Warn(fmt.Sprintf("%s: %s", path, warning))
 			}
 			fmt.Fprintf(cmd.OutOrStdout(), "%s: ok\n", path)
 		}
@@ -181,6 +185,9 @@ var appRenderCmd = &cobra.Command{
 		manifest, err := cfapp.Load(cfapp.ManifestPath(".", args[0]))
 		if err != nil {
 			return err
+		}
+		for _, warning := range cfapp.ImagePolicyWarnings(manifest, appRenderEnv) {
+			printer.Warn(fmt.Sprintf("%s: %s", cfapp.ManifestPath(".", args[0]), warning))
 		}
 		outPath, err := cfapp.Render(".", appRenderEnv, env, manifest)
 		if err != nil {
