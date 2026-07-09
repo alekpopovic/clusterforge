@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `080-v0-2-0-planning-and-milestone-board` |
-| Next prompt to execute | `081-v0-2-release-gate-review` |
+| Last executed prompt | `081-v0-2-release-gate-review` |
+| Next prompt to execute | `082-local-kubernetes-development-target-with-kind-or-k3d` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -45,3 +45,12 @@ Commit: <filled after commit if useful>
 - Prompts `000` through `080` have repository artifacts from prior execution.
 - Prompts `081` through `120` have been split into files but have not been
   executed as implementation prompts yet.
+
+```text
+Prompt: 081-v0-2-release-gate-review
+Title: v0.2 release gate review
+Result: completed
+Validation: make fmt-check passed; make lint failed on TFLint warnings; make test passed; make validate passed; make security skipped missing scanners; cli build/version passed; cf doctor failed without clusterforge.yaml
+Evidence: RELEASE_GATE_V0.2.md
+Commit: pending
+```
