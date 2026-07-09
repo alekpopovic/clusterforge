@@ -16,6 +16,12 @@ variable "values" {
   default     = []
 }
 
+variable "service_account_annotations" {
+  description = "Annotations applied to the cert-manager service account, such as an EKS IRSA role ARN."
+  type        = map(string)
+  default     = {}
+}
+
 variable "labels" {
   description = "Labels applied to the namespace when create_namespace is true."
   type        = map(string)

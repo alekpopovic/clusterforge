@@ -57,6 +57,10 @@ Route53 DNS01 challenges require cert-manager to have IAM permissions to read
 and change challenge records in the hosted zone. Prefer IRSA on EKS and keep
 cloud credentials out of Terraform variables and Kubernetes manifests.
 
+Use `modules/cloud/aws/cert-manager-route53-irsa` to create the IRSA role, then
+pass the role ARN to `modules/platform/kubernetes/cert-manager` with
+`service_account_annotations`.
+
 Do not put DNS provider access keys in Terraform. Manage workload identity or
 external secret references separately.
 

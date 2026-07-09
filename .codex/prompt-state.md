@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `096-external-dns-production-hardening` |
-| Next prompt to execute | `097-cert-manager-route53-dns01-iam-module` |
+| Last executed prompt | `097-cert-manager-route53-dns01-iam-module` |
+| Next prompt to execute | `098-aws-rds-postgresql-module` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -187,5 +187,14 @@ Title: External DNS production hardening
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/external-dns-irsa, modules/platform/kubernetes/external-dns, and examples/aws-eks-external-dns; make check-modules passed with warning status; git diff --check passed
 Evidence: modules/cloud/aws/external-dns-irsa; modules/platform/kubernetes/external-dns; examples/aws-eks-external-dns
+Commit: pending
+```
+
+```text
+Prompt: 097-cert-manager-route53-dns01-iam-module
+Title: Cert-manager Route53 DNS01 IAM module
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/cert-manager-route53-irsa, modules/platform/kubernetes/cert-manager, modules/platform/kubernetes/cert-manager-issuer, and examples/aws-eks-cert-manager-dns01; make check-modules passed with warning status; git diff --check passed
+Evidence: modules/cloud/aws/cert-manager-route53-irsa; docs/tls-cert-manager.md; examples/aws-eks-cert-manager-dns01
 Commit: pending
 ```
