@@ -1,0 +1,19 @@
+{{ .Header }}
+
+variable "environment" {
+  description = "Environment name."
+  type        = string
+  default     = "{{ .Environment }}"
+}
+
+variable "name" {
+  description = "Cluster name."
+  type        = string
+  default     = "{{ .Name }}"
+}
+
+variable "server_count" {
+  description = "Expected server node count."
+  type        = number
+  default     = 1
+}

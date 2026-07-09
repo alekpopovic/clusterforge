@@ -3,10 +3,12 @@ package terraform
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 type Runner struct {
@@ -40,6 +42,11 @@ func (r Runner) Plan(ctx context.Context, outFile string, extraArgs []string) er
 	return r.run(ctx, planArgs(outFile, extraArgs))
 }
 
+func (r Runner) PlanDetailedExitCode(ctx context.Context, outFile string, extraArgs []string) (int, error) {
+	args := planArgs(outFile, append([]string{"-detailed-exitcode"}, extraArgs...))
+	return r.runExitCode(ctx, args, true)
+}
+
 func (r Runner) Apply(ctx context.Context, planFile string, extraArgs []string) error {
 	return r.run(ctx, applyArgs(planFile, extraArgs))
 }
@@ -50,6 +57,36 @@ func (r Runner) Destroy(ctx context.Context, extraArgs []string) error {
 
 func (r Runner) Output(ctx context.Context, json bool) error {
 	return r.run(ctx, outputArgs(json))
+}
+
+func (r Runner) StateList(ctx context.Context) error {
+	return r.run(ctx, []string{"state", "list"})
+}
+
+func (r Runner) StateShow(ctx context.Context, address string) error {
+	if address == "" {
+		return fmt.Errorf("state address is required")
+	}
+	return r.run(ctx, []string{"state", "show", address})
+}
+
+func (r Runner) StatePull(ctx context.Context, outputPath string) error {
+	if outputPath == "" {
+		return fmt.Errorf("output path is required")
+	}
+	var stdout bytes.Buffer
+	copy := r
+	copy.Stdout = &stdout
+	if err := copy.run(ctx, []string{"state", "pull"}); err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Dir(outputPath), 0o755); err != nil {
+		return fmt.Errorf("create state output directory: %w", err)
+	}
+	if err := os.WriteFile(outputPath, stdout.Bytes(), 0o600); err != nil {
+		return fmt.Errorf("write state output %s: %w", outputPath, err)
+	}
+	return nil
 }
 
 func (r Runner) ShowPlanJSON(ctx context.Context, planFile string) ([]byte, error) {
@@ -71,18 +108,23 @@ func (r Runner) Run(ctx context.Context, args ...string) error {
 }
 
 func (r Runner) run(ctx context.Context, args []string) error {
+	_, err := r.runExitCode(ctx, args, false)
+	return err
+}
+
+func (r Runner) runExitCode(ctx context.Context, args []string, allowDetailedExitCode bool) (int, error) {
 	if r.Binary == "" {
-		return fmt.Errorf("engine binary is required")
+		return 1, fmt.Errorf("engine binary is required")
 	}
 	if r.WorkDir == "" {
-		return fmt.Errorf("work directory is required")
+		return 1, fmt.Errorf("work directory is required")
 	}
 	if len(args) == 0 {
-		return fmt.Errorf("command arguments are required")
+		return 1, fmt.Errorf("command arguments are required")
 	}
 	binary, err := exec.LookPath(r.Binary)
 	if err != nil {
-		return fmt.Errorf("find engine binary %q: %w", r.Binary, err)
+		return 1, fmt.Errorf("find engine binary %q: %w", r.Binary, err)
 	}
 
 	stdout := r.Stdout
@@ -104,9 +146,13 @@ func (r Runner) run(ctx context.Context, args []string) error {
 	cmd.Stderr = stderr
 	cmd.Stdin = os.Stdin
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("%s %s failed in %s: %w", r.Binary, args[0], r.WorkDir, err)
+		var exitErr *exec.ExitError
+		if allowDetailedExitCode && args[0] == "plan" && errors.As(err, &exitErr) && exitErr.ExitCode() == 2 {
+			return 2, nil
+		}
+		return 1, fmt.Errorf("%s %s failed in %s: %w", r.Binary, args[0], r.WorkDir, err)
 	}
-	return nil
+	return 0, nil
 }
 
 func initArgs() []string {

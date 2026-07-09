@@ -8,6 +8,9 @@ Use this checklist for ClusterForge release candidates.
 - Update `CHANGELOG.md` with Added, Changed, Security, and Known Limitations.
 - Confirm release notes do not overstate cloud validation.
 - Confirm known limitations are still accurate.
+- Confirm `VERSION_MATRIX.md` reflects supported, tested, experimental, and
+  deprecated versions.
+- Confirm `SMOKE_TEST_MATRIX.md` does not claim unrun tests passed.
 
 ## Documentation
 
@@ -22,6 +25,7 @@ Use this checklist for ClusterForge release candidates.
   - `docs/gitops.md`
   - `docs/roadmap.md`
 - Confirm module READMEs include useful examples.
+- Review `MODULE_CATALOG.md` and confirm stability labels are honest.
 - Confirm no example contains real credentials, account IDs, private keys, or
   secret values.
 
@@ -75,6 +79,9 @@ Do not run `terraform apply` as a release smoke check.
 - Confirm `git status` does not show generated state, lock, cache, or secret
   files.
 - Confirm Checkov, Trivy, and TFLint results are reviewed when installed.
+- Confirm release artifacts have SHA256 checksums.
+- Generate or explicitly defer SBOM evidence according to
+  `docs/supply-chain-security.md`.
 - Confirm production apply/destroy safety rules are documented.
 
 ## GitHub Release

@@ -8,12 +8,14 @@ import (
 const DefaultPath = "clusterforge.yaml"
 
 type Config struct {
-	Project      Project                `yaml:"project"`
-	Engines      map[string]Engine      `yaml:"engines"`
-	Defaults     Defaults               `yaml:"defaults"`
-	Environments map[string]Environment `yaml:"environments"`
-	Backends     map[string]Backend     `yaml:"backends,omitempty"`
-	Policies     Policies               `yaml:"policies"`
+	ClusterForgeVersion string                 `yaml:"clusterforge_version,omitempty"`
+	Project             Project                `yaml:"project"`
+	Engines             map[string]Engine      `yaml:"engines"`
+	Defaults            Defaults               `yaml:"defaults"`
+	Environments        map[string]Environment `yaml:"environments"`
+	Backends            map[string]Backend     `yaml:"backends,omitempty"`
+	Policies            Policies               `yaml:"policies"`
+	TemplatePacks       []TemplatePack         `yaml:"template_packs,omitempty"`
 }
 
 type Project struct {
@@ -58,6 +60,11 @@ type Policies struct {
 	RequirePlanFileForApply      bool `yaml:"require_plan_file_for_apply"`
 	BlockDestroyInProd           bool `yaml:"block_destroy_in_prod"`
 	RequireManualApprovalForProd bool `yaml:"require_manual_approval_for_prod"`
+}
+
+type TemplatePack struct {
+	Name string `yaml:"name"`
+	Path string `yaml:"path"`
 }
 
 func (c *Config) Validate() error {
@@ -109,6 +116,19 @@ func (c *Config) Validate() error {
 		if err := backend.Validate(name); err != nil {
 			return err
 		}
+	}
+	seenPacks := map[string]bool{}
+	for _, pack := range c.TemplatePacks {
+		if strings.TrimSpace(pack.Name) == "" {
+			return fmt.Errorf("template pack name is required")
+		}
+		if strings.TrimSpace(pack.Path) == "" {
+			return fmt.Errorf("template pack %q path is required", pack.Name)
+		}
+		if seenPacks[pack.Name] {
+			return fmt.Errorf("duplicate template pack %q", pack.Name)
+		}
+		seenPacks[pack.Name] = true
 	}
 	return nil
 }

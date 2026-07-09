@@ -1,0 +1,4 @@
+output "server_user_data" {
+  description = "RKE2 server user data."
+  value       = module.rke2.server_user_data
+}

@@ -179,6 +179,17 @@ variable "load_balancer" {
   }
 }
 
+variable "deployment_controller" {
+  description = "ECS deployment controller type. Use CODE_DEPLOY only with a blue/green deployment group."
+  type        = string
+  default     = "ECS"
+
+  validation {
+    condition     = contains(["ECS", "CODE_DEPLOY", "EXTERNAL"], var.deployment_controller)
+    error_message = "Deployment controller must be ECS, CODE_DEPLOY, or EXTERNAL."
+  }
+}
+
 variable "autoscaling" {
   description = "Optional ECS service autoscaling configuration."
   type = object({

@@ -96,6 +96,7 @@ func runDoctor(ctx context.Context, configPath string, runner doctorCommandRunne
 	report.Checks = append(report.Checks, checkCLIVersion()...)
 	report.Checks = append(report.Checks, checkBinaries(ctx, runner)...)
 	report.Checks = append(report.Checks, checkTerraform(ctx, runner)...)
+	report.Checks = append(report.Checks, checkKubernetesVersion(ctx, runner)...)
 	cfgChecks, loadedConfig := checkProjectConfig(configPath)
 	report.Checks = append(report.Checks, cfgChecks...)
 	cfg = loadedConfig
@@ -171,6 +172,25 @@ func checkTerraform(ctx context.Context, runner doctorCommandRunner) []doctorChe
 		message = fmt.Sprintf("terraform %s is below recommended minimum %s", version, terraformMinimumVersion)
 	}
 	return []doctorCheck{{Name: "terraform.version", Status: status, Message: message}}
+}
+
+func checkKubernetesVersion(ctx context.Context, runner doctorCommandRunner) []doctorCheck {
+	if _, err := runner.LookPath("kubectl"); err != nil {
+		return nil
+	}
+	output, err := runner.Output(ctx, "kubectl", "version", "--client=true")
+	if err != nil {
+		return []doctorCheck{{Name: "kubernetes.version", Status: doctorWarn, Message: fmt.Sprintf("kubectl version failed: %v", err)}}
+	}
+	version, ok := parseKubernetesVersion(string(output))
+	if !ok {
+		return []doctorCheck{{Name: "kubernetes.version", Status: doctorWarn, Message: "could not parse kubectl client version"}}
+	}
+	minor := semverParts(version)[1]
+	if minor < 29 || minor > 31 {
+		return []doctorCheck{{Name: "kubernetes.version", Status: doctorWarn, Message: fmt.Sprintf("kubectl client %s is outside the documented 1.29-1.31 tested matrix", version)}}
+	}
+	return []doctorCheck{{Name: "kubernetes.version", Status: doctorPass, Message: fmt.Sprintf("kubectl client %s is inside the documented tested matrix", version)}}
 }
 
 func checkProjectConfig(configPath string) ([]doctorCheck, *config.Config) {
@@ -347,9 +367,18 @@ func sortedEnvironmentNames(cfg *config.Config) []string {
 }
 
 var terraformVersionPattern = regexp.MustCompile(`(?m)(?:Terraform|OpenTofu)\s+v?([0-9]+\.[0-9]+\.[0-9]+)`)
+var kubernetesVersionPattern = regexp.MustCompile(`(?m)(?:GitVersion|Client Version|Kustomize Version|v)(?:[: ]+)?v?([0-9]+\.[0-9]+\.[0-9]+)`)
 
 func parseTerraformVersion(output string) (string, bool) {
 	matches := terraformVersionPattern.FindStringSubmatch(output)
+	if len(matches) != 2 {
+		return "", false
+	}
+	return matches[1], true
+}
+
+func parseKubernetesVersion(output string) (string, bool) {
+	matches := kubernetesVersionPattern.FindStringSubmatch(output)
 	if len(matches) != 2 {
 		return "", false
 	}

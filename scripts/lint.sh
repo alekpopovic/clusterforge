@@ -48,3 +48,6 @@ if [[ -d cli ]]; then
     GOCACHE="${GOCACHE}" GOPATH="${GOPATH}" go vet ./...
   )
 fi
+
+echo "==> module contract checks"
+./scripts/check-modules.sh

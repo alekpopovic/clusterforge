@@ -288,6 +288,36 @@ cf apply prod --plan-file .cf/plans/prod.tfplan --confirm-prod
 If a production plan contains delete actions, apply is blocked unless the
 operator also passes `--allow-destroy`.
 
+## Operational Helpers
+
+Read-only and advisory workflows:
+
+```bash
+cf drift check dev
+cf drift check dev --json
+cf state list dev
+cf state show dev module.network.aws_vpc.this
+cf state pull dev --output /secure/path/state.json
+cf cost scan dev --plan-file .cf/plans/dev.tfplan
+cf policy list
+cf policy check prod --pack production --plan-file .cf/plans/prod.tfplan
+```
+
+Local project workflow helpers:
+
+```bash
+cf upgrade check
+cf upgrade plan
+cf upgrade apply --yes
+cf promote diff --from staging --to prod
+cf template list
+cf template validate
+cf generate dev --template-pack company-standard
+```
+
+These commands do not auto-remediate infrastructure. State output and plan files
+may contain sensitive values and should stay out of git.
+
 ## Doctor
 
 Use `doctor` to check local tooling, project config, safety settings, and common

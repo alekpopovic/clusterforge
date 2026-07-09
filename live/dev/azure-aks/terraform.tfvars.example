@@ -1,0 +1,4 @@
+location            = "westeurope"
+environment         = "dev"
+name                = "clusterforge-dev-aks"
+resource_group_name = "rg-clusterforge-dev-aks"

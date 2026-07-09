@@ -10,7 +10,7 @@ CLI_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
 CLI_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 CLI_LDFLAGS := -s -w -X github.com/textracta/clusterforge/cli/cmd.Version=$(CLI_VERSION) -X github.com/textracta/clusterforge/cli/cmd.Commit=$(CLI_COMMIT) -X github.com/textracta/clusterforge/cli/cmd.Date=$(CLI_DATE)
 
-.PHONY: help fmt fmt-check validate lint test test-cli test-terraform test-terraform-aws build-cli security docs clean ci
+.PHONY: help fmt fmt-check validate lint test test-cli test-terraform test-terraform-aws build-cli security docs docs-serve docs-build clean ci
 
 help: ## Show available targets.
 	@awk 'BEGIN {FS = ":.*## "; printf "ClusterForge developer targets:\n\n"} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-14s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -62,6 +62,12 @@ security: ## Run installed security scanners when available.
 
 docs: ## Generate module documentation when terraform-docs is installed.
 	./scripts/docs.sh
+
+docs-serve: ## Serve the MkDocs documentation site locally.
+	./scripts/docs-serve.sh
+
+docs-build: ## Build the MkDocs documentation site.
+	./scripts/docs-build.sh
 
 clean: ## Remove local build artifacts and temporary generated files.
 	rm -f cli/cf cli/clusterforge

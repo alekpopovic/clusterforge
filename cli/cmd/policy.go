@@ -12,10 +12,22 @@ import (
 
 var policyPlanFile string
 var policyCheckJSON bool
+var policyPack string
 
 var policyCmd = &cobra.Command{
 	Use:   "policy",
 	Short: "Check ClusterForge safety policies",
+}
+
+var policyListCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List built-in policy packs",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		for _, pack := range []string{"baseline", "production", "kubernetes-security", "aws-security"} {
+			fmt.Fprintln(cmd.OutOrStdout(), pack)
+		}
+		return nil
+	},
 }
 
 var policyCheckCmd = &cobra.Command{
@@ -34,6 +46,7 @@ var policyCheckCmd = &cobra.Command{
 		}
 		response := policyCheckResponse{
 			Environment: envName,
+			Pack:        defaultString(policyPack, "baseline"),
 			Policies: policySettings{
 				RequirePlanFileForApply: cfg.Policies.RequirePlanFileForApply,
 				BlockDestroyInProd:      cfg.Policies.BlockDestroyInProd,
@@ -47,6 +60,7 @@ var policyCheckCmd = &cobra.Command{
 		} else {
 			response.Messages = append(response.Messages, "non-production changes should still be reviewed before apply")
 		}
+		response.Messages = append(response.Messages, policyPackMessages(response.Pack)...)
 		if policyPlanFile == "" {
 			if policyCheckJSON {
 				return ui.WriteJSON(cmd.OutOrStdout(), response)
@@ -121,12 +135,30 @@ var policyCheckCmd = &cobra.Command{
 
 func init() {
 	policyCheckCmd.Flags().StringVar(&policyPlanFile, "plan-file", "", "Existing plan file to summarize")
+	policyCheckCmd.Flags().StringVar(&policyPack, "pack", "baseline", "Policy pack to check: baseline, production, kubernetes-security, aws-security")
 	policyCheckCmd.Flags().BoolVar(&policyCheckJSON, "json", false, "Print policy check as JSON")
+	policyCmd.AddCommand(policyListCmd)
 	policyCmd.AddCommand(policyCheckCmd)
+}
+
+func policyPackMessages(pack string) []string {
+	switch pack {
+	case "baseline":
+		return []string{"baseline pack: require reviewed plans and safe destructive-operation gates"}
+	case "production":
+		return []string{"production pack: remote backend, provider pinning, tagged module sources, and ingress approvals are required by convention"}
+	case "kubernetes-security":
+		return []string{"kubernetes-security pack: pod security labels and network policies are recommended; privileged workloads require review"}
+	case "aws-security":
+		return []string{"aws-security pack: public S3, unrestricted security groups, unencrypted state, and IAM wildcards require review"}
+	default:
+		return []string{fmt.Sprintf("unknown pack %q; only built-in baseline checks were evaluated", pack)}
+	}
 }
 
 type policyCheckResponse struct {
 	Environment string         `json:"environment"`
+	Pack        string         `json:"pack"`
 	Policies    policySettings `json:"policies"`
 	Messages    []string       `json:"messages"`
 	Risk        string         `json:"risk,omitempty"`

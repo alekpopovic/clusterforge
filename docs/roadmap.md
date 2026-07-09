@@ -5,6 +5,16 @@ permalink: /roadmap/
 
 # Roadmap
 
+See also:
+
+- [v0.2 roadmap](../ROADMAP_V0.2.md)
+- [v0.3 roadmap](../ROADMAP_V0.3.md)
+- [backlog](../BACKLOG.md)
+- [AKS RFC](rfcs/002-aks-support.md)
+- [GKE RFC](rfcs/003-gke-support.md)
+- [self-hosted Kubernetes RFC](rfcs/004-self-hosted-kubernetes.md)
+- [plugin architecture RFC](rfcs/006-cli-plugin-architecture.md)
+
 ClusterForge is being built in practical phases. The order favors a useful AWS
 Kubernetes path first, then broader orchestrator coverage.
 

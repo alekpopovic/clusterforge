@@ -35,6 +35,8 @@ locals {
   ingress_tls_secret_name = try(var.ingress.tls_secret_name, null) == null ? (
     "${local.name}-tls"
   ) : var.ingress.tls_secret_name
+  service_account_name     = try(var.service_account.name, null) == null || var.service_account.name == "" ? local.name : var.service_account.name
+  pod_service_account_name = var.service_account.create || try(var.service_account.name, "") != "" ? local.service_account_name : null
 }
 
 resource "kubernetes_namespace_v1" "this" {
@@ -68,6 +70,9 @@ resource "kubernetes_deployment_v1" "this" {
       }
 
       spec {
+        service_account_name            = local.pod_service_account_name
+        automount_service_account_token = try(var.service_account.automount_token, null)
+
         dynamic "image_pull_secrets" {
           for_each = toset(var.image_pull_secrets)
 
@@ -163,6 +168,71 @@ resource "kubernetes_deployment_v1" "this" {
   }
 
   depends_on = [kubernetes_namespace_v1.this]
+}
+
+resource "kubernetes_service_account_v1" "this" {
+  count = var.service_account.create ? 1 : 0
+
+  metadata {
+    name        = local.service_account_name
+    namespace   = local.namespace
+    labels      = merge(local.labels, try(var.service_account.labels, {}))
+    annotations = try(var.service_account.annotations, {})
+  }
+
+  automount_service_account_token = try(var.service_account.automount_token, null)
+
+  depends_on = [kubernetes_namespace_v1.this]
+}
+
+resource "kubernetes_role_v1" "this" {
+  count = var.rbac.create ? 1 : 0
+
+  metadata {
+    name      = "${local.name}-role"
+    namespace = local.namespace
+    labels    = local.labels
+  }
+
+  dynamic "rule" {
+    for_each = var.rbac.rules
+
+    content {
+      api_groups     = rule.value.api_groups
+      resources      = rule.value.resources
+      verbs          = rule.value.verbs
+      resource_names = try(rule.value.resource_names, null)
+    }
+  }
+
+  depends_on = [kubernetes_namespace_v1.this]
+}
+
+resource "kubernetes_role_binding_v1" "this" {
+  count = var.rbac.create ? 1 : 0
+
+  metadata {
+    name      = "${local.name}-role-binding"
+    namespace = local.namespace
+    labels    = local.labels
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = kubernetes_role_v1.this[0].metadata[0].name
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = local.service_account_name
+    namespace = local.namespace
+  }
+
+  depends_on = [
+    kubernetes_namespace_v1.this,
+    kubernetes_service_account_v1.this
+  ]
 }
 
 resource "kubernetes_service_v1" "this" {

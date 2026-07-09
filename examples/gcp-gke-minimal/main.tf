@@ -1,0 +1,19 @@
+module "network" {
+  source = "../../modules/cloud/gcp/network"
+
+  project_id  = var.project_id
+  name        = var.name
+  environment = "dev"
+  region      = var.region
+}
+
+module "gke" {
+  source = "../../modules/orchestrators/kubernetes/gke"
+
+  project_id  = var.project_id
+  name        = var.name
+  environment = "dev"
+  region      = var.region
+  network     = module.network.network_name
+  subnetwork  = module.network.subnetwork_name
+}

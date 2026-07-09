@@ -1,0 +1,29 @@
+name: Drift Check Example
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "ClusterForge environment to check"
+        required: true
+        default: "dev"
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Build cf
+        run: cd cli && go build -o cf .
+
+      - name: Drift check
+        run: ./cli/cf drift check "${{ inputs.environment }}"
+
+# This workflow is an example only. Real scheduled drift checks require
+# cloud credentials, backend access, and environment-specific approvals. Do not
+# add credentials to the repository.

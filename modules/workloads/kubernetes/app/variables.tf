@@ -208,3 +208,34 @@ variable "autoscaling" {
     error_message = "Autoscaling min_replicas must be less than or equal to max_replicas."
   }
 }
+
+variable "service_account" {
+  description = "Optional service account configuration for the workload."
+  type = object({
+    create          = optional(bool, false)
+    name            = optional(string)
+    annotations     = optional(map(string), {})
+    labels          = optional(map(string), {})
+    automount_token = optional(bool)
+  })
+  default = {}
+}
+
+variable "rbac" {
+  description = "Optional namespace-scoped RBAC Role and RoleBinding rules for the workload service account."
+  type = object({
+    create = optional(bool, false)
+    rules = optional(list(object({
+      api_groups     = list(string)
+      resources      = list(string)
+      verbs          = list(string)
+      resource_names = optional(list(string))
+    })), [])
+  })
+  default = {}
+
+  validation {
+    condition     = !var.rbac.create || var.service_account.create || try(length(trimspace(var.service_account.name)) > 0, false)
+    error_message = "RBAC requires a created service account or an existing service_account.name."
+  }
+}

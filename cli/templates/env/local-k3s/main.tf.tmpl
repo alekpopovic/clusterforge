@@ -1,0 +1,9 @@
+{{ .Header }}
+
+module "k3s" {
+  source = "{{ .ModulesPath }}/orchestrators/kubernetes/k3s"
+
+  cluster_name = var.name
+  environment  = var.environment
+  server_count = var.server_count
+}

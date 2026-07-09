@@ -82,8 +82,8 @@ func Generate(name string, env config.Environment, opts Options) (*Result, error
 		env.Layout = "simple"
 	}
 	target := fmt.Sprintf("%s-%s", env.Cloud, env.Orchestrator)
-	if target != "aws-eks" && target != "aws-ecs" {
-		return nil, fmt.Errorf("unsupported generate target %q; supported targets are aws-eks and aws-ecs", target)
+	if !supportedTarget(target) {
+		return nil, fmt.Errorf("unsupported generate target %q; supported targets are aws-eks, aws-ecs, azure-aks, gcp-gke, local-k3s, and local-rke2", target)
 	}
 	if env.Layout != "simple" && env.Layout != "stacked" {
 		return nil, fmt.Errorf("unsupported layout %q; expected simple or stacked", env.Layout)
@@ -166,6 +166,15 @@ func Generate(name string, env config.Environment, opts Options) (*Result, error
 		}
 	}
 	return result, nil
+}
+
+func supportedTarget(target string) bool {
+	switch target {
+	case "aws-eks", "aws-ecs", "azure-aks", "gcp-gke", "local-k3s", "local-rke2":
+		return true
+	default:
+		return false
+	}
 }
 
 func generateStacked(name string, env config.Environment, opts Options, rootDir string, backend config.Backend) (*Result, error) {

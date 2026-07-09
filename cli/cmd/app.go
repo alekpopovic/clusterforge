@@ -11,6 +11,7 @@ import (
 
 var appAddOptions cfapp.AddOptions
 var appRenderEnv string
+var appRenderTemplatePack string
 var appValidateAll bool
 var appListJSON bool
 
@@ -160,6 +161,19 @@ var appRenderCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		if appRenderTemplatePack != "" {
+			found := false
+			for _, pack := range cfg.TemplatePacks {
+				if pack.Name == appRenderTemplatePack {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return fmt.Errorf("template pack %q not found in %s", appRenderTemplatePack, opts.ConfigPath)
+			}
+			printer.Warn("app template pack overrides are not executed; built-in app renderer is used")
+		}
 		env, ok := cfg.Environments[appRenderEnv]
 		if !ok {
 			return fmt.Errorf("environment %q not found", appRenderEnv)
@@ -200,6 +214,7 @@ func init() {
 	appAddCmd.Flags().BoolVar(&appAddOptions.Force, "force", false, "Overwrite an existing app manifest")
 
 	appRenderCmd.Flags().StringVar(&appRenderEnv, "env", "", "Environment to render into")
+	appRenderCmd.Flags().StringVar(&appRenderTemplatePack, "template-pack", "", "Local template pack name to validate before rendering")
 	appValidateCmd.Flags().BoolVar(&appValidateAll, "all", false, "Validate all app manifests")
 	appListCmd.Flags().BoolVar(&appListJSON, "json", false, "Print app manifests as JSON")
 

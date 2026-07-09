@@ -118,6 +118,10 @@ resource "aws_ecs_service" "this" {
   launch_type     = "FARGATE"
   tags            = local.common_tags
 
+  deployment_controller {
+    type = var.deployment_controller
+  }
+
   network_configuration {
     subnets          = var.subnet_ids
     security_groups  = var.security_group_ids

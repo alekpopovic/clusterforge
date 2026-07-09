@@ -1,0 +1,4 @@
+project_id  = "replace-with-gcp-project-id"
+region      = "europe-west1"
+environment = "dev"
+name        = "clusterforge-dev-gke"

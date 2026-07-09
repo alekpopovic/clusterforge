@@ -1,0 +1,12 @@
+{{ .Header }}
+
+output "cluster_name" {
+  description = "AKS cluster name."
+  value       = module.aks.cluster_name
+}
+
+output "kube_config_raw" {
+  description = "Raw AKS kubeconfig."
+  value       = module.aks.kube_config_raw
+  sensitive   = true
+}

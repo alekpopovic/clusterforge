@@ -1,0 +1,21 @@
+{{ .Header }}
+
+module "network" {
+  source = "{{ .ModulesPath }}/cloud/gcp/network"
+
+  project_id  = var.project_id
+  name        = var.name
+  environment = var.environment
+  region      = var.region
+}
+
+module "gke" {
+  source = "{{ .ModulesPath }}/orchestrators/kubernetes/gke"
+
+  project_id = var.project_id
+  name       = var.name
+  environment = var.environment
+  region     = var.region
+  network    = module.network.network_name
+  subnetwork = module.network.subnetwork_name
+}

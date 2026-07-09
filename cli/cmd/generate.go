@@ -15,6 +15,7 @@ var generateDryRun bool
 var generateCloud string
 var generateOrchestrator string
 var generateLayout string
+var generateTemplatePack string
 
 var generateCmd = &cobra.Command{
 	Use:   "generate <env>",
@@ -37,6 +38,18 @@ var generateCmd = &cobra.Command{
 			env = updated
 		}
 		backend := cfg.BackendFor(args[0])
+		templatesDir := ""
+		if generateTemplatePack != "" {
+			for _, pack := range cfg.TemplatePacks {
+				if pack.Name == generateTemplatePack {
+					templatesDir = pack.Path
+					break
+				}
+			}
+			if templatesDir == "" {
+				return fmt.Errorf("template pack %q not found in %s", generateTemplatePack, opts.ConfigPath)
+			}
+		}
 		result, err := generator.Generate(args[0], env, generator.Options{
 			Force:        generateForce,
 			DryRun:       generateDryRun,
@@ -46,6 +59,7 @@ var generateCmd = &cobra.Command{
 			Backend:      backend,
 			Project:      cfg.Project.Name,
 			RootDir:      ".",
+			TemplatesDir: templatesDir,
 			Stdout:       os.Stdout,
 		})
 		if err != nil {
@@ -72,6 +86,7 @@ func init() {
 	generateCmd.Flags().StringVar(&generateCloud, "cloud", "", "Override environment cloud for generation")
 	generateCmd.Flags().StringVar(&generateOrchestrator, "orchestrator", "", "Override environment orchestrator for generation")
 	generateCmd.Flags().StringVar(&generateLayout, "layout", "", "Environment layout to generate: simple or stacked")
+	generateCmd.Flags().StringVar(&generateTemplatePack, "template-pack", "", "Local template pack name to use instead of built-in templates")
 }
 
 func environmentWithLayout(env config.Environment, layout string) (config.Environment, error) {

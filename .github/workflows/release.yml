@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.6.6"
+
+      - name: Test CLI
+        run: make test-cli
+
+      - name: Terraform fmt check
+        run: make fmt-check
+
+      - name: Build CLI artifacts
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          for target in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64; do
+            os="${target%/*}"
+            arch="${target#*/}"
+            ext=""
+            if [ "${os}" = "windows" ]; then ext=".exe"; fi
+            output="dist/cf-${os}-${arch}${ext}"
+            (cd cli && GOOS="${os}" GOARCH="${arch}" go build -trimpath -o "../${output}" .)
+          done
+          (cd dist && sha256sum * > SHA256SUMS)
+
+      - name: Generate release notes
+        run: scripts/release-notes.sh "${GITHUB_REF_NAME}" > dist/RELEASE_NOTES.md
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: dist/RELEASE_NOTES.md
+          files: |
+            dist/*

@@ -23,6 +23,7 @@ var allowedOrchestrators = map[string]bool{
 
 func DefaultConfig(name string) *Config {
 	cfg := &Config{
+		ClusterForgeVersion: "0.1.0",
 		Project: Project{
 			Name: name,
 		},
@@ -38,6 +39,9 @@ func DefaultConfig(name string) *Config {
 }
 
 func (c *Config) ApplyDefaults() {
+	if c.ClusterForgeVersion == "" {
+		c.ClusterForgeVersion = "0.1.0"
+	}
 	if c.Project.DefaultEngine == "" {
 		c.Project.DefaultEngine = "terraform"
 	}

@@ -240,6 +240,27 @@ make security
 make clean
 ```
 
+Additional workflows:
+
+- [Version support](docs/version-support.md)
+- [Module release](docs/module-release.md)
+- [Registry strategy](docs/registry-strategy.md)
+- [Drift detection](docs/drift-detection.md)
+- [State helpers](docs/state.md)
+- [Upgrade workflow](docs/upgrades.md)
+- [Policy packs](docs/policies.md)
+- [Template packs](docs/template-packs.md)
+- [Cost awareness](docs/cost-awareness.md)
+- [Integration testing](docs/testing-integration.md)
+
+## Tutorials
+
+- [Local existing Kubernetes](docs/tutorials/01-local-existing-kubernetes.md)
+- [AWS ECS first service](docs/tutorials/02-aws-ecs-first-service.md)
+- [AWS EKS platform](docs/tutorials/03-aws-eks-platform.md)
+- [GitOps with Argo CD](docs/tutorials/04-gitops-with-argocd.md)
+- [Production safety](docs/tutorials/05-production-safety.md)
+
 ## Roadmap
 
 - **Phase 1**: AWS EKS
@@ -252,3 +273,9 @@ make clean
 - **Phase 8**: AKS, GKE, K3s, and RKE2
 
 See [docs/roadmap.md](docs/roadmap.md).
+
+Planning docs:
+
+- [v0.2 roadmap](ROADMAP_V0.2.md)
+- [v0.3 roadmap](ROADMAP_V0.3.md)
+- [Backlog](BACKLOG.md)
