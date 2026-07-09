@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `094-velero-backup-module` |
-| Next prompt to execute | `095-disaster-recovery-runbooks` |
+| Last executed prompt | `095-disaster-recovery-runbooks` |
+| Next prompt to execute | `096-cost-visibility-for-aws-modules` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -169,5 +169,14 @@ Title: Velero backup module
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/velero-backup-bucket, modules/platform/kubernetes/velero, and examples/aws-eks-velero; make check-modules passed with warning status; git diff --check passed
 Evidence: modules/platform/kubernetes/velero; modules/cloud/aws/velero-backup-bucket; docs/backup-restore.md; examples/aws-eks-velero
+Commit: pending
+```
+
+```text
+Prompt: 095-disaster-recovery-runbooks
+Title: Disaster recovery runbooks
+Result: completed
+Validation: git diff --check passed; DR section coverage scan passed for all runbooks; no real account IDs or fake RTO/RPO guarantees added
+Evidence: docs/dr; docs/operations.md; docs/security.md; README.md
 Commit: pending
 ```

@@ -160,6 +160,14 @@ comments where IAM permissions or external secret references must be provided.
 
 See [docs/security.md](docs/security.md) for the detailed safety model.
 
+## Operations And DR
+
+Operational runbooks live in [docs/operations.md](docs/operations.md). Disaster
+recovery procedures start with [docs/dr/state-recovery.md](docs/dr/state-recovery.md)
+and include EKS, ECS, Kubernetes, cluster restore, app restore, and DNS failover
+guidance. Restore procedures must be tested; ClusterForge does not provide
+automatic DR or RTO/RPO guarantees.
+
 ## Module Development Guide
 
 Reusable modules live under `modules/`. Each module must do one thing and must

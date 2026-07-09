@@ -101,3 +101,13 @@ State belongs to root environments. Keep state separate by environment and
 stack. Do not share state between production and non-production.
 
 Remote state backends should use encryption, locking, and access controls.
+
+## Disaster Recovery
+
+Security controls must remain in place during recovery. Use break-glass access
+only when approved, record manual changes, and reconcile them back into
+Terraform after the incident.
+
+See [DR state recovery](dr/state-recovery.md), [cluster restore](dr/cluster-restore.md),
+and [application restore](dr/app-restore.md). Restore procedures must be tested;
+ClusterForge does not make DR automatic.
