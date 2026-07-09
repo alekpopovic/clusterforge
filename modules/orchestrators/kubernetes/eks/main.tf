@@ -13,6 +13,10 @@ locals {
     })
   }
 
+  create_cluster_kms_key         = var.enable_cluster_encryption && var.create_kms_key && var.kms_key_arn == ""
+  cluster_encryption_key_arn     = var.kms_key_arn != "" ? var.kms_key_arn : (local.create_cluster_kms_key ? aws_kms_key.cluster[0].arn : null)
+  create_control_plane_log_group = length(var.enabled_cluster_log_types) > 0
+
   create_ebs_csi_irsa_role = var.enable_ebs_csi_driver_addon && var.create_ebs_csi_irsa_role
   oidc_provider_url        = try(aws_eks_cluster.this.identity[0].oidc[0].issuer, null)
   oidc_issuer_hostpath     = local.oidc_provider_url == null ? null : trimsuffix(replace(local.oidc_provider_url, "https://", ""), "/")
@@ -48,6 +52,30 @@ locals {
       }
     } : {}
   )
+}
+
+resource "aws_kms_key" "cluster" {
+  count = local.create_cluster_kms_key ? 1 : 0
+
+  description             = "EKS secrets encryption key for ${local.name}"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+  tags                    = local.common_tags
+}
+
+resource "aws_kms_alias" "cluster" {
+  count = local.create_cluster_kms_key ? 1 : 0
+
+  name          = "alias/${local.name}-eks-secrets"
+  target_key_id = aws_kms_key.cluster[0].key_id
+}
+
+resource "aws_cloudwatch_log_group" "control_plane" {
+  count = local.create_control_plane_log_group ? 1 : 0
+
+  name              = "/aws/eks/${local.name}/cluster"
+  retention_in_days = var.cluster_log_retention_days
+  tags              = local.common_tags
 }
 
 data "aws_iam_policy_document" "cluster_assume_role" {
@@ -98,14 +126,32 @@ resource "aws_eks_cluster" "this" {
     public_access_cidrs     = var.public_access_cidrs
   }
 
+  dynamic "encryption_config" {
+    for_each = var.enable_cluster_encryption && local.cluster_encryption_key_arn != null ? [local.cluster_encryption_key_arn] : []
+
+    content {
+      resources = ["secrets"]
+
+      provider {
+        key_arn = encryption_config.value
+      }
+    }
+  }
+
   lifecycle {
     precondition {
       condition     = length(trimspace(var.vpc_id)) > 0
       error_message = "VPC ID must not be empty."
     }
+
+    precondition {
+      condition     = !var.enable_cluster_encryption || local.cluster_encryption_key_arn != null
+      error_message = "enable_cluster_encryption requires kms_key_arn or create_kms_key=true."
+    }
   }
 
   depends_on = [
+    aws_cloudwatch_log_group.control_plane,
     aws_iam_role_policy_attachment.cluster
   ]
 }
@@ -181,20 +227,37 @@ resource "aws_eks_addon" "before_compute" {
 resource "aws_eks_node_group" "this" {
   for_each = local.node_groups
 
-  cluster_name    = aws_eks_cluster.this.name
-  node_group_name = each.key
-  node_role_arn   = aws_iam_role.node.arn
-  subnet_ids      = each.value.subnet_ids
-  instance_types  = each.value.instance_types
-  capacity_type   = each.value.capacity_type
-  disk_size       = each.value.disk_size
-  labels          = each.value.labels
-  tags            = local.common_tags
+  cluster_name         = aws_eks_cluster.this.name
+  node_group_name      = each.key
+  node_role_arn        = aws_iam_role.node.arn
+  subnet_ids           = each.value.subnet_ids
+  instance_types       = each.value.instance_types
+  ami_type             = var.node_group_ami_type
+  capacity_type        = each.value.capacity_type
+  disk_size            = each.value.disk_size
+  release_version      = var.node_group_release_version
+  force_update_version = var.node_group_force_update_version
+  labels               = each.value.labels
+  tags                 = local.common_tags
 
   scaling_config {
     min_size     = each.value.min_size
     desired_size = each.value.desired_size
     max_size     = each.value.max_size
+  }
+
+  update_config {
+    max_unavailable            = try(var.node_group_update_config.max_unavailable, null)
+    max_unavailable_percentage = try(var.node_group_update_config.max_unavailable_percentage, null)
+  }
+
+  dynamic "remote_access" {
+    for_each = var.node_group_remote_access == null ? [] : [var.node_group_remote_access]
+
+    content {
+      ec2_ssh_key               = remote_access.value.ec2_ssh_key
+      source_security_group_ids = remote_access.value.source_security_group_ids
+    }
   }
 
   dynamic "taint" {

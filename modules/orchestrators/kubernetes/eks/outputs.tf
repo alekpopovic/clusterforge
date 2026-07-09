@@ -53,3 +53,13 @@ output "cluster_security_group_id" {
   description = "EKS cluster security group ID created by EKS."
   value       = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
 }
+
+output "cluster_encryption_key_arn" {
+  description = "KMS key ARN used for EKS secrets encryption, when enabled."
+  value       = local.cluster_encryption_key_arn
+}
+
+output "control_plane_log_group_name" {
+  description = "CloudWatch log group name for EKS control plane logs, when enabled."
+  value       = local.create_control_plane_log_group ? aws_cloudwatch_log_group.control_plane[0].name : null
+}

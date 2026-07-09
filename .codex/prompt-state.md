@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `088-platform-conformance-tests-for-kubernetes-add-ons` |
-| Next prompt to execute | `089-eks-production-hardening-options` |
+| Last executed prompt | `089-eks-production-hardening-options` |
+| Next prompt to execute | `090-aws-kms-reusable-module` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -115,5 +115,14 @@ Title: Platform conformance tests for Kubernetes add-ons
 Result: completed
 Validation: scripts/check-platform-modules.sh passed with bootstrap pass-through warnings; terraform fmt -recursive passed; git diff --check passed; cd cli && go test ./... passed
 Evidence: scripts/check-platform-modules.sh; docs/platform-module-conventions.md
+Commit: pending
+```
+
+```text
+Prompt: 089-eks-production-hardening-options
+Title: EKS production hardening options
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for modules/orchestrators/kubernetes/eks and examples/aws-eks-production-hardened; git diff --check passed
+Evidence: modules/orchestrators/kubernetes/eks; docs/aws-eks-production.md; examples/aws-eks-production-hardened
 Commit: pending
 ```

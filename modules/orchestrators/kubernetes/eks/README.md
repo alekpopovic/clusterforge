@@ -23,6 +23,50 @@ The module can manage these EKS add-ons:
 - `kube-proxy`
 - `aws-ebs-csi-driver`
 
+## Production Hardening
+
+The module exposes production controls for API endpoint access, control plane
+logs, Kubernetes secrets encryption, and managed node group updates.
+
+Private endpoint-only clusters:
+
+```hcl
+endpoint_public_access  = false
+endpoint_private_access = true
+public_access_cidrs     = []
+```
+
+Restricted public endpoint access:
+
+```hcl
+endpoint_public_access  = true
+endpoint_private_access = true
+public_access_cidrs     = ["203.0.113.0/24"] # Replace with approved operator CIDRs.
+```
+
+Secrets encryption with a module-owned KMS key:
+
+```hcl
+enable_cluster_encryption = true
+create_kms_key            = true
+```
+
+Control plane log retention:
+
+```hcl
+enabled_cluster_log_types  = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+cluster_log_retention_days = 90
+```
+
+SSH remote access for managed node groups is disabled by default. Prefer SSM
+Session Manager or Kubernetes-native debugging. If SSH is required, configure
+`node_group_remote_access` with explicit source security groups.
+
+AWS EKS cluster deletion protection is handled at workflow level in
+ClusterForge: production apply requires an existing plan file and production
+destroy is blocked by default unless explicitly allowed. Keep those controls
+enabled for real environments.
+
 ## IRSA And OIDC Provider
 
 IAM Roles for Service Accounts (IRSA) lets Kubernetes workloads assume AWS IAM
@@ -147,8 +191,17 @@ provider "helm" {
 | `endpoint_private_access` | `bool` | `true` | Whether the EKS API endpoint is reachable from inside the VPC. |
 | `public_access_cidrs` | `list(string)` | `["0.0.0.0/0"]` | CIDR blocks allowed to reach the public EKS API endpoint. |
 | `enabled_cluster_log_types` | `list(string)` | `["api", "audit", "authenticator"]` | EKS control plane log types to enable. |
+| `cluster_log_retention_days` | `number` | `30` | CloudWatch Logs retention in days for EKS control plane logs. |
+| `enable_cluster_encryption` | `bool` | `false` | Whether to enable EKS envelope encryption for Kubernetes secrets. |
+| `kms_key_arn` | `string` | `""` | Existing KMS key ARN for EKS secrets encryption. |
+| `create_kms_key` | `bool` | `false` | Whether to create a KMS key for EKS secrets encryption. |
 | `tags` | `map(string)` | `{}` | Tags applied to supported AWS resources. |
 | `node_groups` | `map(object)` | `{ default = {} }` | Managed node group definitions. |
+| `node_group_update_config` | `object` | `{ max_unavailable = 1 }` | Managed node group rolling update settings. |
+| `node_group_ami_type` | `string` | `null` | AMI type applied to managed node groups. |
+| `node_group_release_version` | `string` | `null` | AMI release version applied to managed node groups. |
+| `node_group_force_update_version` | `bool` | `false` | Whether to force node group version updates when pods cannot be drained. |
+| `node_group_remote_access` | `object` | `null` | Optional SSH remote access settings; null keeps SSH disabled. |
 | `enable_vpc_cni_addon` | `bool` | `true` | Whether to manage the VPC CNI add-on. |
 | `enable_coredns_addon` | `bool` | `true` | Whether to manage the CoreDNS add-on. |
 | `enable_kube_proxy_addon` | `bool` | `true` | Whether to manage the kube-proxy add-on. |
@@ -171,6 +224,8 @@ provider "helm" {
 | `node_group_names` | Managed node group names. |
 | `node_group_arns` | Managed node group ARNs. |
 | `cluster_security_group_id` | EKS cluster security group ID created by EKS. |
+| `cluster_encryption_key_arn` | KMS key ARN used for EKS secrets encryption, when enabled. |
+| `control_plane_log_group_name` | CloudWatch log group name for EKS control plane logs, when enabled. |
 
 ## Generated Terraform Documentation
 

@@ -81,6 +81,35 @@ variable "enabled_cluster_log_types" {
   }
 }
 
+variable "cluster_log_retention_days" {
+  description = "CloudWatch Logs retention in days for EKS control plane logs. Set to 0 to keep logs indefinitely."
+  type        = number
+  default     = 30
+
+  validation {
+    condition     = var.cluster_log_retention_days == 0 || contains([1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1096, 1827, 2192, 2557, 2922, 3288, 3653], var.cluster_log_retention_days)
+    error_message = "cluster_log_retention_days must be 0 or a valid CloudWatch Logs retention value."
+  }
+}
+
+variable "enable_cluster_encryption" {
+  description = "Whether to enable EKS envelope encryption for Kubernetes secrets."
+  type        = bool
+  default     = false
+}
+
+variable "kms_key_arn" {
+  description = "Existing KMS key ARN for EKS secrets encryption. Leave empty to create one when create_kms_key is true."
+  type        = string
+  default     = ""
+}
+
+variable "create_kms_key" {
+  description = "Whether to create a KMS key for EKS secrets encryption when enable_cluster_encryption is true and kms_key_arn is empty."
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "Tags applied to supported AWS resources."
   type        = map(string)
@@ -133,6 +162,55 @@ variable "node_groups" {
     ]))
     error_message = "Node group taint effects must be NO_SCHEDULE, NO_EXECUTE, or PREFER_NO_SCHEDULE."
   }
+}
+
+variable "node_group_update_config" {
+  description = "Managed node group rolling update settings applied to all node groups."
+  type = object({
+    max_unavailable            = optional(number)
+    max_unavailable_percentage = optional(number)
+  })
+  default = {
+    max_unavailable = 1
+  }
+
+  validation {
+    condition = (
+      try(var.node_group_update_config.max_unavailable, null) != null &&
+      try(var.node_group_update_config.max_unavailable_percentage, null) == null
+      ) || (
+      try(var.node_group_update_config.max_unavailable, null) == null &&
+      try(var.node_group_update_config.max_unavailable_percentage, null) != null
+    )
+    error_message = "Set exactly one of node_group_update_config.max_unavailable or max_unavailable_percentage."
+  }
+}
+
+variable "node_group_ami_type" {
+  description = "AMI type applied to managed node groups. Leave null for AWS defaults."
+  type        = string
+  default     = null
+}
+
+variable "node_group_release_version" {
+  description = "AMI release version applied to managed node groups. Leave null for AWS defaults."
+  type        = string
+  default     = null
+}
+
+variable "node_group_force_update_version" {
+  description = "Whether to force node group version updates when pods cannot be drained."
+  type        = bool
+  default     = false
+}
+
+variable "node_group_remote_access" {
+  description = "Optional SSH remote access settings for managed node groups. Null keeps SSH disabled."
+  type = object({
+    ec2_ssh_key               = string
+    source_security_group_ids = optional(list(string), [])
+  })
+  default = null
 }
 
 variable "enable_vpc_cni_addon" {
