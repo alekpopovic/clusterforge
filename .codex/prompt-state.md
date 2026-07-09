@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `098-aws-rds-postgresql-module` |
-| Next prompt to execute | `099-aws-elasticache-redis-module` |
+| Last executed prompt | `099-aws-elasticache-redis-module` |
+| Next prompt to execute | `100-aws-messaging-modules-sqs-and-sns` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -205,5 +205,14 @@ Title: AWS RDS PostgreSQL module
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/rds-postgres and examples/aws-rds-postgres; make check-modules passed with warning status; git diff --check passed
 Evidence: modules/cloud/aws/rds-postgres; examples/aws-rds-postgres
+Commit: pending
+```
+
+```text
+Prompt: 099-aws-elasticache-redis-module
+Title: AWS ElastiCache Redis module
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/elasticache-redis and examples/aws-elasticache-redis; make check-modules passed with warning status; git diff --check passed
+Evidence: modules/cloud/aws/elasticache-redis; examples/aws-elasticache-redis
 Commit: pending
 ```
