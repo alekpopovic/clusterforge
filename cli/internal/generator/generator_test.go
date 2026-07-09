@@ -85,6 +85,35 @@ func TestGenerateS3Backend(t *testing.T) {
 	}
 }
 
+func TestGenerateExistingKubernetes(t *testing.T) {
+	dir := t.TempDir()
+	env := config.Environment{
+		Cloud:        "existing",
+		Region:       "local",
+		Orchestrator: "kubernetes",
+		Path:         filepath.Join(dir, "live", "dev", "existing-kubernetes"),
+	}
+
+	result, err := Generate("dev", env, Options{
+		RootDir: dir,
+		Project: "demo",
+	})
+	if err != nil {
+		t.Fatalf("generate existing kubernetes: %v", err)
+	}
+	if result.Target != "existing-kubernetes" {
+		t.Fatalf("target = %q", result.Target)
+	}
+	mainTF := readFile(t, filepath.Join(env.Path, "main.tf"))
+	if strings.Contains(mainTF, `module "network"`) || strings.Contains(mainTF, `module "eks"`) {
+		t.Fatalf("existing kubernetes main.tf should not create cloud resources:\n%s", mainTF)
+	}
+	providersTF := readFile(t, filepath.Join(env.Path, "providers.tf"))
+	if !strings.Contains(providersTF, "config_path") || !strings.Contains(providersTF, "config_context") {
+		t.Fatalf("providers.tf missing kubeconfig settings:\n%s", providersTF)
+	}
+}
+
 func TestGenerateMissingS3BucketFails(t *testing.T) {
 	dir := t.TempDir()
 	env := config.Environment{

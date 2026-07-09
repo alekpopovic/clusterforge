@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `082-local-kubernetes-development-target-with-kind-or-k3d` |
-| Next prompt to execute | `083-existing-kubernetes-environment-support` |
+| Last executed prompt | `083-existing-kubernetes-environment-support` |
+| Next prompt to execute | `084-provider-compatibility-matrix-ci` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -61,5 +61,14 @@ Title: Local Kubernetes development target with Kind or K3d
 Result: completed
 Validation: terraform fmt -recursive examples/local-kind-app examples/local-k3d-app passed; gofmt passed; cd cli && go test ./... passed
 Evidence: docs/local-development.md; examples/local-kind-app; examples/local-k3d-app; cli/cmd/local.go
+Commit: pending
+```
+
+```text
+Prompt: 083-existing-kubernetes-environment-support
+Title: Existing Kubernetes environment support
+Result: completed
+Validation: terraform fmt -recursive examples/existing-kubernetes-basic-app examples/existing-kubernetes-platform-bootstrap passed; gofmt passed; cd cli && go test ./... passed
+Evidence: docs/existing-kubernetes.md; cli/templates/env/existing-kubernetes; examples/existing-kubernetes-basic-app; examples/existing-kubernetes-platform-bootstrap
 Commit: pending
 ```

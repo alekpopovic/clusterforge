@@ -243,7 +243,7 @@ func validateCloud(field, value string) error {
 	if allowedClouds[strings.ToLower(strings.TrimSpace(value))] {
 		return nil
 	}
-	return fmt.Errorf("%s must be one of aws, azure, gcp, hetzner, local", field)
+	return fmt.Errorf("%s must be one of aws, azure, gcp, hetzner, local, existing", field)
 }
 
 func validateOrchestrator(field, value string) error {

@@ -1,11 +1,12 @@
 package config
 
 var allowedClouds = map[string]bool{
-	"aws":     true,
-	"azure":   true,
-	"gcp":     true,
-	"hetzner": true,
-	"local":   true,
+	"aws":      true,
+	"azure":    true,
+	"gcp":      true,
+	"hetzner":  true,
+	"local":    true,
+	"existing": true,
 }
 
 var allowedOrchestrators = map[string]bool{

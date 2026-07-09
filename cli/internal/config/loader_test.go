@@ -160,6 +160,26 @@ environments:
 	}
 }
 
+func TestExistingKubernetesConfigIsValid(t *testing.T) {
+	path := writeConfig(t, `project:
+  name: demo
+environments:
+  dev:
+    cloud: existing
+    orchestrator: kubernetes
+    region: local
+    path: live/dev/existing-kubernetes
+`)
+
+	cfg, err := Load(path)
+	if err != nil {
+		t.Fatalf("load existing kubernetes config: %v", err)
+	}
+	if cfg.Environments["dev"].Cloud != "existing" {
+		t.Fatalf("cloud = %q", cfg.Environments["dev"].Cloud)
+	}
+}
+
 func TestValidateMissingS3BackendBucketFails(t *testing.T) {
 	path := writeConfig(t, `project:
   name: demo
