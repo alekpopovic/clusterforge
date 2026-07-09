@@ -55,6 +55,7 @@ func init() {
 	rootCmd.AddCommand(promoteCmd)
 	rootCmd.AddCommand(costCmd)
 	rootCmd.AddCommand(templateCmd)
+	rootCmd.AddCommand(localCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)

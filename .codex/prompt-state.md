@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `081-v0-2-release-gate-review` |
-| Next prompt to execute | `082-local-kubernetes-development-target-with-kind-or-k3d` |
+| Last executed prompt | `082-local-kubernetes-development-target-with-kind-or-k3d` |
+| Next prompt to execute | `083-existing-kubernetes-environment-support` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -52,5 +52,14 @@ Title: v0.2 release gate review
 Result: completed
 Validation: make fmt-check passed; make lint failed on TFLint warnings; make test passed; make validate passed; make security skipped missing scanners; cli build/version passed; cf doctor failed without clusterforge.yaml
 Evidence: RELEASE_GATE_V0.2.md
+Commit: pending
+```
+
+```text
+Prompt: 082-local-kubernetes-development-target-with-kind-or-k3d
+Title: Local Kubernetes development target with Kind or K3d
+Result: completed
+Validation: terraform fmt -recursive examples/local-kind-app examples/local-k3d-app passed; gofmt passed; cd cli && go test ./... passed
+Evidence: docs/local-development.md; examples/local-kind-app; examples/local-k3d-app; cli/cmd/local.go
 Commit: pending
 ```
