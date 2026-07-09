@@ -22,9 +22,11 @@ context, agent profiles, and repeatable workflows.
 3. Make scoped changes directly from `main`, following repository git rules.
 4. Run the smallest useful validation first, then broader validation when the
    change touches shared behavior.
-5. If executing numbered prompts, update `.codex/prompt-state.md` with the last
-   completed prompt and the next prompt to run.
-6. Commit and push from `main`.
+5. If executing numbered prompts, update `.codex/prompt-state.md` before
+   staging files.
+6. For numbered prompts, use the prompt title as the commit message without the
+   prompt number.
+7. Commit and push from `main`.
 
 ## Safety Defaults
 

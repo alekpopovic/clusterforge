@@ -22,6 +22,23 @@ completed or intentionally skipped.
 - If prompts are executed out of order, record the exception in `Notes`.
 - Do not mark a prompt complete if real cloud, smoke, or integration evidence
   was required but not collected.
+- After each prompt execution, update this file before running `git add`.
+- Commit the prompt result and this state file together.
+- The commit message for a prompt must be the prompt title without the prompt
+  number.
+
+## Current Prompt Template
+
+Use this block in `Notes` when executing a prompt:
+
+```text
+Prompt: <NNN-slug>
+Title: <prompt title without number>
+Result: <completed | skipped | blocked>
+Validation: <commands run or skip reason>
+Evidence: <paths, reports, or not applicable>
+Commit: <filled after commit if useful>
+```
 
 ## Notes
 
