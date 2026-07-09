@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `093-container-image-security-workflow` |
-| Next prompt to execute | `094-velero-backup-module` |
+| Last executed prompt | `094-velero-backup-module` |
+| Next prompt to execute | `095-disaster-recovery-runbooks` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-09 |
 
@@ -160,5 +160,14 @@ Title: Container image security workflow
 Result: completed
 Validation: gofmt passed; cd cli && go test ./... passed; git diff --check passed
 Evidence: docs/image-security.md; .github/workflows/image-security-example.yml; cli/internal/app image policy warnings
+Commit: pending
+```
+
+```text
+Prompt: 094-velero-backup-module
+Title: Velero backup module
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/velero-backup-bucket, modules/platform/kubernetes/velero, and examples/aws-eks-velero; make check-modules passed with warning status; git diff --check passed
+Evidence: modules/platform/kubernetes/velero; modules/cloud/aws/velero-backup-bucket; docs/backup-restore.md; examples/aws-eks-velero
 Commit: pending
 ```
