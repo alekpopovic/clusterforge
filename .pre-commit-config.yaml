@@ -1,0 +1,36 @@
+minimum_pre_commit_version: "3.2.0"
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        exclude: ^\.github/workflows/examples/
+
+  - repo: local
+    hooks:
+      - id: terraform-fmt
+        name: terraform fmt
+        entry: terraform fmt
+        language: system
+        files: \.tf$
+
+      - id: gofmt
+        name: gofmt
+        entry: gofmt -w
+        language: system
+        files: \.go$
+
+      - id: secret-scan
+        name: secret scan when gitleaks is installed
+        entry: scripts/pre-commit-secret-scan.sh
+        language: script
+        pass_filenames: false
+
+      - id: shellcheck
+        name: shellcheck repository scripts when installed
+        entry: scripts/pre-commit-shellcheck.sh
+        language: script
+        files: \.sh$

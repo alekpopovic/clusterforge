@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `113-cli-audit-log` |
-| Next prompt to execute | `114-pre-commit-hooks` |
+| Last executed prompt | `114-pre-commit-hooks` |
+| Next prompt to execute | `115-secret-scanning-baseline` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -340,5 +340,14 @@ Title: CLI audit log
 Result: completed
 Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; git diff --check passed
 Evidence: cli/internal/audit; CLI audit middleware and commands; audit redaction/disabled/confirmation tests; docs/audit-log.md; .gitignore
+Commit: pending
+```
+
+```text
+Prompt: 114-pre-commit-hooks
+Title: Pre-commit hooks
+Result: completed
+Validation: .pre-commit-config.yaml parsed successfully with Ruby; shell scripts passed bash -n; optional wrappers reported gitleaks and shellcheck unavailable; git diff --check passed; pre-commit run --all-files skipped because pre-commit is unavailable
+Evidence: .pre-commit-config.yaml; scripts/install-hooks.sh; scripts/pre-commit-secret-scan.sh; scripts/pre-commit-shellcheck.sh; docs/pre-commit.md; README.md; CONTRIBUTING.md
 Commit: pending
 ```

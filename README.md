@@ -214,6 +214,16 @@ Run CLI checks locally:
 make test-cli
 ```
 
+Install the optional fast pre-commit checks:
+
+```bash
+./scripts/install-hooks.sh
+pre-commit run --all-files
+```
+
+See [docs/pre-commit.md](docs/pre-commit.md) for tool requirements and the
+documented emergency bypass process.
+
 Add new commands under `cli/cmd/`, keep business logic under `cli/internal/`,
 and add tests for parsing, generation, policy, and command construction where
 practical.

@@ -29,6 +29,16 @@ List local developer commands:
 make help
 ```
 
+Install the repository's optional pre-commit hook:
+
+```bash
+./scripts/install-hooks.sh
+pre-commit run --all-files
+```
+
+The hooks format Terraform and Go, validate YAML, and use locally installed
+Gitleaks/ShellCheck when available. See [`docs/pre-commit.md`](docs/pre-commit.md).
+
 ## Testing and Validation
 
 Run the default local checks:
