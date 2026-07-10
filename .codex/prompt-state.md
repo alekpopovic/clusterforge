@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `105-kyverno-policy-module` |
-| Next prompt to execute | `106-opa-gatekeeper-alternative-module` |
+| Last executed prompt | `106-opa-gatekeeper-alternative-module` |
+| Next prompt to execute | `107-progressive-delivery-with-argo-rollouts` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -268,5 +268,14 @@ Title: Kyverno policy module
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for the Kyverno module and example; make check-modules passed for the new module with only pre-existing repository warnings; git diff --check passed; live Helm install and policy admission tests skipped because no cluster was provided
 Evidence: modules/platform/kubernetes/kyverno; examples/kubernetes-kyverno-baseline; docs/kubernetes-policy-kyverno.md
+Commit: pending
+```
+
+```text
+Prompt: 106-opa-gatekeeper-alternative-module
+Title: OPA Gatekeeper alternative module
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for the Gatekeeper module and example; make check-modules passed for the new module with only pre-existing repository warnings; git diff --check passed; live admission tests skipped because no cluster was provided
+Evidence: modules/platform/kubernetes/gatekeeper; examples/kubernetes-gatekeeper-baseline; docs/kubernetes-policy-gatekeeper.md
 Commit: pending
 ```
