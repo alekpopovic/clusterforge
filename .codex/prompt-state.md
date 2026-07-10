@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `114-pre-commit-hooks` |
-| Next prompt to execute | `115-secret-scanning-baseline` |
+| Last executed prompt | `115-secret-scanning-baseline` |
+| Next prompt to execute | `116-devcontainer-and-reproducible-dev-environment` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -349,5 +349,14 @@ Title: Pre-commit hooks
 Result: completed
 Validation: .pre-commit-config.yaml parsed successfully with Ruby; shell scripts passed bash -n; optional wrappers reported gitleaks and shellcheck unavailable; git diff --check passed; pre-commit run --all-files skipped because pre-commit is unavailable
 Evidence: .pre-commit-config.yaml; scripts/install-hooks.sh; scripts/pre-commit-secret-scan.sh; scripts/pre-commit-shellcheck.sh; docs/pre-commit.md; README.md; CONTRIBUTING.md
+Commit: pending
+```
+
+```text
+Prompt: 115-secret-scanning-baseline
+Title: Secret scanning baseline
+Result: completed
+Validation: bash -n passed; security workflow parsed successfully as YAML; temporary checksum-verified Gitleaks v8.30.1 dir scan and 106-commit repository scan passed with no leaks; optional missing-tool mode returned success with warning and REQUIRE_GITLEAKS mode failed as designed; git diff --check passed
+Evidence: .gitleaks.toml; scripts/secret-scan.sh; Makefile secret-scan target; security workflow Gitleaks job; pre-commit integration; docs/secret-scanning.md
 Commit: pending
 ```

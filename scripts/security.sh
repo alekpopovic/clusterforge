@@ -5,6 +5,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 ran=0
 
+echo "==> Secret scanning baseline"
+./scripts/secret-scan.sh
+
 if command -v checkov >/dev/null 2>&1; then
   ran=1
   echo "==> Checkov"

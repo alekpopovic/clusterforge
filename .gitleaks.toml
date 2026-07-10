@@ -1,0 +1,31 @@
+title = "ClusterForge secret scanning baseline"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "kubeconfig-client-key-data"
+description = "Kubeconfig embedded client private key data"
+regex = '''(?i)client-key-data\s*:\s*([A-Za-z0-9+/]{40,}={0,2})'''
+secretGroup = 1
+entropy = 3.5
+keywords = ["client-key-data"]
+tags = ["kubernetes", "private-key"]
+
+[[rules]]
+id = "kubeconfig-client-certificate-data"
+description = "Kubeconfig embedded client certificate data"
+regex = '''(?i)client-certificate-data\s*:\s*([A-Za-z0-9+/]{80,}={0,2})'''
+secretGroup = 1
+entropy = 3.5
+keywords = ["client-certificate-data"]
+tags = ["kubernetes", "certificate"]
+
+[[rules]]
+id = "confident-generic-password"
+description = "High-entropy password assigned directly in configuration"
+regex = '''(?i)(?:password|passwd|pwd)\s*[:=]\s*["']([A-Za-z0-9_!@#$%^&*+./=-]{12,})["']'''
+secretGroup = 1
+entropy = 3.5
+keywords = ["password", "passwd", "pwd"]
+tags = ["password"]

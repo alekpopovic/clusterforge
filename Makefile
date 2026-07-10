@@ -10,7 +10,7 @@ CLI_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
 CLI_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 CLI_LDFLAGS := -s -w -X github.com/textracta/clusterforge/cli/cmd.Version=$(CLI_VERSION) -X github.com/textracta/clusterforge/cli/cmd.Commit=$(CLI_COMMIT) -X github.com/textracta/clusterforge/cli/cmd.Date=$(CLI_DATE)
 
-.PHONY: help fmt fmt-check validate lint test test-cli test-terraform test-terraform-aws check-modules build-cli security docs docs-serve docs-build clean ci
+.PHONY: help fmt fmt-check validate lint test test-cli test-terraform test-terraform-aws check-modules build-cli security secret-scan docs docs-serve docs-build clean ci
 
 help: ## Show available targets.
 	@awk 'BEGIN {FS = ":.*## "; printf "ClusterForge developer targets:\n\n"} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-14s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -62,6 +62,9 @@ build-cli: ## Build the ClusterForge CLI at cli/cf.
 
 security: ## Run installed security scanners when available.
 	./scripts/security.sh
+
+secret-scan: ## Scan tracked files and Git history for secrets when Gitleaks is available.
+	./scripts/secret-scan.sh
 
 docs: ## Generate module documentation when terraform-docs is installed.
 	./scripts/docs.sh
