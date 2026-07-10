@@ -1,0 +1,84 @@
+name: Example - scheduled AWS EKS drift check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 5 * * 1-5"
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: example-drift-aws-eks
+  cancel-in-progress: false
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ENVIRONMENT: prod
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      FAIL_ON_DRIFT: "false"
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: cli/go.mod
+          cache-dependency-path: cli/go.sum
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.10"
+          terraform_wrapper: false
+
+      - name: Configure short-lived AWS credentials through OIDC
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.AWS_DRIFT_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: clusterforge-eks-drift
+
+      - name: Build ClusterForge CLI
+        run: |
+          INSTALL_DIR="$RUNNER_TEMP/bin" ./scripts/install-cli.sh
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      - name: Initialize read-only Terraform root
+        run: cf init "$ENVIRONMENT"
+
+      - name: Detect drift and write summary
+        id: drift
+        shell: bash
+        run: |
+          set +e
+          cf drift check "$ENVIRONMENT" --json > drift-summary.json
+          code=$?
+          set -e
+          if [[ "$code" != "0" && "$code" != "2" ]]; then
+            echo "Drift command failed with exit code $code" >&2
+            exit "$code"
+          fi
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+
+      - name: Upload drift summary only
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aws-eks-drift-summary
+          path: drift-summary.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Apply configured drift outcome
+        if: steps.drift.outputs.exit_code == '2'
+        shell: bash
+        run: |
+          if [[ "$FAIL_ON_DRIFT" == "true" ]]; then
+            echo "Drift detected; failing because FAIL_ON_DRIFT=true" >&2
+            exit 1
+          fi
+          echo "::warning::Drift detected for $ENVIRONMENT; review the summary artifact."

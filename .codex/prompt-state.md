@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `111-environment-graph-visualization` |
-| Next prompt to execute | `112-scheduled-drift-check-workflow-templates` |
+| Last executed prompt | `112-scheduled-drift-check-workflow-templates` |
+| Next prompt to execute | `113-cli-audit-log` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -322,5 +322,14 @@ Title: Environment graph visualization
 Result: completed
 Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; git diff --check passed; Terraform graph execution was not run because no initialized target root was requested
 Evidence: cli/internal/graph; cli/cmd/graph.go; Terraform runner graph support; docs/graphs.md
+Commit: pending
+```
+
+```text
+Prompt: 112-scheduled-drift-check-workflow-templates
+Title: Scheduled drift check workflow templates
+Result: completed
+Validation: git diff --check passed; both workflow examples parsed successfully as YAML with Ruby; actionlint was unavailable; workflows were not executed because they are disabled examples and no AWS OIDC role was provided
+Evidence: .github/workflows/examples/drift-check-aws-eks.yml; .github/workflows/examples/drift-check-aws-ecs.yml; docs/ci-drift-checks.md
 Commit: pending
 ```
