@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/textracta/clusterforge/cli/internal/bindings"
 	"github.com/textracta/clusterforge/cli/internal/config"
 )
 
@@ -256,6 +257,74 @@ func TestCloudIdentityRejectsAdministratorPolicy(t *testing.T) {
 	manifest := sampleManifest()
 	manifest.CloudIdentity = CloudIdentity{Enabled: true, Provider: "aws", PolicyARNs: []string{"arn:aws:iam::aws:policy/AdministratorAccess"}}
 	assertValidationError(t, manifest.Validate(), "must not grant administrator access")
+}
+
+func TestRenderServiceBindings(t *testing.T) {
+	dir := t.TempDir()
+	envPath := filepath.Join(dir, "live", "dev", "aws-eks")
+	if err := os.MkdirAll(envPath, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	registry := []byte(`dependencies:
+  main:
+    type: rds-postgres
+    module: database
+  jobs:
+    type: sqs
+    module: queues
+    key: jobs
+`)
+	if err := os.WriteFile(filepath.Join(envPath, "dependencies.yaml"), registry, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	manifest := sampleManifest()
+	manifest.Dependencies = map[string]bindings.Request{
+		"database": {Type: "rds-postgres", Reference: "main", Env: map[string]string{"DATABASE_HOST": "endpoint"}},
+		"queue":    {Type: "sqs", Reference: "jobs", Env: map[string]string{"QUEUE_URL": "queue_url"}},
+	}
+	outPath, err := Render(dir, "dev", config.Environment{Cloud: "aws", Orchestrator: "eks", Path: envPath}, manifest)
+	if err != nil {
+		t.Fatalf("render bindings: %v", err)
+	}
+	rendered := readFile(t, outPath)
+	for _, want := range []string{`"DATABASE_HOST" = module.database.endpoint`, `"QUEUE_URL" = module.queues.queue_urls["jobs"]`} {
+		if !strings.Contains(rendered, want) {
+			t.Fatalf("rendered binding missing %q:\n%s", want, rendered)
+		}
+	}
+}
+
+func TestRenderUnknownServiceBindingFails(t *testing.T) {
+	dir := t.TempDir()
+	manifest := sampleManifest()
+	manifest.Dependencies = map[string]bindings.Request{
+		"database": {Type: "rds-postgres", Reference: "missing", Env: map[string]string{"DATABASE_HOST": "endpoint"}},
+	}
+	_, err := Render(dir, "dev", config.Environment{Cloud: "aws", Orchestrator: "eks", Path: filepath.Join(dir, "live", "dev")}, manifest)
+	assertValidationError(t, err, "unknown registry entry")
+}
+
+func TestRenderSecretBindingDoesNotRenderValue(t *testing.T) {
+	dir := t.TempDir()
+	envPath := filepath.Join(dir, "live", "dev")
+	if err := os.MkdirAll(envPath, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(envPath, "dependencies.yaml"), []byte("dependencies:\n  main:\n    type: rds-postgres\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	manifest := sampleManifest()
+	manifest.Dependencies = map[string]bindings.Request{
+		"database": {Type: "rds-postgres", Reference: "main", Secrets: map[string]string{"DATABASE_PASSWORD": "password"}},
+	}
+	outPath, err := Render(dir, "dev", config.Environment{Cloud: "aws", Orchestrator: "eks", Path: envPath}, manifest)
+	if err != nil {
+		t.Fatalf("render secret binding: %v", err)
+	}
+	rendered := readFile(t, outPath)
+	if strings.Contains(rendered, `DATABASE_PASSWORD =`) || !strings.Contains(rendered, "requires an external secret reference") {
+		t.Fatalf("secret binding was not safely rendered:\n%s", rendered)
+	}
 }
 
 func TestRenderUnsupportedOrchestrator(t *testing.T) {

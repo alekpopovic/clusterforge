@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `101-workload-cloud-identity-abstraction` |
-| Next prompt to execute | `102-service-binding-pattern-for-apps` |
+| Last executed prompt | `102-service-binding-pattern-for-apps` |
+| Next prompt to execute | `103-kubernetes-tenant-model` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -232,5 +232,14 @@ Title: Workload cloud identity abstraction
 Result: completed
 Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; terraform fmt passed; terraform validate passed for ECS service, Kubernetes worker, and Kubernetes cronjob modules; git diff --check passed
 Evidence: docs/rfcs/007-workload-identity.md; CLI manifest rendering tests; ECS task role policy support; Kubernetes annotated service accounts
+Commit: pending
+```
+
+```text
+Prompt: 102-service-binding-pattern-for-apps
+Title: Service binding pattern for apps
+Result: completed
+Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; git diff --check passed
+Evidence: cli/internal/bindings; app manifest dependency rendering tests; docs/service-bindings.md
 Commit: pending
 ```

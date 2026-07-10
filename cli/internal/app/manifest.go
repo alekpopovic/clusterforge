@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/textracta/clusterforge/cli/internal/bindings"
 	"gopkg.in/yaml.v3"
 )
 
@@ -16,17 +17,18 @@ const AppsDir = "apps"
 var appNamePattern = regexp.MustCompile(`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`)
 
 type Manifest struct {
-	Name          string               `yaml:"name"`
-	Type          string               `yaml:"type"`
-	Image         string               `yaml:"image"`
-	Replicas      int                  `yaml:"replicas"`
-	Ports         []Port               `yaml:"ports,omitempty"`
-	Env           map[string]string    `yaml:"env,omitempty"`
-	SecretEnv     map[string]SecretRef `yaml:"secret_env,omitempty"`
-	Resources     Resources            `yaml:"resources,omitempty"`
-	Ingress       Ingress              `yaml:"ingress,omitempty"`
-	Autoscaling   Autoscaling          `yaml:"autoscaling,omitempty"`
-	CloudIdentity CloudIdentity        `yaml:"cloud_identity,omitempty"`
+	Name          string                      `yaml:"name"`
+	Type          string                      `yaml:"type"`
+	Image         string                      `yaml:"image"`
+	Replicas      int                         `yaml:"replicas"`
+	Ports         []Port                      `yaml:"ports,omitempty"`
+	Env           map[string]string           `yaml:"env,omitempty"`
+	SecretEnv     map[string]SecretRef        `yaml:"secret_env,omitempty"`
+	Resources     Resources                   `yaml:"resources,omitempty"`
+	Ingress       Ingress                     `yaml:"ingress,omitempty"`
+	Autoscaling   Autoscaling                 `yaml:"autoscaling,omitempty"`
+	CloudIdentity CloudIdentity               `yaml:"cloud_identity,omitempty"`
+	Dependencies  map[string]bindings.Request `yaml:"dependencies,omitempty"`
 }
 
 type Port struct {
@@ -245,6 +247,9 @@ func (m *Manifest) ApplyDefaults() {
 	}
 	if m.CloudIdentity.InlinePolicies == nil {
 		m.CloudIdentity.InlinePolicies = map[string]string{}
+	}
+	if m.Dependencies == nil {
+		m.Dependencies = map[string]bindings.Request{}
 	}
 	if m.CloudIdentity.Enabled && m.CloudIdentity.Provider == "" {
 		m.CloudIdentity.Provider = "aws"

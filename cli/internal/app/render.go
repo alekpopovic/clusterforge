@@ -10,6 +10,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/textracta/clusterforge/cli/internal/bindings"
 	"github.com/textracta/clusterforge/cli/internal/config"
 )
 
@@ -20,14 +21,16 @@ type RenderOptions struct {
 }
 
 type renderData struct {
-	Header      string
-	ModuleName  string
-	App         Manifest
-	EnvName     string
-	Environment config.Environment
-	ModulesPath string
-	PrimaryPort int
-	PortName    string
+	Header          string
+	ModuleName      string
+	App             Manifest
+	EnvName         string
+	Environment     config.Environment
+	ModulesPath     string
+	PrimaryPort     int
+	PortName        string
+	BindingEnv      map[string]string
+	BindingComments []string
 }
 
 func Render(rootDir, envName string, env config.Environment, manifest Manifest) (string, error) {
@@ -53,15 +56,25 @@ func Render(rootDir, envName string, env config.Environment, manifest Manifest) 
 	if err != nil {
 		return "", err
 	}
+	registry, err := bindings.Load(env.Path)
+	if err != nil {
+		return "", err
+	}
+	resolvedBindings, err := bindings.Resolve(registry, manifest.Dependencies)
+	if err != nil {
+		return "", err
+	}
 	data := renderData{
-		Header:      renderHeader,
-		ModuleName:  sanitizeModuleName(manifest.Name),
-		App:         manifest,
-		EnvName:     envName,
-		Environment: env,
-		ModulesPath: modulesPath,
-		PrimaryPort: primaryPort(manifest),
-		PortName:    primaryPortName(manifest),
+		Header:          renderHeader,
+		ModuleName:      sanitizeModuleName(manifest.Name),
+		App:             manifest,
+		EnvName:         envName,
+		Environment:     env,
+		ModulesPath:     modulesPath,
+		PrimaryPort:     primaryPort(manifest),
+		PortName:        primaryPortName(manifest),
+		BindingEnv:      resolvedBindings.Environment,
+		BindingComments: resolvedBindings.Comments,
 	}
 
 	tpl, err := template.New("app").Funcs(template.FuncMap{
@@ -69,6 +82,7 @@ func Render(rootDir, envName string, env config.Environment, manifest Manifest) 
 		"lower":      strings.ToLower,
 		"hclMap":     hclMap,
 		"hclList":    hclList,
+		"hclExprMap": hclExpressionMap,
 		"hclPorts":   hclPorts,
 		"hclSecrets": hclSecrets,
 		"hclRes":     hclResources,
@@ -111,6 +125,9 @@ func IsSupportedOrchestrator(orchestrator string) bool {
 }
 
 const kubernetesTemplate = `{{ .Header }}
+{{- range .BindingComments }}
+# {{ . }}
+{{- end }}
 
 {{- if .App.CloudIdentity.Enabled }}
 module "{{ .ModuleName }}_irsa" {
@@ -150,7 +167,13 @@ module "{{ .ModuleName }}" {
   ports = {{ hclPorts .App.Ports 2 }}
 
 {{- end }}
-{{- if .App.Env }}
+{{- if .BindingEnv }}
+  env = merge(
+    {{ hclMap .App.Env 4 }},
+    {{ hclExprMap .BindingEnv 4 }}
+  )
+
+{{- else if .App.Env }}
   env = {{ hclMap .App.Env 2 }}
 
 {{- end }}
@@ -186,6 +209,9 @@ module "{{ .ModuleName }}" {
 `
 
 const ecsTemplate = `{{ .Header }}
+{{- range .BindingComments }}
+# {{ . }}
+{{- end }}
 
 module "{{ .ModuleName }}" {
   source = "{{ .ModulesPath }}/workloads/ecs/service"
@@ -210,7 +236,13 @@ module "{{ .ModuleName }}" {
 {{- end }}
 {{- end }}
 
-{{- if .App.Env }}
+{{- if .BindingEnv }}
+  environment_variables = merge(
+    {{ hclMap .App.Env 4 }},
+    {{ hclExprMap .BindingEnv 4 }}
+  )
+
+{{- else if .App.Env }}
   environment_variables = {{ hclMap .App.Env 2 }}
 
 {{- end }}
@@ -318,6 +350,25 @@ func hclList(values []string, indent int) string {
 		out.WriteString(fmt.Sprintf("%s  %s,\n", pad, strconv.Quote(value)))
 	}
 	out.WriteString(pad + "]")
+	return out.String()
+}
+
+func hclExpressionMap(values map[string]string, indent int) string {
+	if len(values) == 0 {
+		return "{}"
+	}
+	pad := strings.Repeat(" ", indent)
+	keys := make([]string, 0, len(values))
+	for key := range values {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	var out strings.Builder
+	out.WriteString("{\n")
+	for _, key := range keys {
+		out.WriteString(fmt.Sprintf("%s  %s = %s\n", pad, strconv.Quote(key), values[key]))
+	}
+	out.WriteString(pad + "}")
 	return out.String()
 }
 
