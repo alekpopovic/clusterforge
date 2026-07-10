@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `109-multi-cluster-inventory-model` |
-| Next prompt to execute | `110-fleet-operations-cli` |
+| Last executed prompt | `110-fleet-operations-cli` |
+| Next prompt to execute | `111-environment-graph-visualization` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -304,5 +304,14 @@ Title: Multi-cluster inventory model
 Result: completed
 Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; git diff --check passed
 Evidence: cli/internal/config cluster schema; cli/internal/inventory; cli/cmd/cluster.go; docs/multi-cluster.md
+Commit: pending
+```
+
+```text
+Prompt: 110-fleet-operations-cli
+Title: Fleet operations CLI
+Result: completed
+Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; git diff --check passed; real fleet drift was not run because no initialized fleet/backend credentials were provided
+Evidence: cli/internal/fleet; cli/cmd/fleet.go; fleet aggregation and filter tests; docs/fleet-operations.md
 Commit: pending
 ```
