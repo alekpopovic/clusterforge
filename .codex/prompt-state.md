@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `103-kubernetes-tenant-model` |
-| Next prompt to execute | `104-resourcequota-and-limitrange-baseline-modules` |
+| Last executed prompt | `104-resourcequota-and-limitrange-baseline-modules` |
+| Next prompt to execute | `105-kyverno-policy-module` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -250,5 +250,14 @@ Title: Kubernetes tenant model
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for the tenant module and example; make check-modules completed with only pre-existing warning status; git diff --check passed
 Evidence: modules/platform/kubernetes/tenant; examples/kubernetes-tenant; docs/kubernetes-tenancy.md
+Commit: pending
+```
+
+```text
+Prompt: 104-resourcequota-and-limitrange-baseline-modules
+Title: ResourceQuota and LimitRange baseline modules
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for both modules and the example; make check-modules passed for both new modules with only pre-existing repository warnings; git diff --check passed
+Evidence: modules/platform/kubernetes/resource-quota; modules/platform/kubernetes/limit-range; examples/kubernetes-resource-governance; docs/kubernetes-resource-governance.md
 Commit: pending
 ```
