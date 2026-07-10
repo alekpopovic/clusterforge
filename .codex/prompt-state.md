@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `104-resourcequota-and-limitrange-baseline-modules` |
-| Next prompt to execute | `105-kyverno-policy-module` |
+| Last executed prompt | `105-kyverno-policy-module` |
+| Next prompt to execute | `106-opa-gatekeeper-alternative-module` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -259,5 +259,14 @@ Title: ResourceQuota and LimitRange baseline modules
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for both modules and the example; make check-modules passed for both new modules with only pre-existing repository warnings; git diff --check passed
 Evidence: modules/platform/kubernetes/resource-quota; modules/platform/kubernetes/limit-range; examples/kubernetes-resource-governance; docs/kubernetes-resource-governance.md
+Commit: pending
+```
+
+```text
+Prompt: 105-kyverno-policy-module
+Title: Kyverno policy module
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for the Kyverno module and example; make check-modules passed for the new module with only pre-existing repository warnings; git diff --check passed; live Helm install and policy admission tests skipped because no cluster was provided
+Evidence: modules/platform/kubernetes/kyverno; examples/kubernetes-kyverno-baseline; docs/kubernetes-policy-kyverno.md
 Commit: pending
 ```
