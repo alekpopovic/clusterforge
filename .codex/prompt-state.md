@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `106-opa-gatekeeper-alternative-module` |
-| Next prompt to execute | `107-progressive-delivery-with-argo-rollouts` |
+| Last executed prompt | `107-progressive-delivery-with-argo-rollouts` |
+| Next prompt to execute | `108-service-mesh-rfc` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -277,5 +277,14 @@ Title: OPA Gatekeeper alternative module
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for the Gatekeeper module and example; make check-modules passed for the new module with only pre-existing repository warnings; git diff --check passed; live admission tests skipped because no cluster was provided
 Evidence: modules/platform/kubernetes/gatekeeper; examples/kubernetes-gatekeeper-baseline; docs/kubernetes-policy-gatekeeper.md
+Commit: pending
+```
+
+```text
+Prompt: 107-progressive-delivery-with-argo-rollouts
+Title: Progressive delivery with Argo Rollouts
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for controller module, rollout workload module, and example; make check-modules passed for both new modules with only pre-existing repository warnings; git diff --check passed; live rollout tests skipped because no cluster was provided
+Evidence: modules/platform/kubernetes/argo-rollouts; modules/workloads/kubernetes/rollout-app; examples/kubernetes-argo-rollouts-canary; docs/progressive-delivery.md
 Commit: pending
 ```
