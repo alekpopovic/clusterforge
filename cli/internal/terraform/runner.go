@@ -59,6 +59,16 @@ func (r Runner) Output(ctx context.Context, json bool) error {
 	return r.run(ctx, outputArgs(json))
 }
 
+func (r Runner) Graph(ctx context.Context) ([]byte, error) {
+	var stdout bytes.Buffer
+	copy := r
+	copy.Stdout = &stdout
+	if err := copy.run(ctx, []string{"graph"}); err != nil {
+		return nil, err
+	}
+	return stdout.Bytes(), nil
+}
+
 func (r Runner) StateList(ctx context.Context) error {
 	return r.run(ctx, []string{"state", "list"})
 }

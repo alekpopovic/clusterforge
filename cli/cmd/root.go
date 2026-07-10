@@ -48,6 +48,7 @@ func init() {
 	rootCmd.AddCommand(envCmd)
 	rootCmd.AddCommand(clusterCmd)
 	rootCmd.AddCommand(fleetCmd)
+	rootCmd.AddCommand(graphCmd)
 	rootCmd.AddCommand(backendCmd)
 	rootCmd.AddCommand(generateCmd)
 	rootCmd.AddCommand(policyCmd)

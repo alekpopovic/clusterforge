@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `110-fleet-operations-cli` |
-| Next prompt to execute | `111-environment-graph-visualization` |
+| Last executed prompt | `111-environment-graph-visualization` |
+| Next prompt to execute | `112-scheduled-drift-check-workflow-templates` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -313,5 +313,14 @@ Title: Fleet operations CLI
 Result: completed
 Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; git diff --check passed; real fleet drift was not run because no initialized fleet/backend credentials were provided
 Evidence: cli/internal/fleet; cli/cmd/fleet.go; fleet aggregation and filter tests; docs/fleet-operations.md
+Commit: pending
+```
+
+```text
+Prompt: 111-environment-graph-visualization
+Title: Environment graph visualization
+Result: completed
+Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; git diff --check passed; Terraform graph execution was not run because no initialized target root was requested
+Evidence: cli/internal/graph; cli/cmd/graph.go; Terraform runner graph support; docs/graphs.md
 Commit: pending
 ```
