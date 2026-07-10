@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `108-service-mesh-rfc` |
-| Next prompt to execute | `109-multi-cluster-inventory-model` |
+| Last executed prompt | `109-multi-cluster-inventory-model` |
+| Next prompt to execute | `110-fleet-operations-cli` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -295,5 +295,14 @@ Title: Service mesh RFC
 Result: completed
 Validation: git diff --check passed; docs build skipped because mkdocs-material is unavailable
 Evidence: docs/rfcs/008-service-mesh.md; docs/roadmap.md
+Commit: pending
+```
+
+```text
+Prompt: 109-multi-cluster-inventory-model
+Title: Multi-cluster inventory model
+Result: completed
+Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; git diff --check passed
+Evidence: cli/internal/config cluster schema; cli/internal/inventory; cli/cmd/cluster.go; docs/multi-cluster.md
 Commit: pending
 ```

@@ -43,6 +43,48 @@ policies:
 	}
 }
 
+func TestLoadConfigWithClusters(t *testing.T) {
+	path := writeConfig(t, `project:
+  name: demo
+environments:
+  dev:
+    cloud: aws
+    region: eu-central-1
+    orchestrator: eks
+    path: live/dev/aws-eks
+clusters:
+  dev-eks:
+    environment: dev
+    cloud: aws
+    orchestrator: eks
+    region: eu-central-1
+    path: live/dev/aws-eks
+    status: experimental
+    kubeconfig_path: ~/.kube/config
+`)
+	cfg, err := Load(path)
+	if err != nil {
+		t.Fatalf("load config with clusters: %v", err)
+	}
+	if cluster := cfg.Clusters["dev-eks"]; cluster.Environment != "dev" || cluster.Status != "experimental" || cluster.KubeconfigPath != "~/.kube/config" {
+		t.Fatalf("cluster = %#v", cluster)
+	}
+}
+
+func TestLoadClusterWithMissingEnvironmentFails(t *testing.T) {
+	path := writeConfig(t, `project:
+  name: demo
+environments: {}
+clusters:
+  orphan:
+    environment: missing
+    path: live/missing
+`)
+	if _, err := Load(path); err == nil {
+		t.Fatal("expected missing cluster environment to fail")
+	}
+}
+
 func TestLoadFailsOnMissingProjectName(t *testing.T) {
 	path := writeConfig(t, `project: {}
 environments: {}

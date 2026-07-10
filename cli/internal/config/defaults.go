@@ -22,6 +22,14 @@ var allowedOrchestrators = map[string]bool{
 	"gke":        true,
 }
 
+var allowedClusterStatuses = map[string]bool{
+	"experimental": true,
+	"development":  true,
+	"staging":      true,
+	"production":   true,
+	"deprecated":   true,
+}
+
 func DefaultConfig(name string) *Config {
 	cfg := &Config{
 		ClusterForgeVersion: "0.1.0",
@@ -73,6 +81,9 @@ func (c *Config) ApplyDefaults() {
 	if c.Environments == nil {
 		c.Environments = map[string]Environment{}
 	}
+	if c.Clusters == nil {
+		c.Clusters = map[string]Cluster{}
+	}
 	if c.Backends == nil {
 		c.Backends = map[string]Backend{}
 	}
@@ -102,5 +113,24 @@ func (c *Config) ApplyDefaults() {
 			}
 		}
 		c.Environments[name] = env
+	}
+	for name, cluster := range c.Clusters {
+		env := c.Environments[cluster.Environment]
+		if cluster.Cloud == "" {
+			cluster.Cloud = env.Cloud
+		}
+		if cluster.Region == "" {
+			cluster.Region = env.Region
+		}
+		if cluster.Orchestrator == "" {
+			cluster.Orchestrator = env.Orchestrator
+		}
+		if cluster.Path == "" {
+			cluster.Path = env.Path
+		}
+		if cluster.Status == "" {
+			cluster.Status = "experimental"
+		}
+		c.Clusters[name] = cluster
 	}
 }

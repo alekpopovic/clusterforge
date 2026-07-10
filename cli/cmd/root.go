@@ -46,6 +46,7 @@ func init() {
 	rootCmd.AddCommand(appCmd)
 	rootCmd.AddCommand(projectCmd)
 	rootCmd.AddCommand(envCmd)
+	rootCmd.AddCommand(clusterCmd)
 	rootCmd.AddCommand(backendCmd)
 	rootCmd.AddCommand(generateCmd)
 	rootCmd.AddCommand(policyCmd)

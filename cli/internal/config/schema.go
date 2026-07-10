@@ -13,6 +13,7 @@ type Config struct {
 	Engines             map[string]Engine      `yaml:"engines"`
 	Defaults            Defaults               `yaml:"defaults"`
 	Environments        map[string]Environment `yaml:"environments"`
+	Clusters            map[string]Cluster     `yaml:"clusters,omitempty"`
 	Backends            map[string]Backend     `yaml:"backends,omitempty"`
 	Policies            Policies               `yaml:"policies"`
 	TemplatePacks       []TemplatePack         `yaml:"template_packs,omitempty"`
@@ -40,6 +41,16 @@ type Environment struct {
 	Path         string `yaml:"path"`
 	Layout       string `yaml:"layout,omitempty"`
 	Stacks       Stacks `yaml:"stacks,omitempty"`
+}
+
+type Cluster struct {
+	Environment    string `yaml:"environment"`
+	Cloud          string `yaml:"cloud"`
+	Orchestrator   string `yaml:"orchestrator"`
+	Region         string `yaml:"region"`
+	Path           string `yaml:"path"`
+	Status         string `yaml:"status,omitempty"`
+	KubeconfigPath string `yaml:"kubeconfig_path,omitempty"`
 }
 
 type Stacks map[string]Stack
@@ -107,6 +118,29 @@ func (c *Config) Validate() error {
 		}
 		if err := validateOrchestrator(fmt.Sprintf("environment %q orchestrator", name), env.Orchestrator); err != nil {
 			return err
+		}
+	}
+	for name, cluster := range c.Clusters {
+		if strings.TrimSpace(name) == "" {
+			return fmt.Errorf("cluster name must not be empty")
+		}
+		if strings.TrimSpace(cluster.Environment) == "" {
+			return fmt.Errorf("cluster %q environment is required", name)
+		}
+		if _, ok := c.Environments[cluster.Environment]; !ok {
+			return fmt.Errorf("cluster %q references unknown environment %q", name, cluster.Environment)
+		}
+		if strings.TrimSpace(cluster.Path) == "" {
+			return fmt.Errorf("cluster %q path is required", name)
+		}
+		if err := validateCloud(fmt.Sprintf("cluster %q cloud", name), cluster.Cloud); err != nil {
+			return err
+		}
+		if err := validateOrchestrator(fmt.Sprintf("cluster %q orchestrator", name), cluster.Orchestrator); err != nil {
+			return err
+		}
+		if !allowedClusterStatuses[strings.ToLower(strings.TrimSpace(cluster.Status))] {
+			return fmt.Errorf("cluster %q status must be one of experimental, development, staging, production, deprecated", name)
 		}
 	}
 	for name, backend := range c.Backends {
