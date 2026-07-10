@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `102-service-binding-pattern-for-apps` |
-| Next prompt to execute | `103-kubernetes-tenant-model` |
+| Last executed prompt | `103-kubernetes-tenant-model` |
+| Next prompt to execute | `104-resourcequota-and-limitrange-baseline-modules` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -241,5 +241,14 @@ Title: Service binding pattern for apps
 Result: completed
 Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; git diff --check passed
 Evidence: cli/internal/bindings; app manifest dependency rendering tests; docs/service-bindings.md
+Commit: pending
+```
+
+```text
+Prompt: 103-kubernetes-tenant-model
+Title: Kubernetes tenant model
+Result: completed
+Validation: terraform fmt -recursive passed; terraform validate passed for the tenant module and example; make check-modules completed with only pre-existing warning status; git diff --check passed
+Evidence: modules/platform/kubernetes/tenant; examples/kubernetes-tenant; docs/kubernetes-tenancy.md
 Commit: pending
 ```
