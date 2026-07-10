@@ -38,6 +38,9 @@ func Render(rootDir, envName string, env config.Environment, manifest Manifest) 
 	if !IsSupportedOrchestrator(env.Orchestrator) {
 		return "", fmt.Errorf("unsupported orchestrator %q for app rendering; supported targets are Kubernetes variants and ecs", env.Orchestrator)
 	}
+	if manifest.CloudIdentity.Enabled && env.Orchestrator != "eks" && env.Orchestrator != "ecs" {
+		return "", fmt.Errorf("cloud identity provider %q is not supported for orchestrator %q; the MVP supports EKS IRSA and ECS task roles", manifest.CloudIdentity.Provider, env.Orchestrator)
+	}
 	outDir := filepath.Join(env.Path, "apps")
 	if env.EffectiveLayout() == "stacked" {
 		stackPath, err := env.StackPath("apps")
@@ -65,6 +68,7 @@ func Render(rootDir, envName string, env config.Environment, manifest Manifest) 
 		"quote":      strconv.Quote,
 		"lower":      strings.ToLower,
 		"hclMap":     hclMap,
+		"hclList":    hclList,
 		"hclPorts":   hclPorts,
 		"hclSecrets": hclSecrets,
 		"hclRes":     hclResources,
@@ -108,6 +112,22 @@ func IsSupportedOrchestrator(orchestrator string) bool {
 
 const kubernetesTemplate = `{{ .Header }}
 
+{{- if .App.CloudIdentity.Enabled }}
+module "{{ .ModuleName }}_irsa" {
+  source = "{{ .ModulesPath }}/cloud/aws/irsa-role"
+
+  name                 = {{ quote (printf "%s-%s" .App.Name .EnvName) }}
+  environment          = {{ quote .EnvName }}
+  oidc_provider_arn    = module.eks.oidc_provider_arn
+  oidc_provider_url    = module.eks.oidc_provider_url
+  namespace            = {{ quote .EnvName }}
+  service_account_name = {{ quote .App.Name }}
+  policy_arns          = {{ hclList .App.CloudIdentity.PolicyARNs 2 }}
+  inline_policies      = {{ hclMap .App.CloudIdentity.InlinePolicies 2 }}
+}
+
+{{- end }}
+
 module "{{ .ModuleName }}" {
   source = "{{ .ModulesPath }}/workloads/kubernetes/app"
 
@@ -115,6 +135,16 @@ module "{{ .ModuleName }}" {
   namespace = {{ quote .EnvName }}
   image     = {{ quote .App.Image }}
   replicas  = {{ .App.Replicas }}
+
+{{- if .App.CloudIdentity.Enabled }}
+  service_account = {
+    create = true
+    name   = {{ quote .App.Name }}
+    annotations = {
+      "eks.amazonaws.com/role-arn" = module.{{ .ModuleName }}_irsa.role_arn
+    }
+  }
+{{- end }}
 
 {{- if .App.Ports }}
   ports = {{ hclPorts .App.Ports 2 }}
@@ -170,6 +200,15 @@ module "{{ .ModuleName }}" {
   desired_count  = {{ .App.Replicas }}
   container_port = {{ .PrimaryPort }}
   protocol       = {{ quote (lower .PortName) }}
+
+{{- if .App.CloudIdentity.Enabled }}
+{{- if .App.CloudIdentity.TaskRoleARN }}
+  task_role_arn = {{ quote .App.CloudIdentity.TaskRoleARN }}
+{{- else }}
+  task_role_policy_arns    = {{ hclList .App.CloudIdentity.PolicyARNs 2 }}
+  task_role_inline_policies = {{ hclMap .App.CloudIdentity.InlinePolicies 2 }}
+{{- end }}
+{{- end }}
 
 {{- if .App.Env }}
   environment_variables = {{ hclMap .App.Env 2 }}
@@ -265,6 +304,20 @@ func hclMap(values map[string]string, indent int) string {
 		out.WriteString(fmt.Sprintf("%s  %s = %s\n", pad, strconv.Quote(key), strconv.Quote(values[key])))
 	}
 	out.WriteString(pad + "}")
+	return out.String()
+}
+
+func hclList(values []string, indent int) string {
+	if len(values) == 0 {
+		return "[]"
+	}
+	pad := strings.Repeat(" ", indent)
+	var out strings.Builder
+	out.WriteString("[\n")
+	for _, value := range values {
+		out.WriteString(fmt.Sprintf("%s  %s,\n", pad, strconv.Quote(value)))
+	}
+	out.WriteString(pad + "]")
 	return out.String()
 }
 

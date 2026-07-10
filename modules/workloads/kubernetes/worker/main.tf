@@ -31,7 +31,21 @@ locals {
     } : key => value if value != null
   }
 
-  has_resources = length(local.resource_requests) > 0 || length(local.resource_limits) > 0
+  has_resources          = length(local.resource_requests) > 0 || length(local.resource_limits) > 0
+  create_service_account = var.service_account_name != "" && length(var.service_account_annotations) > 0
+}
+
+resource "kubernetes_service_account_v1" "this" {
+  count = local.create_service_account ? 1 : 0
+
+  metadata {
+    name        = var.service_account_name
+    namespace   = local.namespace
+    labels      = local.labels
+    annotations = var.service_account_annotations
+  }
+
+  depends_on = [kubernetes_namespace_v1.this]
 }
 
 resource "kubernetes_namespace_v1" "this" {

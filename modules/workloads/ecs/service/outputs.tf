@@ -17,3 +17,8 @@ output "log_group_name" {
   description = "CloudWatch log group name used by the task."
   value       = local.log_group
 }
+
+output "task_role_arn" {
+  description = "IAM role ARN assumed by application containers."
+  value       = local.task_role_arn
+}

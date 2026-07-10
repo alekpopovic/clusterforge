@@ -17,3 +17,8 @@ output "labels" {
   description = "Labels applied to worker resources."
   value       = local.labels
 }
+
+output "service_account_name" {
+  description = "Service account used by the workload, or null when the namespace default is used."
+  value       = var.service_account_name == "" ? null : var.service_account_name
+}

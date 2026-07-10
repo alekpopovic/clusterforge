@@ -60,6 +60,21 @@ resource "aws_iam_role" "task" {
   tags               = local.common_tags
 }
 
+resource "aws_iam_role_policy_attachment" "task" {
+  for_each = var.task_role_arn == "" ? toset(var.task_role_policy_arns) : toset([])
+
+  role       = aws_iam_role.task[0].name
+  policy_arn = each.value
+}
+
+resource "aws_iam_role_policy" "task" {
+  for_each = var.task_role_arn == "" ? var.task_role_inline_policies : {}
+
+  name   = each.key
+  role   = aws_iam_role.task[0].id
+  policy = each.value
+}
+
 resource "aws_ecs_task_definition" "this" {
   family                   = local.name
   requires_compatibilities = ["FARGATE"]

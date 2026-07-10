@@ -7,10 +7,10 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `100-aws-messaging-modules-sqs-and-sns` |
-| Next prompt to execute | `101-workload-cloud-identity-abstraction` |
+| Last executed prompt | `101-workload-cloud-identity-abstraction` |
+| Next prompt to execute | `102-service-binding-pattern-for-apps` |
 | Prompt directory | `prompts/` |
-| Last updated | 2026-07-09 |
+| Last updated | 2026-07-10 |
 
 ## Rules
 
@@ -223,5 +223,14 @@ Title: AWS messaging modules: SQS and SNS
 Result: completed
 Validation: terraform fmt -recursive passed; terraform validate passed for modules/cloud/aws/sqs, modules/cloud/aws/sns, examples/aws-sqs-worker, and examples/aws-sns-topic; make check-modules passed with warning status; git diff --check passed
 Evidence: modules/cloud/aws/sqs; modules/cloud/aws/sns; examples/aws-sqs-worker; examples/aws-sns-topic
+Commit: pending
+```
+
+```text
+Prompt: 101-workload-cloud-identity-abstraction
+Title: Workload cloud identity abstraction
+Result: completed
+Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; terraform fmt passed; terraform validate passed for ECS service, Kubernetes worker, and Kubernetes cronjob modules; git diff --check passed
+Evidence: docs/rfcs/007-workload-identity.md; CLI manifest rendering tests; ECS task role policy support; Kubernetes annotated service accounts
 Commit: pending
 ```

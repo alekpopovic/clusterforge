@@ -16,16 +16,17 @@ const AppsDir = "apps"
 var appNamePattern = regexp.MustCompile(`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`)
 
 type Manifest struct {
-	Name        string               `yaml:"name"`
-	Type        string               `yaml:"type"`
-	Image       string               `yaml:"image"`
-	Replicas    int                  `yaml:"replicas"`
-	Ports       []Port               `yaml:"ports,omitempty"`
-	Env         map[string]string    `yaml:"env,omitempty"`
-	SecretEnv   map[string]SecretRef `yaml:"secret_env,omitempty"`
-	Resources   Resources            `yaml:"resources,omitempty"`
-	Ingress     Ingress              `yaml:"ingress,omitempty"`
-	Autoscaling Autoscaling          `yaml:"autoscaling,omitempty"`
+	Name          string               `yaml:"name"`
+	Type          string               `yaml:"type"`
+	Image         string               `yaml:"image"`
+	Replicas      int                  `yaml:"replicas"`
+	Ports         []Port               `yaml:"ports,omitempty"`
+	Env           map[string]string    `yaml:"env,omitempty"`
+	SecretEnv     map[string]SecretRef `yaml:"secret_env,omitempty"`
+	Resources     Resources            `yaml:"resources,omitempty"`
+	Ingress       Ingress              `yaml:"ingress,omitempty"`
+	Autoscaling   Autoscaling          `yaml:"autoscaling,omitempty"`
+	CloudIdentity CloudIdentity        `yaml:"cloud_identity,omitempty"`
 }
 
 type Port struct {
@@ -58,6 +59,16 @@ type Autoscaling struct {
 	MinReplicas int  `yaml:"min_replicas,omitempty"`
 	MaxReplicas int  `yaml:"max_replicas,omitempty"`
 	CPUPercent  int  `yaml:"cpu_percent,omitempty"`
+}
+
+// CloudIdentity describes an opt-in workload identity. Policy documents are
+// references or JSON policy documents; credentials never belong here.
+type CloudIdentity struct {
+	Enabled        bool              `yaml:"enabled"`
+	Provider       string            `yaml:"provider,omitempty"`
+	PolicyARNs     []string          `yaml:"policy_arns,omitempty"`
+	InlinePolicies map[string]string `yaml:"inline_policies,omitempty"`
+	TaskRoleARN    string            `yaml:"task_role_arn,omitempty"`
 }
 
 type AddOptions struct {
@@ -232,6 +243,12 @@ func (m *Manifest) ApplyDefaults() {
 	if m.SecretEnv == nil {
 		m.SecretEnv = map[string]SecretRef{}
 	}
+	if m.CloudIdentity.InlinePolicies == nil {
+		m.CloudIdentity.InlinePolicies = map[string]string{}
+	}
+	if m.CloudIdentity.Enabled && m.CloudIdentity.Provider == "" {
+		m.CloudIdentity.Provider = "aws"
+	}
 	for i := range m.Ports {
 		if m.Ports[i].Protocol == "" {
 			m.Ports[i].Protocol = "TCP"
@@ -300,6 +317,19 @@ func (m Manifest) Validate() error {
 		}
 		if strings.TrimSpace(ref.SecretKey) == "" {
 			errs.Add(fmt.Sprintf("secret_env.%s.secret_key is required", key))
+		}
+	}
+	if m.CloudIdentity.Enabled {
+		if strings.ToLower(strings.TrimSpace(m.CloudIdentity.Provider)) != "aws" {
+			errs.Add("cloud_identity.provider must be aws for the current MVP")
+		}
+		for index, arn := range m.CloudIdentity.PolicyARNs {
+			if !strings.HasPrefix(strings.TrimSpace(arn), "arn:aws:iam::") {
+				errs.Add(fmt.Sprintf("cloud_identity.policy_arns[%d] must be an AWS IAM policy ARN", index))
+			}
+			if strings.Contains(arn, "AdministratorAccess") {
+				errs.Add(fmt.Sprintf("cloud_identity.policy_arns[%d] must not grant administrator access", index))
+			}
 		}
 	}
 	if len(errs) > 0 {

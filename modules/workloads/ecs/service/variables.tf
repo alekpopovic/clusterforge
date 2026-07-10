@@ -143,6 +143,18 @@ variable "task_role_arn" {
   default     = ""
 }
 
+variable "task_role_policy_arns" {
+  description = "Managed IAM policy ARNs attached to the created task role. Ignored when task_role_arn references an existing role."
+  type        = list(string)
+  default     = []
+}
+
+variable "task_role_inline_policies" {
+  description = "Inline IAM policy JSON documents attached to the created task role. Do not include credentials or administrator policies."
+  type        = map(string)
+  default     = {}
+}
+
 variable "create_log_group" {
   description = "Whether to create the CloudWatch log group."
   type        = bool

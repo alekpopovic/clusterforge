@@ -129,6 +129,12 @@ variable "service_account_name" {
   default     = ""
 }
 
+variable "service_account_annotations" {
+  description = "Annotations for an optional workload service account, including EKS IRSA role annotations."
+  type        = map(string)
+  default     = {}
+}
+
 variable "autoscaling" {
   description = "Optional Horizontal Pod Autoscaler configuration."
   type = object({

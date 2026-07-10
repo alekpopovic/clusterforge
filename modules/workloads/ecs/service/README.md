@@ -6,6 +6,11 @@ Deploys a generic AWS ECS Fargate service. The module creates a task
 definition, service, optional CloudWatch log group, optional IAM roles, and
 optional service autoscaling.
 
+The generated task role can receive least-privilege managed or inline policies
+through `task_role_policy_arns` and `task_role_inline_policies`. Alternatively,
+set `task_role_arn` to use an externally managed role. Never put credentials in
+policy documents or plain environment variables.
+
 Provider configuration belongs in the root module. This module declares the
 AWS provider requirement but does not configure the provider.
 

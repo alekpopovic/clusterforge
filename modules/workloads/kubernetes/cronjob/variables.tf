@@ -117,6 +117,18 @@ variable "restart_policy" {
   }
 }
 
+variable "service_account_name" {
+  description = "Existing or managed service account name. Leave empty to use the namespace default service account."
+  type        = string
+  default     = ""
+}
+
+variable "service_account_annotations" {
+  description = "Annotations for an optional workload service account, including EKS IRSA role annotations."
+  type        = map(string)
+  default     = {}
+}
+
 variable "resources" {
   description = "Container resource requests and limits."
   type = object({

@@ -26,7 +26,8 @@ locals {
     } : key => value if value != null
   }
 
-  has_resources = length(local.resource_requests) > 0 || length(local.resource_limits) > 0
+  has_resources          = length(local.resource_requests) > 0 || length(local.resource_limits) > 0
+  create_service_account = var.service_account_name != "" && length(var.service_account_annotations) > 0
 }
 
 resource "kubernetes_namespace_v1" "this" {
@@ -36,6 +37,19 @@ resource "kubernetes_namespace_v1" "this" {
     name   = local.namespace
     labels = local.labels
   }
+}
+
+resource "kubernetes_service_account_v1" "this" {
+  count = local.create_service_account ? 1 : 0
+
+  metadata {
+    name        = var.service_account_name
+    namespace   = local.namespace
+    labels      = local.labels
+    annotations = var.service_account_annotations
+  }
+
+  depends_on = [kubernetes_namespace_v1.this]
 }
 
 resource "kubernetes_cron_job_v1" "this" {
@@ -66,7 +80,8 @@ resource "kubernetes_cron_job_v1" "this" {
           }
 
           spec {
-            restart_policy = var.restart_policy
+            restart_policy       = var.restart_policy
+            service_account_name = var.service_account_name == "" ? null : var.service_account_name
 
             dynamic "image_pull_secrets" {
               for_each = toset(var.image_pull_secrets)

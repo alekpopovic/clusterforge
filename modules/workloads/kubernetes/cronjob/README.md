@@ -2,6 +2,10 @@
 
 Deploys a Kubernetes CronJob using the Terraform Kubernetes provider.
 
+For EKS IRSA, set `service_account_name` and the
+`eks.amazonaws.com/role-arn` key in `service_account_annotations`. The module
+creates that annotated service account; create the IAM role separately.
+
 Provider configuration belongs in the root module. This module does not create
 or configure a cluster.
 

@@ -199,6 +199,65 @@ func TestRenderECSModuleCall(t *testing.T) {
 	}
 }
 
+func TestRenderEKSCloudIdentity(t *testing.T) {
+	dir := t.TempDir()
+	manifest := sampleManifest()
+	manifest.CloudIdentity = CloudIdentity{
+		Enabled:    true,
+		Provider:   "aws",
+		PolicyARNs: []string{"arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"},
+	}
+	env := config.Environment{Cloud: "aws", Orchestrator: "eks", Path: filepath.Join(dir, "live", "dev", "aws-eks")}
+	outPath, err := Render(dir, "dev", env, manifest)
+	if err != nil {
+		t.Fatalf("render EKS cloud identity: %v", err)
+	}
+	rendered := readFile(t, outPath)
+	for _, want := range []string{
+		`module "api_irsa"`,
+		`source = "../../../../modules/cloud/aws/irsa-role"`,
+		`"eks.amazonaws.com/role-arn" = module.api_irsa.role_arn`,
+		`arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess`,
+	} {
+		if !strings.Contains(rendered, want) {
+			t.Fatalf("rendered EKS identity missing %q:\n%s", want, rendered)
+		}
+	}
+}
+
+func TestRenderECSCloudIdentity(t *testing.T) {
+	dir := t.TempDir()
+	manifest := sampleManifest()
+	manifest.CloudIdentity = CloudIdentity{
+		Enabled:    true,
+		Provider:   "aws",
+		PolicyARNs: []string{"arn:aws:iam::aws:policy/AmazonSQSReadOnlyAccess"},
+	}
+	env := config.Environment{Cloud: "aws", Orchestrator: "ecs", Path: filepath.Join(dir, "live", "dev", "aws-ecs")}
+	outPath, err := Render(dir, "dev", env, manifest)
+	if err != nil {
+		t.Fatalf("render ECS cloud identity: %v", err)
+	}
+	if rendered := readFile(t, outPath); !strings.Contains(rendered, "task_role_policy_arns") || !strings.Contains(rendered, "AmazonSQSReadOnlyAccess") {
+		t.Fatalf("rendered ECS task role is incomplete:\n%s", rendered)
+	}
+}
+
+func TestCloudIdentityUnsupportedTargetFails(t *testing.T) {
+	manifest := sampleManifest()
+	manifest.CloudIdentity = CloudIdentity{Enabled: true, Provider: "aws"}
+	dir := t.TempDir()
+	env := config.Environment{Cloud: "gcp", Orchestrator: "gke", Path: filepath.Join(dir, "live", "dev", "gke")}
+	_, err := Render(dir, "dev", env, manifest)
+	assertValidationError(t, err, "not supported for orchestrator")
+}
+
+func TestCloudIdentityRejectsAdministratorPolicy(t *testing.T) {
+	manifest := sampleManifest()
+	manifest.CloudIdentity = CloudIdentity{Enabled: true, Provider: "aws", PolicyARNs: []string{"arn:aws:iam::aws:policy/AdministratorAccess"}}
+	assertValidationError(t, manifest.Validate(), "must not grant administrator access")
+}
+
 func TestRenderUnsupportedOrchestrator(t *testing.T) {
 	dir := t.TempDir()
 	env := config.Environment{
