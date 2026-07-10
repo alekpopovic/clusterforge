@@ -14,6 +14,7 @@ type Config struct {
 	Defaults            Defaults               `yaml:"defaults"`
 	Environments        map[string]Environment `yaml:"environments"`
 	Clusters            map[string]Cluster     `yaml:"clusters,omitempty"`
+	Audit               Audit                  `yaml:"audit,omitempty"`
 	Backends            map[string]Backend     `yaml:"backends,omitempty"`
 	Policies            Policies               `yaml:"policies"`
 	TemplatePacks       []TemplatePack         `yaml:"template_packs,omitempty"`
@@ -51,6 +52,11 @@ type Cluster struct {
 	Path           string `yaml:"path"`
 	Status         string `yaml:"status,omitempty"`
 	KubeconfigPath string `yaml:"kubeconfig_path,omitempty"`
+}
+
+type Audit struct {
+	Enabled bool   `yaml:"enabled"`
+	Path    string `yaml:"path,omitempty"`
 }
 
 type Stacks map[string]Stack

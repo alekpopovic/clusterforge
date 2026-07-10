@@ -153,4 +153,5 @@ func init() {
 	upgradeCmd.AddCommand(upgradeCheckCmd)
 	upgradeCmd.AddCommand(upgradePlanCmd)
 	upgradeCmd.AddCommand(upgradeApplyCmd)
+	wrapAuditedCommand(upgradeApplyCmd)
 }

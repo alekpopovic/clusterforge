@@ -35,5 +35,8 @@ bin/
 dist/
 coverage/
 
+# Local CLI audit trail
+.cf/audit.log
+
 .DS_Store
 *.swp

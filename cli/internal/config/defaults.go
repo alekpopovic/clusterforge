@@ -37,6 +37,10 @@ func DefaultConfig(name string) *Config {
 			Name: name,
 		},
 		Environments: map[string]Environment{},
+		Audit: Audit{
+			Enabled: true,
+			Path:    ".cf/audit.log",
+		},
 		Policies: Policies{
 			RequirePlanFileForApply:      true,
 			BlockDestroyInProd:           true,
@@ -77,6 +81,9 @@ func (c *Config) ApplyDefaults() {
 	}
 	if c.Defaults.Orchestrator == "" {
 		c.Defaults.Orchestrator = "eks"
+	}
+	if c.Audit.Enabled && c.Audit.Path == "" {
+		c.Audit.Path = ".cf/audit.log"
 	}
 	if c.Environments == nil {
 		c.Environments = map[string]Environment{}

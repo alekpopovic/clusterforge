@@ -7,8 +7,8 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `112-scheduled-drift-check-workflow-templates` |
-| Next prompt to execute | `113-cli-audit-log` |
+| Last executed prompt | `113-cli-audit-log` |
+| Next prompt to execute | `114-pre-commit-hooks` |
 | Prompt directory | `prompts/` |
 | Last updated | 2026-07-10 |
 
@@ -331,5 +331,14 @@ Title: Scheduled drift check workflow templates
 Result: completed
 Validation: git diff --check passed; both workflow examples parsed successfully as YAML with Ruby; actionlint was unavailable; workflows were not executed because they are disabled examples and no AWS OIDC role was provided
 Evidence: .github/workflows/examples/drift-check-aws-eks.yml; .github/workflows/examples/drift-check-aws-ecs.yml; docs/ci-drift-checks.md
+Commit: pending
+```
+
+```text
+Prompt: 113-cli-audit-log
+Title: CLI audit log
+Result: completed
+Validation: gofmt passed with a temporary Go toolchain; cd cli && go test ./... passed; git diff --check passed
+Evidence: cli/internal/audit; CLI audit middleware and commands; audit redaction/disabled/confirmation tests; docs/audit-log.md; .gitignore
 Commit: pending
 ```

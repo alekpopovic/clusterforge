@@ -95,7 +95,7 @@ var driftCheckCmd = &cobra.Command{
 			}
 		}
 		if highestExit == 2 {
-			os.Exit(2)
+			return commandExitError{code: 2, message: "drift detected"}
 		}
 		return nil
 	},

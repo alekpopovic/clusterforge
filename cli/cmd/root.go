@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -31,6 +32,10 @@ var rootCmd = &cobra.Command{
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
+		var coded interface{ ExitCode() int }
+		if errors.As(err, &coded) {
+			os.Exit(coded.ExitCode())
+		}
 		os.Exit(1)
 	}
 }
@@ -49,6 +54,7 @@ func init() {
 	rootCmd.AddCommand(clusterCmd)
 	rootCmd.AddCommand(fleetCmd)
 	rootCmd.AddCommand(graphCmd)
+	rootCmd.AddCommand(auditCmd)
 	rootCmd.AddCommand(backendCmd)
 	rootCmd.AddCommand(generateCmd)
 	rootCmd.AddCommand(policyCmd)
@@ -66,7 +72,16 @@ func init() {
 	rootCmd.AddCommand(destroyCmd)
 	rootCmd.AddCommand(outputCmd)
 	rootCmd.AddCommand(doctorCmd)
+	installAuditWrappers(rootCmd)
 }
+
+type commandExitError struct {
+	code    int
+	message string
+}
+
+func (e commandExitError) Error() string { return e.message }
+func (e commandExitError) ExitCode() int { return e.code }
 
 func loadConfig() (*config.Config, error) {
 	return config.Load(opts.ConfigPath)
