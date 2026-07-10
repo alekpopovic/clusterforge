@@ -14,6 +14,8 @@ See also:
 - [GKE RFC](rfcs/003-gke-support.md)
 - [self-hosted Kubernetes RFC](rfcs/004-self-hosted-kubernetes.md)
 - [plugin architecture RFC](rfcs/006-cli-plugin-architecture.md)
+- [workload identity RFC](rfcs/007-workload-identity.md)
+- [service mesh RFC](rfcs/008-service-mesh.md)
 
 ClusterForge is being built in practical phases. The order favors a useful AWS
 Kubernetes path first, then broader orchestrator coverage.
@@ -75,3 +77,12 @@ Kubernetes path first, then broader orchestrator coverage.
 - Google GKE
 - Lightweight Kubernetes targets
 - Generic Kubernetes adapter improvements
+
+## Phase 9: Optional Advanced Kubernetes Platform
+
+- Argo Rollouts progressive delivery remains opt-in
+- Istio is the recommended first service mesh implementation
+- Linkerd and Consul service mesh remain evaluated alternatives
+- No mesh, injection, strict mTLS, or ingress gateway is enabled by default
+- Implementation starts only after disposable-cluster upgrade, rollback, and
+  cleanup acceptance criteria from RFC 008 are automated
