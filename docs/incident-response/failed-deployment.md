@@ -1,3 +1,10 @@
+---
+title: Failed deployment
+category: deployment
+severity: high
+tags: [terraform, kubernetes, ecs, argocd, incident]
+---
+
 # Failed deployment
 
 ## Severity classification

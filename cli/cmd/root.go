@@ -80,6 +80,7 @@ func init() {
 	rootCmd.AddCommand(profileCmd)
 	rootCmd.AddCommand(tfeCmd)
 	rootCmd.AddCommand(healthCmd)
+	rootCmd.AddCommand(runbookCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)
