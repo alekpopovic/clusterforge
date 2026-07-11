@@ -113,6 +113,9 @@ func (c *Config) ApplyDefaults() {
 	if c.PlatformVersions == nil {
 		c.PlatformVersions = map[string]string{}
 	}
+	if c.ExecutionProfiles == nil {
+		c.ExecutionProfiles = map[string]ExecutionProfile{}
+	}
 	for name, backend := range c.Backends {
 		if backend.Type == "" {
 			backend.Type = "local"

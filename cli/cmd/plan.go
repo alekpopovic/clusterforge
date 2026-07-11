@@ -16,6 +16,7 @@ var planOut string
 var planRiskSummary bool
 var planStack string
 var planJSON bool
+var planProfile string
 
 var planCmd = &cobra.Command{
 	Use:   "plan <env>",
@@ -31,6 +32,15 @@ var planCmd = &cobra.Command{
 			return fmt.Errorf("environment %q not found", args[0])
 		}
 		binary, err := engineBinary(cfg)
+		var profileArgs []string
+		if planProfile != "" {
+			profile, profileErr := cfterraform.ResolveProfile(cfg.ExecutionProfiles, planProfile)
+			if profileErr != nil {
+				return profileErr
+			}
+			binary, err = cfg.EngineBinary(profile.Engine)
+			profileArgs = cfterraform.ProfilePlanArgs(profile)
+		}
 		if err != nil {
 			return err
 		}
@@ -71,7 +81,7 @@ var planCmd = &cobra.Command{
 			if planJSON {
 				runner.Stdout = cmd.ErrOrStderr()
 			}
-			if err := runner.Plan(cmd.Context(), currentOut, nil); err != nil {
+			if err := runner.Plan(cmd.Context(), currentOut, profileArgs); err != nil {
 				return err
 			}
 			if !planRiskSummary {
@@ -143,6 +153,7 @@ func init() {
 	planCmd.Flags().BoolVar(&planRiskSummary, "risk-summary", false, "Show a risk summary from Terraform plan JSON")
 	planCmd.Flags().StringVar(&planStack, "stack", "", "Stack to plan for stacked environments")
 	planCmd.Flags().BoolVar(&planJSON, "json", false, "Print risk summary as JSON")
+	planCmd.Flags().StringVar(&planProfile, "profile", "", "Execution profile name")
 }
 
 type planRiskResponse struct {

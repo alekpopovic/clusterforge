@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/textracta/clusterforge/cli/internal/config"
 	"github.com/textracta/clusterforge/cli/internal/policy"
 	cfterraform "github.com/textracta/clusterforge/cli/internal/terraform"
 	"github.com/textracta/clusterforge/cli/internal/terraform/planjson"
@@ -14,6 +15,7 @@ var applyPlanFile string
 var applyConfirmProd bool
 var applyAllowDestroy bool
 var applyStack string
+var applyProfile string
 
 var applyCmd = &cobra.Command{
 	Use:   "apply <env>",
@@ -29,6 +31,16 @@ var applyCmd = &cobra.Command{
 		if !ok {
 			return fmt.Errorf("environment %q not found", envName)
 		}
+		var executionProfile config.ExecutionProfile
+		if applyProfile != "" {
+			executionProfile, err = cfterraform.ResolveProfile(cfg.ExecutionProfiles, applyProfile)
+			if err != nil {
+				return err
+			}
+			if err := validateProfileApply(applyProfile, executionProfile, applyPlanFile); err != nil {
+				return err
+			}
+		}
 		if err := policy.CheckApply(policy.Operation{
 			Environment: envName,
 			PlanFile:    applyPlanFile,
@@ -42,6 +54,12 @@ var applyCmd = &cobra.Command{
 		binary, err := engineBinary(cfg)
 		if err != nil {
 			return err
+		}
+		if applyProfile != "" {
+			binary, err = cfg.EngineBinary(executionProfile.Engine)
+			if err != nil {
+				return err
+			}
 		}
 		paths, err := resolveStackPaths(env, applyStack)
 		if err != nil {
@@ -93,7 +111,7 @@ var applyCmd = &cobra.Command{
 			if label := stackLabel(path, len(paths)); label != "" {
 				fmt.Fprintln(os.Stdout, label)
 			}
-			if err := cfterraform.NewRunner(binary, path, opts.Verbose).Apply(cmd.Context(), applyPlanFile, nil); err != nil {
+			if err := cfterraform.NewRunner(binary, path, opts.Verbose).Apply(cmd.Context(), applyPlanFile, cfterraform.ProfileApplyArgs(executionProfile)); err != nil {
 				return err
 			}
 		}
@@ -101,9 +119,17 @@ var applyCmd = &cobra.Command{
 	},
 }
 
+func validateProfileApply(name string, profile config.ExecutionProfile, planFile string) error {
+	if profile.RequirePlanFile && planFile == "" {
+		return fmt.Errorf("execution profile %q requires --plan-file", name)
+	}
+	return nil
+}
+
 func init() {
 	applyCmd.Flags().StringVar(&applyPlanFile, "plan-file", "", "Existing plan file to apply")
 	applyCmd.Flags().BoolVar(&applyConfirmProd, "confirm-prod", false, "Explicitly confirm a production apply")
 	applyCmd.Flags().BoolVar(&applyAllowDestroy, "allow-destroy", false, "Allow applying prod plans that contain delete actions")
 	applyCmd.Flags().StringVar(&applyStack, "stack", "", "Stack to apply for stacked environments")
+	applyCmd.Flags().StringVar(&applyProfile, "profile", "", "Execution profile name")
 }

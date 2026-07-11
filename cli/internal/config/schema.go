@@ -3,29 +3,31 @@ package config
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 const DefaultPath = "clusterforge.yaml"
 
 type Config struct {
-	ClusterForgeVersion       string                 `yaml:"clusterforge_version,omitempty"`
-	Project                   Project                `yaml:"project"`
-	Engines                   map[string]Engine      `yaml:"engines"`
-	Defaults                  Defaults               `yaml:"defaults"`
-	Environments              map[string]Environment `yaml:"environments"`
-	Clusters                  map[string]Cluster     `yaml:"clusters,omitempty"`
-	Audit                     Audit                  `yaml:"audit,omitempty"`
-	Backends                  map[string]Backend     `yaml:"backends,omitempty"`
-	Policies                  Policies               `yaml:"policies"`
-	TemplatePacks             []TemplatePack         `yaml:"template_packs,omitempty"`
-	Plugins                   Plugins                `yaml:"plugins,omitempty"`
-	Organization              Organization           `yaml:"organization,omitempty"`
-	Workspaces                map[string]Workspace   `yaml:"workspaces,omitempty"`
-	Teams                     map[string]Team        `yaml:"teams,omitempty"`
-	AWSAccounts               map[string]AWSAccount  `yaml:"aws_accounts,omitempty"`
-	AllowSharedProdAWSAccount bool                   `yaml:"allow_shared_prod_aws_account,omitempty"`
-	Regions                   map[string]string      `yaml:"regions,omitempty"`
-	PlatformVersions          map[string]string      `yaml:"platform_versions,omitempty"`
+	ClusterForgeVersion       string                      `yaml:"clusterforge_version,omitempty"`
+	Project                   Project                     `yaml:"project"`
+	Engines                   map[string]Engine           `yaml:"engines"`
+	Defaults                  Defaults                    `yaml:"defaults"`
+	Environments              map[string]Environment      `yaml:"environments"`
+	Clusters                  map[string]Cluster          `yaml:"clusters,omitempty"`
+	Audit                     Audit                       `yaml:"audit,omitempty"`
+	Backends                  map[string]Backend          `yaml:"backends,omitempty"`
+	Policies                  Policies                    `yaml:"policies"`
+	TemplatePacks             []TemplatePack              `yaml:"template_packs,omitempty"`
+	Plugins                   Plugins                     `yaml:"plugins,omitempty"`
+	Organization              Organization                `yaml:"organization,omitempty"`
+	Workspaces                map[string]Workspace        `yaml:"workspaces,omitempty"`
+	Teams                     map[string]Team             `yaml:"teams,omitempty"`
+	AWSAccounts               map[string]AWSAccount       `yaml:"aws_accounts,omitempty"`
+	AllowSharedProdAWSAccount bool                        `yaml:"allow_shared_prod_aws_account,omitempty"`
+	Regions                   map[string]string           `yaml:"regions,omitempty"`
+	PlatformVersions          map[string]string           `yaml:"platform_versions,omitempty"`
+	ExecutionProfiles         map[string]ExecutionProfile `yaml:"execution_profiles,omitempty"`
 }
 
 type Project struct {
@@ -35,6 +37,14 @@ type Project struct {
 
 type Engine struct {
 	Binary string `yaml:"binary"`
+}
+type ExecutionProfile struct {
+	Engine          string `yaml:"engine"`
+	Parallelism     int    `yaml:"parallelism,omitempty"`
+	Refresh         *bool  `yaml:"refresh,omitempty"`
+	LockTimeout     string `yaml:"lock_timeout,omitempty"`
+	Input           *bool  `yaml:"input,omitempty"`
+	RequirePlanFile bool   `yaml:"require_plan_file,omitempty"`
 }
 
 type Defaults struct {
@@ -268,6 +278,19 @@ func (c *Config) Validate() error {
 			return fmt.Errorf("duplicate template pack %q", pack.Name)
 		}
 		seenPacks[pack.Name] = true
+	}
+	for name, profile := range c.ExecutionProfiles {
+		if _, ok := c.Engines[profile.Engine]; !ok {
+			return fmt.Errorf("execution profile %q references unknown engine %q", name, profile.Engine)
+		}
+		if profile.Parallelism < 0 {
+			return fmt.Errorf("execution profile %q parallelism must be positive", name)
+		}
+		if profile.LockTimeout != "" {
+			if _, err := time.ParseDuration(profile.LockTimeout); err != nil {
+				return fmt.Errorf("execution profile %q lock_timeout: %w", name, err)
+			}
+		}
 	}
 	return nil
 }
