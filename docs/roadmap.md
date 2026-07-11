@@ -19,6 +19,7 @@ See also:
 - [workload identity RFC](rfcs/007-workload-identity.md)
 - [service mesh RFC](rfcs/008-service-mesh.md)
 - [cluster federation RFC](rfcs/013-cluster-federation.md)
+- [edge deployments RFC](rfcs/014-edge-deployments.md)
 
 ClusterForge is being built in practical phases. The order favors a useful AWS
 Kubernetes path first, then broader orchestrator coverage.
@@ -102,3 +103,14 @@ Kubernetes path first, then broader orchestrator coverage.
 - Treat Cluster API and multi-cluster service mesh as optional future integrations
 - Do not provide an automatic global scheduler, secret/data replication, or hidden
   failover; see RFC 013
+
+## Phase 11: Edge Evaluation
+
+- Define a K3s-first hardware, OS, architecture and resource profile; retain RKE2
+  as the hardened experimental alternative
+- Design signed offline bundles, a local registry mirror, lightweight
+  observability, edge workload defaults, backup targets, and GitOps pull behavior
+- Exercise disconnection, reconnect, power loss, disk pressure, upgrade, device
+  revocation, backup and full rebuild on disposable matching hardware
+- Do not implement or advertise `cf edge` commands as supported until RFC 014
+  acceptance evidence exists
