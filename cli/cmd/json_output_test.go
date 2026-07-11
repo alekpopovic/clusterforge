@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/textracta/clusterforge/cli/internal/policyengine"
 	"github.com/textracta/clusterforge/cli/internal/terraform/planjson"
 )
 
@@ -142,10 +143,9 @@ func TestDoctorJSONOutputShape(t *testing.T) {
 }
 
 func TestPolicyAndPlanJSONDoNotContainSecrets(t *testing.T) {
-	policyResponse := policyCheckResponse{
-		Environment: "dev",
-		Messages:    []string{"non-production changes should still be reviewed before apply"},
-		Summary:     summaryResponse(testSummary()),
+	policyResponse := policyengine.Result{
+		Pack:     "baseline",
+		Findings: []policyengine.Finding{},
 	}
 	planResponse := planRiskResponse{
 		Environment: "dev",

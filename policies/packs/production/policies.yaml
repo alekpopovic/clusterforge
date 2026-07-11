@@ -1,0 +1,11 @@
+policies:
+  - id: CF-PROD-003
+    action: block
+  - id: CF-MOD-001
+    action: block
+  - id: CF-NET-001
+    action: block
+  - id: CF-K8S-001
+    action: block
+  - id: CF-IAM-001
+    action: warn
