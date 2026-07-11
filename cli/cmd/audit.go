@@ -17,6 +17,8 @@ import (
 var auditJSON bool
 var auditTailLines int
 var auditClearYes bool
+var auditExportFormat, auditExportSince, auditExportOutput string
+var auditRedactInput, auditRedactOutput string
 
 var auditedCommands = map[string]bool{
 	"cf project init": true, "cf env create": true, "cf generate": true,
@@ -165,10 +167,74 @@ var auditClearCmd = &cobra.Command{
 	},
 }
 
+var auditExportCmd = &cobra.Command{
+	Use: "export", Short: "Export redacted local audit entries", Args: cobra.NoArgs,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		settings, err := auditSettings()
+		if err != nil {
+			return err
+		}
+		entries, err := audit.Read(settings.Path, 0)
+		if err != nil {
+			return err
+		}
+		if auditExportSince != "" {
+			duration, parseErr := time.ParseDuration(auditExportSince)
+			if parseErr != nil || duration < 0 {
+				return fmt.Errorf("invalid --since duration %q", auditExportSince)
+			}
+			entries = audit.FilterSince(entries, time.Now().UTC().Add(-duration))
+		}
+		file, err := os.OpenFile(auditExportOutput, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0o600)
+		if err != nil {
+			return err
+		}
+		if err := audit.Export(file, entries, auditExportFormat); err != nil {
+			file.Close()
+			return err
+		}
+		if err := file.Close(); err != nil {
+			return err
+		}
+		fmt.Fprintf(cmd.OutOrStdout(), "Exported %d audit entries to %s\n", len(entries), auditExportOutput)
+		return nil
+	},
+}
+
+var auditRedactCmd = &cobra.Command{
+	Use: "redact", Short: "Create a redacted copy of a JSONL audit log", Args: cobra.NoArgs,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if auditRedactInput == "" || auditRedactOutput == "" {
+			return fmt.Errorf("--input and --output are required")
+		}
+		if auditRedactInput == auditRedactOutput {
+			return fmt.Errorf("--input and --output must differ")
+		}
+		file, err := os.OpenFile(auditRedactOutput, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0o600)
+		if err != nil {
+			return err
+		}
+		if err := audit.RedactFile(auditRedactInput, file); err != nil {
+			file.Close()
+			return err
+		}
+		if err := file.Close(); err != nil {
+			return err
+		}
+		fmt.Fprintf(cmd.OutOrStdout(), "Redacted audit log written to %s\n", auditRedactOutput)
+		return nil
+	},
+}
+
 func init() {
 	auditShowCmd.Flags().BoolVar(&auditJSON, "json", false, "Print audit entries as JSON")
 	auditTailCmd.Flags().BoolVar(&auditJSON, "json", false, "Print audit entries as JSON")
 	auditTailCmd.Flags().IntVar(&auditTailLines, "lines", 20, "Number of recent entries to show")
 	auditClearCmd.Flags().BoolVar(&auditClearYes, "yes", false, "Confirm audit log deletion")
-	auditCmd.AddCommand(auditShowCmd, auditTailCmd, auditClearCmd)
+	auditExportCmd.Flags().StringVar(&auditExportFormat, "format", "jsonl", "Export format: jsonl, json, or csv")
+	auditExportCmd.Flags().StringVar(&auditExportSince, "since", "", "Only include entries from this duration (for example 24h)")
+	auditExportCmd.Flags().StringVar(&auditExportOutput, "output", "audit.jsonl", "Output file")
+	auditRedactCmd.Flags().StringVar(&auditRedactInput, "input", "", "Input JSONL audit log")
+	auditRedactCmd.Flags().StringVar(&auditRedactOutput, "output", "", "Output redacted JSONL file")
+	auditCmd.AddCommand(auditShowCmd, auditTailCmd, auditClearCmd, auditExportCmd, auditRedactCmd)
 }

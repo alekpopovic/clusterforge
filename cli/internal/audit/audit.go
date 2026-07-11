@@ -2,10 +2,13 @@ package audit
 
 import (
 	"bufio"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -112,4 +115,61 @@ func Clear(path string) error {
 		return fmt.Errorf("clear audit log: %w", err)
 	}
 	return nil
+}
+
+// FilterSince returns entries at or after the cutoff and redacts sensitive
+// arguments again so older logs receive the current redaction rules on export.
+func FilterSince(entries []Entry, cutoff time.Time) []Entry {
+	filtered := make([]Entry, 0, len(entries))
+	for _, entry := range entries {
+		if !cutoff.IsZero() && entry.Timestamp.Before(cutoff) {
+			continue
+		}
+		entry.Args = Redact(entry.Args)
+		filtered = append(filtered, entry)
+	}
+	return filtered
+}
+
+func Export(writer io.Writer, entries []Entry, format string) error {
+	entries = FilterSince(entries, time.Time{})
+	switch format {
+	case "jsonl":
+		encoder := json.NewEncoder(writer)
+		for _, entry := range entries {
+			if err := encoder.Encode(entry); err != nil {
+				return fmt.Errorf("encode JSONL audit entry: %w", err)
+			}
+		}
+		return nil
+	case "json":
+		encoder := json.NewEncoder(writer)
+		encoder.SetIndent("", "  ")
+		return encoder.Encode(entries)
+	case "csv":
+		csvWriter := csv.NewWriter(writer)
+		if err := csvWriter.Write([]string{"timestamp", "user", "command", "args", "working_directory", "environment", "stack", "result", "duration_ms", "cli_version"}); err != nil {
+			return err
+		}
+		for _, entry := range entries {
+			args, _ := json.Marshal(entry.Args)
+			record := []string{entry.Timestamp.Format(time.RFC3339Nano), entry.User, entry.Command, string(args), entry.WorkingDirectory, entry.Environment, entry.Stack, entry.Result, strconv.FormatInt(entry.DurationMS, 10), entry.CLIVersion}
+			if err := csvWriter.Write(record); err != nil {
+				return err
+			}
+		}
+		csvWriter.Flush()
+		return csvWriter.Error()
+	default:
+		return fmt.Errorf("unsupported audit export format %q (use jsonl, json, or csv)", format)
+	}
+}
+
+// RedactFile rewrites a JSONL audit log without modifying its source.
+func RedactFile(inputPath string, writer io.Writer) error {
+	entries, err := Read(inputPath, 0)
+	if err != nil {
+		return err
+	}
+	return Export(writer, entries, "jsonl")
 }
