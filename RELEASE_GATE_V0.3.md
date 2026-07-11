@@ -1,7 +1,9 @@
 # ClusterForge v0.3.0 release gate review
 
-Review date: 2026-07-11  
-Reviewed commit: `e580c65` (`main`)  
+Review date: 2026-07-11
+
+Reviewed commit: `e580c65` (`main`)
+
 Decision: **BLOCKED — do not release v0.3.0 yet**
 
 ## 1. Executive summary
