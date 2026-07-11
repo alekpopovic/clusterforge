@@ -43,13 +43,14 @@ type Defaults struct {
 }
 
 type Environment struct {
-	Cloud        string `yaml:"cloud"`
-	Region       string `yaml:"region"`
-	Orchestrator string `yaml:"orchestrator"`
-	Path         string `yaml:"path"`
-	Layout       string `yaml:"layout,omitempty"`
-	Stacks       Stacks `yaml:"stacks,omitempty"`
-	Account      string `yaml:"account,omitempty"`
+	Cloud             string `yaml:"cloud"`
+	Region            string `yaml:"region"`
+	Orchestrator      string `yaml:"orchestrator"`
+	Path              string `yaml:"path"`
+	Layout            string `yaml:"layout,omitempty"`
+	Stacks            Stacks `yaml:"stacks,omitempty"`
+	Account           string `yaml:"account,omitempty"`
+	KubernetesVersion string `yaml:"kubernetes_version,omitempty"`
 }
 
 type AWSAccount struct {
@@ -60,13 +61,15 @@ type AWSAccount struct {
 }
 
 type Cluster struct {
-	Environment    string `yaml:"environment"`
-	Cloud          string `yaml:"cloud"`
-	Orchestrator   string `yaml:"orchestrator"`
-	Region         string `yaml:"region"`
-	Path           string `yaml:"path"`
-	Status         string `yaml:"status,omitempty"`
-	KubeconfigPath string `yaml:"kubeconfig_path,omitempty"`
+	Environment       string `yaml:"environment"`
+	Cloud             string `yaml:"cloud"`
+	Orchestrator      string `yaml:"orchestrator"`
+	Region            string `yaml:"region"`
+	Path              string `yaml:"path"`
+	Status            string `yaml:"status,omitempty"`
+	KubeconfigPath    string `yaml:"kubeconfig_path,omitempty"`
+	KubernetesVersion string `yaml:"kubernetes_version,omitempty"`
+	NodeVersion       string `yaml:"node_version,omitempty"`
 }
 
 type Audit struct {

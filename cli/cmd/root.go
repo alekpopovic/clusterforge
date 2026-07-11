@@ -75,6 +75,7 @@ func init() {
 	rootCmd.AddCommand(teamCmd)
 	rootCmd.AddCommand(accountCmd)
 	rootCmd.AddCommand(regionCmd)
+	rootCmd.AddCommand(k8sCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)
