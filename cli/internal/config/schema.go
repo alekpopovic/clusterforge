@@ -18,6 +18,7 @@ type Config struct {
 	Backends            map[string]Backend     `yaml:"backends,omitempty"`
 	Policies            Policies               `yaml:"policies"`
 	TemplatePacks       []TemplatePack         `yaml:"template_packs,omitempty"`
+	Plugins             Plugins                `yaml:"plugins,omitempty"`
 }
 
 type Project struct {
@@ -82,6 +83,13 @@ type Policies struct {
 type TemplatePack struct {
 	Name string `yaml:"name"`
 	Path string `yaml:"path"`
+}
+
+type Plugins struct {
+	Enabled          bool     `yaml:"enabled"`
+	Directories      []string `yaml:"directories,omitempty"`
+	AllowPathPlugins bool     `yaml:"allow_path_plugins"`
+	Disabled         []string `yaml:"disabled,omitempty"`
 }
 
 func (c *Config) Validate() error {

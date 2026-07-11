@@ -46,6 +46,10 @@ func DefaultConfig(name string) *Config {
 			BlockDestroyInProd:           true,
 			RequireManualApprovalForProd: true,
 		},
+		Plugins: Plugins{
+			Enabled:          false,
+			AllowPathPlugins: true,
+		},
 	}
 	cfg.ApplyDefaults()
 	return cfg

@@ -15,6 +15,8 @@ type rootOptions struct {
 	Engine         string
 	Verbose        bool
 	NonInteractive bool
+	NoPlugins      bool
+	AllowPlugins   bool
 }
 
 var opts = rootOptions{
@@ -45,6 +47,8 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&opts.Engine, "engine", "", "Override IaC engine: terraform or tofu")
 	rootCmd.PersistentFlags().BoolVar(&opts.Verbose, "verbose", false, "Enable verbose output")
 	rootCmd.PersistentFlags().BoolVar(&opts.NonInteractive, "non-interactive", false, "Disable prompts and fail when required values are missing")
+	rootCmd.PersistentFlags().BoolVar(&opts.NoPlugins, "no-plugins", false, "Disable plugin discovery and execution")
+	rootCmd.PersistentFlags().BoolVar(&opts.AllowPlugins, "allow-plugins", false, "Explicitly allow trusted local plugins in CI")
 
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(completionCmd)
@@ -66,6 +70,7 @@ func init() {
 	rootCmd.AddCommand(templateCmd)
 	rootCmd.AddCommand(moduleCmd)
 	rootCmd.AddCommand(localCmd)
+	rootCmd.AddCommand(pluginCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)
