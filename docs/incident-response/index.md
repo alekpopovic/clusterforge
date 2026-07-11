@@ -2,7 +2,9 @@
 
 Use these runbooks for ClusterForge-managed platforms. They are decision aids, not availability or recovery guarantees. Never paste credentials, state, kubeconfigs, tokens, customer data, or private endpoints into tickets.
 
-Severity: **SEV-1** active security breach or broad production outage/data loss; **SEV-2** major degraded production service; **SEV-3** limited/non-production impact; **SEV-4** advisory/no active impact.
+## Severity classification
+
+**SEV-1** active security breach or broad production outage/data loss; **SEV-2** major degraded production service; **SEV-3** limited/non-production impact; **SEV-4** advisory/no active impact.
 
 Runbooks: Kubernetes, AWS EKS, AWS ECS, Terraform state, secret leak, DNS, failed deployment, and cluster outage. Assign incident commander, operations lead, communications lead and scribe. Prefer read-only evidence collection before mutation.
 
