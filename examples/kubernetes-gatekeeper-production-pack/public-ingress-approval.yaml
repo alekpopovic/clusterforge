@@ -1,0 +1,11 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: public-ingress-requires-approval
+spec:
+  match:
+    kinds:
+      - apiGroups: ["networking.k8s.io"]
+        kinds: ["Ingress"]
+  parameters:
+    labels: ["clusterforge.io/public-ingress-approved"]

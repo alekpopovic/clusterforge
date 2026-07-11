@@ -56,6 +56,24 @@ variable "enable_disallow_latest_tag_policy" {
   default     = true
 }
 
+variable "enable_pod_security_extended_policy" {
+  description = "Whether the baseline disallows host networking/hostPath and requires non-root containers with dropped capabilities."
+  type        = bool
+  default     = false
+}
+
+variable "allowed_registries" {
+  description = "Optional registry prefixes allowed by the image policy. Empty disables registry allowlisting."
+  type        = list(string)
+  default     = []
+}
+
+variable "require_image_digest" {
+  description = "Whether container images must use an immutable sha256 digest. Intended for reviewed production rollouts."
+  type        = bool
+  default     = false
+}
+
 variable "policies" {
   description = "Additional policy manifests keyed by a stable logical name. Values must be YAML and require installed CRDs."
   type        = map(string)

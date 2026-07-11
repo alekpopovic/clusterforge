@@ -32,7 +32,11 @@ resource "kubernetes_manifest" "constraint_template" {
 }
 
 resource "kubernetes_manifest" "constraint" {
-  for_each   = var.constraints
-  manifest   = yamldecode(each.value)
+  for_each = var.constraints
+  manifest = merge(yamldecode(each.value), {
+    spec = merge(try(yamldecode(each.value).spec, {}), {
+      enforcementAction = var.enforcement_action
+    })
+  })
   depends_on = [kubernetes_manifest.constraint_template]
 }

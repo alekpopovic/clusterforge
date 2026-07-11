@@ -23,8 +23,10 @@ module "kyverno" {
 ```
 
 The baseline can report privileged containers, missing CPU/memory requests and
-limits, and images using the `latest` tag. `Audit` is the default and does not
-block workload admission. Change to `Enforce` only after reviewing reports and
+limits, and images using the `latest` tag. Optional extended controls restrict
+host networking, hostPath, root execution and capabilities, apply a registry
+allowlist, and require image digests. `Audit` is the default and does not block
+workload admission. Change to `Enforce` only after reviewing reports and
 remediating affected workloads.
 
 ## CRD dependency
@@ -37,6 +39,9 @@ cannot make an unknown CRD schema available during the initial plan.
 User-provided `policies` values are decoded as YAML and applied after the Helm
 release. Review them like code. The module does not validate their semantics or
 automatically exclude system namespaces.
+
+See `examples/kubernetes-kyverno-production-pack` and
+`docs/kubernetes-admission-security.md` for the extended audit-first rollout.
 
 Provider configuration belongs in the calling root module.
 

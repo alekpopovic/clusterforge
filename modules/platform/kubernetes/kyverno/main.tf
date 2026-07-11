@@ -101,10 +101,107 @@ locals {
     }
   }
 
+  pod_security_extended_policy = {
+    apiVersion = "kyverno.io/v1"
+    kind       = "ClusterPolicy"
+    metadata = {
+      name   = "clusterforge-pod-security-extended"
+      labels = local.labels
+    }
+    spec = {
+      background  = true
+      emitWarning = var.baseline_failure_action == "Audit"
+      rules = [
+        {
+          name  = "restrict-pod-and-container-security"
+          match = { any = [{ resources = { kinds = ["Pod"] } }] }
+          validate = {
+            failureAction = var.baseline_failure_action
+            message       = "Pods must avoid host networking/hostPath and run as non-root with all capabilities dropped."
+            pattern = {
+              spec = {
+                "=(hostNetwork)" = false
+                containers = [{
+                  name = "*"
+                  securityContext = {
+                    runAsNonRoot = true
+                    capabilities = { drop = ["ALL"] }
+                  }
+                }]
+              }
+            }
+          }
+        },
+        {
+          name  = "disallow-hostpath-volumes"
+          match = { any = [{ resources = { kinds = ["Pod"] } }] }
+          validate = {
+            failureAction = var.baseline_failure_action
+            message       = "hostPath volumes are not allowed."
+            foreach = [{
+              list = "request.object.spec.volumes || `[]`"
+              deny = { conditions = { any = [{ key = "{{ element.hostPath || '' }}", operator = "NotEquals", value = "" }] } }
+            }]
+          }
+        }
+      ]
+    }
+  }
+
+  registry_policy = {
+    apiVersion = "kyverno.io/v1"
+    kind       = "ClusterPolicy"
+    metadata = {
+      name   = "clusterforge-require-approved-registry"
+      labels = local.labels
+    }
+    spec = {
+      background  = true
+      emitWarning = var.baseline_failure_action == "Audit"
+      rules = [{
+        name  = "require-approved-registry"
+        match = { any = [{ resources = { kinds = ["Pod"] } }] }
+        validate = {
+          failureAction = var.baseline_failure_action
+          message       = "Container images must come from an approved registry."
+          foreach = [{
+            list = "request.object.spec.containers"
+            deny = { conditions = { all = [{ key = "{{ element.image }}", operator = "AnyNotIn", value = [for registry in var.allowed_registries : "${registry}/*"] }] } }
+          }]
+        }
+      }]
+    }
+  }
+
+  digest_policy = {
+    apiVersion = "kyverno.io/v1"
+    kind       = "ClusterPolicy"
+    metadata = {
+      name   = "clusterforge-require-image-digest"
+      labels = local.labels
+    }
+    spec = {
+      background  = true
+      emitWarning = var.baseline_failure_action == "Audit"
+      rules = [{
+        name  = "require-sha256-digest"
+        match = { any = [{ resources = { kinds = ["Pod"] } }] }
+        validate = {
+          failureAction = var.baseline_failure_action
+          message       = "Container images must be pinned by sha256 digest."
+          pattern       = { spec = { containers = [{ name = "*", image = "*@sha256:*" }] } }
+        }
+      }]
+    }
+  }
+
   baseline_policies = var.enable_baseline_policies ? merge(
     { privileged = local.privileged_policy },
     var.enable_require_resources_policy ? { resources = local.resources_policy } : {},
-    var.enable_disallow_latest_tag_policy ? { latest_tag = local.latest_tag_policy } : {}
+    var.enable_disallow_latest_tag_policy ? { latest_tag = local.latest_tag_policy } : {},
+    var.enable_pod_security_extended_policy ? { pod_security_extended = local.pod_security_extended_policy } : {},
+    length(var.allowed_registries) > 0 ? { registry = local.registry_policy } : {},
+    var.require_image_digest ? { digest = local.digest_policy } : {}
   ) : {}
 }
 

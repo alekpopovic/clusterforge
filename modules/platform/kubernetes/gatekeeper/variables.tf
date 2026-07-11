@@ -38,6 +38,17 @@ variable "constraints" {
   default     = {}
 }
 
+variable "enforcement_action" {
+  description = "Enforcement action applied to all supplied constraints. dryrun is the safe default; deny is explicitly opt-in."
+  type        = string
+  default     = "dryrun"
+
+  validation {
+    condition     = contains(["dryrun", "warn", "deny"], var.enforcement_action)
+    error_message = "enforcement_action must be dryrun, warn, or deny."
+  }
+}
+
 variable "labels" {
   description = "Labels applied to the namespace."
   type        = map(string)

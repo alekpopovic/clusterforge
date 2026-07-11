@@ -21,8 +21,10 @@ module "gatekeeper" {
 
 On a fresh cluster, install Gatekeeper first and add templates/constraints in a
 second plan because `kubernetes_manifest` needs CRD schemas during planning.
-Start constraints with `enforcementAction: dryrun`, review audit results, and
-promote individually. Do not run Gatekeeper and Kyverno together without an
+The module applies `enforcement_action = "dryrun"` to every supplied constraint
+by default, overriding manifest values to prevent accidental enforcement. Set it
+to `warn` or `deny` explicitly after review. Promote constraints individually.
+Do not run Gatekeeper and Kyverno together without an
 explicit ownership and conflict analysis.
 
 Provider configuration belongs in the calling root module.

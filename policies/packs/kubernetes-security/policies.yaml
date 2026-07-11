@@ -1,0 +1,34 @@
+name: kubernetes-security-extended
+default_mode: audit
+rules:
+  - id: CF-K8S-IMG-001
+    category: images
+    control: disallow-latest-tag
+  - id: CF-K8S-IMG-002
+    category: images
+    control: require-registry-allowlist
+  - id: CF-K8S-IMG-003
+    category: images
+    control: require-digest
+    production_optional: true
+  - id: CF-K8S-POD-001
+    category: pod-security
+    control: disallow-privileged-hostpath-hostnetwork
+  - id: CF-K8S-POD-002
+    category: pod-security
+    control: require-non-root-and-drop-capabilities
+  - id: CF-K8S-RES-001
+    category: resources
+    control: require-requests-and-limits
+  - id: CF-K8S-NET-001
+    category: networking
+    control: require-network-policy-per-namespace
+    advisory: true
+  - id: CF-K8S-SEC-001
+    category: secrets
+    control: detect-secret-like-environment-literals
+    advisory: true
+  - id: CF-K8S-ING-001
+    category: ingress
+    control: require-public-ingress-approval-annotation
+    annotation: clusterforge.io/public-ingress-approved
