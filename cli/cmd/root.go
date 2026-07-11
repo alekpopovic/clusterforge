@@ -79,6 +79,7 @@ func init() {
 	rootCmd.AddCommand(platformCmd)
 	rootCmd.AddCommand(profileCmd)
 	rootCmd.AddCommand(tfeCmd)
+	rootCmd.AddCommand(healthCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)

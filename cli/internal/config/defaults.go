@@ -119,6 +119,9 @@ func (c *Config) ApplyDefaults() {
 	if c.TerraformCloud.Workspaces == nil {
 		c.TerraformCloud.Workspaces = map[string]TerraformCloudWorkspace{}
 	}
+	if c.Health.Environments == nil {
+		c.Health.Environments = map[string]EnvironmentHealth{}
+	}
 	for name, backend := range c.Backends {
 		if backend.Type == "" {
 			backend.Type = "local"

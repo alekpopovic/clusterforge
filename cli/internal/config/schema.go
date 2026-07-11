@@ -29,6 +29,7 @@ type Config struct {
 	PlatformVersions          map[string]string           `yaml:"platform_versions,omitempty"`
 	ExecutionProfiles         map[string]ExecutionProfile `yaml:"execution_profiles,omitempty"`
 	TerraformCloud            TerraformCloud              `yaml:"terraform_cloud,omitempty"`
+	Health                    Health                      `yaml:"health,omitempty"`
 }
 
 type Project struct {
@@ -56,6 +57,25 @@ type TerraformCloud struct {
 }
 type TerraformCloudWorkspace struct {
 	Name string `yaml:"name"`
+}
+
+type Health struct {
+	Environments map[string]EnvironmentHealth `yaml:"environments,omitempty"`
+}
+type EnvironmentHealth struct {
+	SLO    SLO          `yaml:"slo,omitempty"`
+	Checks HealthChecks `yaml:"checks,omitempty"`
+}
+type SLO struct {
+	AvailabilityTarget string `yaml:"availability_target,omitempty"`
+	LatencyTargetMS    int    `yaml:"latency_target_ms,omitempty"`
+	ErrorRateTarget    string `yaml:"error_rate_target,omitempty"`
+}
+type HealthChecks struct {
+	KubernetesNodes bool `yaml:"kubernetes_nodes,omitempty"`
+	PlatformAddons  bool `yaml:"platform_addons,omitempty"`
+	Ingress         bool `yaml:"ingress,omitempty"`
+	AppHealth       bool `yaml:"app_health,omitempty"`
 }
 
 type Defaults struct {
@@ -317,6 +337,14 @@ func (c *Config) Validate() error {
 			if strings.TrimSpace(workspace.Name) == "" {
 				return fmt.Errorf("terraform_cloud workspace %q name is required", env)
 			}
+		}
+	}
+	for env, health := range c.Health.Environments {
+		if _, ok := c.Environments[env]; !ok {
+			return fmt.Errorf("health references unknown environment %q", env)
+		}
+		if health.SLO.LatencyTargetMS < 0 {
+			return fmt.Errorf("health environment %q latency_target_ms must not be negative", env)
 		}
 	}
 	return nil
