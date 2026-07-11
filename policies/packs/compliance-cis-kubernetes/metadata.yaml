@@ -1,0 +1,7 @@
+id: cis-kubernetes
+name: CIS Kubernetes Benchmark mapping
+framework: CIS Kubernetes Benchmark
+type: control-mapping
+statuses: [implemented, partial, documented, planned, "not covered"]
+evidence_sources: [policy-result, audit-log, terraform-config, ci-result, manual-procedure]
+disclaimer: Implementation aid only; not a CIS certification or compliance claim.

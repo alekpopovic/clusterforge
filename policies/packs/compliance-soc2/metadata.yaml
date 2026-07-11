@@ -1,0 +1,7 @@
+id: soc2
+name: SOC 2 trust services criteria mapping
+framework: SOC 2
+type: control-mapping
+statuses: [implemented, partial, documented, planned, "not covered"]
+evidence_sources: [policy-result, audit-log, terraform-config, ci-result, manual-procedure]
+disclaimer: Control mapping only; not certification, attestation, or legal advice.
