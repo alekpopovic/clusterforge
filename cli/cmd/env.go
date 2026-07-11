@@ -14,6 +14,7 @@ var envCreateCloud string
 var envCreateRegion string
 var envCreateOrchestrator string
 var envListJSON bool
+var envCreateWizard bool
 
 var envCmd = &cobra.Command{
 	Use:   "env",
@@ -158,6 +159,7 @@ func init() {
 	envCreateCmd.Flags().StringVar(&envCreateCloud, "cloud", "", "Cloud target for the environment")
 	envCreateCmd.Flags().StringVar(&envCreateRegion, "region", "", "Cloud region for the environment")
 	envCreateCmd.Flags().StringVar(&envCreateOrchestrator, "orchestrator", "", "Orchestrator target for the environment")
+	envCreateCmd.Flags().BoolVar(&envCreateWizard, "wizard", false, "Prompt for environment settings (default interactively)")
 	envListCmd.Flags().BoolVar(&envListJSON, "json", false, "Print environments as JSON")
 
 	envCmd.AddCommand(envCreateCmd)

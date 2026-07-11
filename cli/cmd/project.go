@@ -10,6 +10,7 @@ import (
 )
 
 var projectForce bool
+var projectWizard bool
 
 var projectCmd = &cobra.Command{
 	Use:   "project",
@@ -21,6 +22,9 @@ var projectInitCmd = &cobra.Command{
 	Short: "Initialize a ClusterForge project",
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if projectWizard {
+			return runScaffoldWizard(cmd, args)
+		}
 		name, err := requireValueWithPrompt(optionalArg(args, 0), "project name", newPromptSession(cmd))
 		if err != nil {
 			return err
@@ -55,5 +59,6 @@ var projectInitCmd = &cobra.Command{
 
 func init() {
 	projectInitCmd.Flags().BoolVar(&projectForce, "force", false, "Overwrite existing project config")
+	projectInitCmd.Flags().BoolVar(&projectWizard, "wizard", false, "Use the full project scaffolding wizard")
 	projectCmd.AddCommand(projectInitCmd)
 }

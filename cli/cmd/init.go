@@ -11,10 +11,13 @@ import (
 var initStack string
 
 var initCmd = &cobra.Command{
-	Use:   "init <env>",
+	Use:   "init [env]",
 	Short: "Run Terraform/OpenTofu init for an environment",
-	Args:  cobra.ExactArgs(1),
+	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) == 0 {
+			return runScaffoldWizard(cmd, args)
+		}
 		cfg, err := loadConfig()
 		if err != nil {
 			return err
@@ -45,4 +48,5 @@ var initCmd = &cobra.Command{
 
 func init() {
 	initCmd.Flags().StringVar(&initStack, "stack", "", "Stack to initialize for stacked environments")
+	initCmd.Flags().BoolVar(&wizardDefaults, "defaults", false, "Use safe scaffolding defaults when no environment is supplied")
 }

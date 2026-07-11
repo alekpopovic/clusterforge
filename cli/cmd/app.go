@@ -14,6 +14,7 @@ var appRenderEnv string
 var appRenderTemplatePack string
 var appValidateAll bool
 var appListJSON bool
+var appAddWizard bool
 
 var appCmd = &cobra.Command{
 	Use:   "app",
@@ -222,6 +223,7 @@ func init() {
 	appAddCmd.Flags().StringVar(&appAddOptions.Type, "type", "web", "App type")
 	appAddCmd.Flags().BoolVar(&appAddOptions.Autoscaling, "autoscaling", false, "Enable default autoscaling settings")
 	appAddCmd.Flags().BoolVar(&appAddOptions.Force, "force", false, "Overwrite an existing app manifest")
+	appAddCmd.Flags().BoolVar(&appAddWizard, "wizard", false, "Prompt for app settings (default interactively)")
 
 	appRenderCmd.Flags().StringVar(&appRenderEnv, "env", "", "Environment to render into")
 	appRenderCmd.Flags().StringVar(&appRenderTemplatePack, "template-pack", "", "Local template pack name to validate before rendering")
