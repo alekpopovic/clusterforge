@@ -84,6 +84,7 @@ func init() {
 	rootCmd.AddCommand(inventoryCmd)
 	rootCmd.AddCommand(backstageCmd)
 	rootCmd.AddCommand(serviceCmd)
+	rootCmd.AddCommand(secretsCmd)
 	rootCmd.AddCommand(dashboardCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
