@@ -12,6 +12,8 @@ See also:
 - [backlog](../BACKLOG.md)
 - [AKS RFC](rfcs/002-aks-support.md)
 - [GKE RFC](rfcs/003-gke-support.md)
+- [AKS production hardening](azure-aks-production.md)
+- [GKE production hardening](gcp-gke-production.md)
 - [self-hosted Kubernetes RFC](rfcs/004-self-hosted-kubernetes.md)
 - [plugin architecture RFC](rfcs/006-cli-plugin-architecture.md)
 - [workload identity RFC](rfcs/007-workload-identity.md)
@@ -77,6 +79,9 @@ Kubernetes path first, then broader orchestrator coverage.
 - Google GKE
 - Lightweight Kubernetes targets
 - Generic Kubernetes adapter improvements
+- AKS and GKE remain experimental until private networking, identity,
+  observability, backup/restore, upgrades, and real-cloud evidence pass their
+  production checklists
 
 ## Phase 9: Optional Advanced Kubernetes Platform
 

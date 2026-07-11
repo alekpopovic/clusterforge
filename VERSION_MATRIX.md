@@ -15,8 +15,8 @@
 | EKS | AWS | smoke-test runbook | supported | Real pass requires matrix evidence. |
 | ECS | AWS | smoke-test runbook | supported | Real pass requires matrix evidence. |
 | Existing Kubernetes | any conformant cluster | smoke-test runbook | supported | Use disposable namespaces. |
-| AKS | Azure | module validation only | experimental | RFC and MVP module added. |
-| GKE | GCP | module validation only | experimental | RFC and MVP module added. |
+| AKS | Azure | module validation only | experimental | MVP lacks several production hardening controls; see AKS production guide. |
+| GKE | GCP | module validation only | experimental | MVP lacks several production hardening controls; see GKE production guide. |
 | K3s | self-hosted | user-data generation | experimental | No VM provisioning. |
 | RKE2 | self-hosted | user-data generation | experimental | No VM provisioning. |
 | Nomad | self-managed | module validation | experimental | Production patterns still evolving. |
