@@ -39,6 +39,7 @@ type Options struct {
 	RootDir      string
 	TemplatesDir string
 	Stdout       io.Writer
+	AWSAccount   config.AWSAccount
 }
 
 type Result struct {
@@ -63,6 +64,8 @@ type templateData struct {
 	BackendBlock string
 	Stack        string
 	StateComment string
+	AWSProfile   string
+	AWSRoleARN   string
 }
 
 func Generate(name string, env config.Environment, opts Options) (*Result, error) {
@@ -130,6 +133,8 @@ func Generate(name string, env config.Environment, opts Options) (*Result, error
 		Name:         fmt.Sprintf("clusterforge-%s-%s", name, env.Orchestrator),
 		ModulesPath:  modulesPath,
 		BackendBlock: renderBackendBlock(name, "", backend),
+		AWSProfile:   opts.AWSAccount.Profile,
+		AWSRoleARN:   opts.AWSAccount.RoleARN,
 	}
 
 	targetDir := filepath.Join(templatesDir, "env", target)

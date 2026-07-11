@@ -2,4 +2,12 @@
 
 provider "aws" {
   region = var.region
+
+  default_tags {
+    tags = {
+      Project     = "demo"
+      Environment = "dev"
+      ManagedBy   = "ClusterForge"
+    }
+  }
 }

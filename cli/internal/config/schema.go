@@ -8,20 +8,22 @@ import (
 const DefaultPath = "clusterforge.yaml"
 
 type Config struct {
-	ClusterForgeVersion string                 `yaml:"clusterforge_version,omitempty"`
-	Project             Project                `yaml:"project"`
-	Engines             map[string]Engine      `yaml:"engines"`
-	Defaults            Defaults               `yaml:"defaults"`
-	Environments        map[string]Environment `yaml:"environments"`
-	Clusters            map[string]Cluster     `yaml:"clusters,omitempty"`
-	Audit               Audit                  `yaml:"audit,omitempty"`
-	Backends            map[string]Backend     `yaml:"backends,omitempty"`
-	Policies            Policies               `yaml:"policies"`
-	TemplatePacks       []TemplatePack         `yaml:"template_packs,omitempty"`
-	Plugins             Plugins                `yaml:"plugins,omitempty"`
-	Organization        Organization           `yaml:"organization,omitempty"`
-	Workspaces          map[string]Workspace   `yaml:"workspaces,omitempty"`
-	Teams               map[string]Team        `yaml:"teams,omitempty"`
+	ClusterForgeVersion       string                 `yaml:"clusterforge_version,omitempty"`
+	Project                   Project                `yaml:"project"`
+	Engines                   map[string]Engine      `yaml:"engines"`
+	Defaults                  Defaults               `yaml:"defaults"`
+	Environments              map[string]Environment `yaml:"environments"`
+	Clusters                  map[string]Cluster     `yaml:"clusters,omitempty"`
+	Audit                     Audit                  `yaml:"audit,omitempty"`
+	Backends                  map[string]Backend     `yaml:"backends,omitempty"`
+	Policies                  Policies               `yaml:"policies"`
+	TemplatePacks             []TemplatePack         `yaml:"template_packs,omitempty"`
+	Plugins                   Plugins                `yaml:"plugins,omitempty"`
+	Organization              Organization           `yaml:"organization,omitempty"`
+	Workspaces                map[string]Workspace   `yaml:"workspaces,omitempty"`
+	Teams                     map[string]Team        `yaml:"teams,omitempty"`
+	AWSAccounts               map[string]AWSAccount  `yaml:"aws_accounts,omitempty"`
+	AllowSharedProdAWSAccount bool                   `yaml:"allow_shared_prod_aws_account,omitempty"`
 }
 
 type Project struct {
@@ -46,6 +48,14 @@ type Environment struct {
 	Path         string `yaml:"path"`
 	Layout       string `yaml:"layout,omitempty"`
 	Stacks       Stacks `yaml:"stacks,omitempty"`
+	Account      string `yaml:"account,omitempty"`
+}
+
+type AWSAccount struct {
+	AccountID string `yaml:"account_id"`
+	Region    string `yaml:"region"`
+	Profile   string `yaml:"profile,omitempty"`
+	RoleARN   string `yaml:"role_arn,omitempty"`
 }
 
 type Cluster struct {
@@ -154,6 +164,24 @@ func (c *Config) Validate() error {
 		}
 		if err := validateOrchestrator(fmt.Sprintf("environment %q orchestrator", name), env.Orchestrator); err != nil {
 			return err
+		}
+		if env.Cloud == "aws" && env.Account != "" {
+			if _, ok := c.AWSAccounts[env.Account]; !ok {
+				return fmt.Errorf("environment %q references unknown AWS account %q", name, env.Account)
+			}
+		}
+	}
+	for name, account := range c.AWSAccounts {
+		if strings.TrimSpace(name) == "" || len(account.AccountID) != 12 {
+			return fmt.Errorf("AWS account %q requires a 12-digit account_id", name)
+		}
+		for _, char := range account.AccountID {
+			if char < '0' || char > '9' {
+				return fmt.Errorf("AWS account %q requires a 12-digit account_id", name)
+			}
+		}
+		if account.AccountID == "000000000000" {
+			return fmt.Errorf("AWS account %q must not use a placeholder/root account ID", name)
 		}
 	}
 	for name, cluster := range c.Clusters {

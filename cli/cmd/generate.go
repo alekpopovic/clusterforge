@@ -38,6 +38,7 @@ var generateCmd = &cobra.Command{
 			env = updated
 		}
 		backend := cfg.BackendFor(args[0])
+		awsAccount := cfg.AWSAccounts[env.Account]
 		templatesDir := ""
 		if generateTemplatePack != "" {
 			for _, pack := range cfg.TemplatePacks {
@@ -64,6 +65,7 @@ var generateCmd = &cobra.Command{
 			RootDir:      ".",
 			TemplatesDir: templatesDir,
 			Stdout:       os.Stdout,
+			AWSAccount:   awsAccount,
 		})
 		if err != nil {
 			return err

@@ -104,6 +104,9 @@ func (c *Config) ApplyDefaults() {
 	if c.Teams == nil {
 		c.Teams = map[string]Team{}
 	}
+	if c.AWSAccounts == nil {
+		c.AWSAccounts = map[string]AWSAccount{}
+	}
 	for name, backend := range c.Backends {
 		if backend.Type == "" {
 			backend.Type = "local"

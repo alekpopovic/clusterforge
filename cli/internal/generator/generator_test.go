@@ -48,6 +48,21 @@ func TestGenerateAWSEKS(t *testing.T) {
 	}
 }
 
+func TestGenerateAWSProviderAccountProfileAndRole(t *testing.T) {
+	dir := t.TempDir()
+	env := config.Environment{Cloud: "aws", Region: "eu-central-1", Orchestrator: "eks", Path: filepath.Join(dir, "live", "prod")}
+	_, err := Generate("prod", env, Options{RootDir: dir, AWSAccount: config.AWSAccount{Profile: "prod", RoleARN: "arn:aws:iam::222222222222:role/Deploy"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	providers := readFile(t, filepath.Join(env.Path, "providers.tf"))
+	for _, expected := range []string{`profile = "prod"`, `role_arn = "arn:aws:iam::222222222222:role/Deploy"`, `default_tags`} {
+		if !strings.Contains(providers, expected) {
+			t.Fatalf("missing %q:\n%s", expected, providers)
+		}
+	}
+}
+
 func TestGenerateS3Backend(t *testing.T) {
 	dir := t.TempDir()
 	env := config.Environment{

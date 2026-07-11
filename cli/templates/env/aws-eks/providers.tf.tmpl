@@ -2,6 +2,23 @@
 
 provider "aws" {
   region = var.region
+{{- if .AWSProfile }}
+  profile = "{{ .AWSProfile }}"
+{{- end }}
+{{- if .AWSRoleARN }}
+
+  assume_role {
+    role_arn = "{{ .AWSRoleARN }}"
+  }
+{{- end }}
+
+  default_tags {
+    tags = {
+      Project     = "{{ .Project }}"
+      Environment = "{{ .Environment }}"
+      ManagedBy   = "ClusterForge"
+    }
+  }
 }
 
 data "aws_eks_cluster_auth" "this" {

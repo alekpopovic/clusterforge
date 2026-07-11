@@ -73,6 +73,7 @@ func init() {
 	rootCmd.AddCommand(pluginCmd)
 	rootCmd.AddCommand(workspaceCmd)
 	rootCmd.AddCommand(teamCmd)
+	rootCmd.AddCommand(accountCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)
