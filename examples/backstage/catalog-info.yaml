@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: clusterforge-example
+spec:
+  owner: platform-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: example-api
+spec:
+  type: service
+  lifecycle: experimental
+  owner: platform-team
+  system: clusterforge-example

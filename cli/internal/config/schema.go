@@ -30,6 +30,7 @@ type Config struct {
 	ExecutionProfiles         map[string]ExecutionProfile `yaml:"execution_profiles,omitempty"`
 	TerraformCloud            TerraformCloud              `yaml:"terraform_cloud,omitempty"`
 	Health                    Health                      `yaml:"health,omitempty"`
+	Backstage                 Backstage                   `yaml:"backstage,omitempty"`
 }
 
 type Project struct {
@@ -76,6 +77,12 @@ type HealthChecks struct {
 	PlatformAddons  bool `yaml:"platform_addons,omitempty"`
 	Ingress         bool `yaml:"ingress,omitempty"`
 	AppHealth       bool `yaml:"app_health,omitempty"`
+}
+type Backstage struct {
+	Enabled   bool   `yaml:"enabled"`
+	Owner     string `yaml:"owner,omitempty"`
+	System    string `yaml:"system,omitempty"`
+	Lifecycle string `yaml:"lifecycle,omitempty"`
 }
 
 type Defaults struct {

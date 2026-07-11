@@ -82,6 +82,7 @@ func init() {
 	rootCmd.AddCommand(healthCmd)
 	rootCmd.AddCommand(runbookCmd)
 	rootCmd.AddCommand(inventoryCmd)
+	rootCmd.AddCommand(backstageCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)

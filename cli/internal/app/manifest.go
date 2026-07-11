@@ -29,6 +29,12 @@ type Manifest struct {
 	Autoscaling   Autoscaling                 `yaml:"autoscaling,omitempty"`
 	CloudIdentity CloudIdentity               `yaml:"cloud_identity,omitempty"`
 	Dependencies  map[string]bindings.Request `yaml:"dependencies,omitempty"`
+	Backstage     Backstage                   `yaml:"backstage,omitempty"`
+}
+type Backstage struct {
+	Owner     string `yaml:"owner,omitempty"`
+	System    string `yaml:"system,omitempty"`
+	Lifecycle string `yaml:"lifecycle,omitempty"`
 }
 
 type Port struct {
