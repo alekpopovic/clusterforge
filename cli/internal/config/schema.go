@@ -31,6 +31,18 @@ type Config struct {
 	TerraformCloud            TerraformCloud              `yaml:"terraform_cloud,omitempty"`
 	Health                    Health                      `yaml:"health,omitempty"`
 	Backstage                 Backstage                   `yaml:"backstage,omitempty"`
+	GitOps                    GitOps                      `yaml:"gitops,omitempty"`
+}
+
+type GitOps struct {
+	Provider string          `yaml:"provider,omitempty"`
+	RepoURL  string          `yaml:"repo_url,omitempty"`
+	Clusters []GitOpsCluster `yaml:"clusters,omitempty"`
+}
+
+type GitOpsCluster struct {
+	Name        string `yaml:"name"`
+	Environment string `yaml:"environment"`
 }
 
 type Project struct {
@@ -352,6 +364,27 @@ func (c *Config) Validate() error {
 		}
 		if health.SLO.LatencyTargetMS < 0 {
 			return fmt.Errorf("health environment %q latency_target_ms must not be negative", env)
+		}
+	}
+	if c.GitOps.Provider != "" || c.GitOps.RepoURL != "" || len(c.GitOps.Clusters) > 0 {
+		if c.GitOps.Provider != "argocd" {
+			return fmt.Errorf("gitops.provider must be argocd")
+		}
+		if strings.TrimSpace(c.GitOps.RepoURL) == "" {
+			return fmt.Errorf("gitops.repo_url is required")
+		}
+		seenClusters := map[string]bool{}
+		for _, cluster := range c.GitOps.Clusters {
+			if strings.TrimSpace(cluster.Name) == "" {
+				return fmt.Errorf("gitops cluster name is required")
+			}
+			if _, ok := c.Environments[cluster.Environment]; !ok {
+				return fmt.Errorf("gitops cluster %q references unknown environment %q", cluster.Name, cluster.Environment)
+			}
+			if seenClusters[cluster.Name] {
+				return fmt.Errorf("duplicate gitops cluster %q", cluster.Name)
+			}
+			seenClusters[cluster.Name] = true
 		}
 	}
 	return nil
