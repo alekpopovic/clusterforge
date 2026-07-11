@@ -166,15 +166,18 @@ var appRenderCmd = &cobra.Command{
 			return err
 		}
 		if appRenderTemplatePack != "" {
-			found := false
+			var packPath string
 			for _, pack := range cfg.TemplatePacks {
-				if pack.Name == appRenderTemplatePack {
-					found = true
+				if pack.Name == appRenderTemplatePack && pack.IsEnabled() {
+					packPath = templatePackPath(pack)
 					break
 				}
 			}
-			if !found {
-				return fmt.Errorf("template pack %q not found in %s", appRenderTemplatePack, opts.ConfigPath)
+			if packPath == "" {
+				return fmt.Errorf("template pack %q is not enabled or configured in %s", appRenderTemplatePack, opts.ConfigPath)
+			}
+			if err := validateTemplatePack(appRenderTemplatePack, packPath); err != nil {
+				return err
 			}
 			printer.Warn("app template pack overrides are not executed; built-in app renderer is used")
 		}

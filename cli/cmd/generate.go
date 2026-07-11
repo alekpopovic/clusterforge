@@ -41,13 +41,16 @@ var generateCmd = &cobra.Command{
 		templatesDir := ""
 		if generateTemplatePack != "" {
 			for _, pack := range cfg.TemplatePacks {
-				if pack.Name == generateTemplatePack {
-					templatesDir = pack.Path
+				if pack.Name == generateTemplatePack && pack.IsEnabled() {
+					templatesDir = templatePackPath(pack)
 					break
 				}
 			}
 			if templatesDir == "" {
-				return fmt.Errorf("template pack %q not found in %s", generateTemplatePack, opts.ConfigPath)
+				return fmt.Errorf("template pack %q is not enabled or configured in %s", generateTemplatePack, opts.ConfigPath)
+			}
+			if err := validateTemplatePack(generateTemplatePack, templatesDir); err != nil {
+				return err
 			}
 		}
 		result, err := generator.Generate(args[0], env, generator.Options{

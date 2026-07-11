@@ -81,9 +81,14 @@ type Policies struct {
 }
 
 type TemplatePack struct {
-	Name string `yaml:"name"`
-	Path string `yaml:"path"`
+	Name    string `yaml:"name"`
+	Path    string `yaml:"path,omitempty"`
+	Source  string `yaml:"source,omitempty"`
+	Version string `yaml:"version,omitempty"`
+	Enabled *bool  `yaml:"enabled,omitempty"`
 }
+
+func (p TemplatePack) IsEnabled() bool { return p.Enabled == nil || *p.Enabled }
 
 type Plugins struct {
 	Enabled          bool     `yaml:"enabled"`
@@ -170,8 +175,11 @@ func (c *Config) Validate() error {
 		if strings.TrimSpace(pack.Name) == "" {
 			return fmt.Errorf("template pack name is required")
 		}
-		if strings.TrimSpace(pack.Path) == "" {
-			return fmt.Errorf("template pack %q path is required", pack.Name)
+		if strings.TrimSpace(pack.Path) == "" && strings.TrimSpace(pack.Source) == "" {
+			return fmt.Errorf("template pack %q requires path or source", pack.Name)
+		}
+		if strings.TrimSpace(pack.Source) != "" && strings.TrimSpace(pack.Version) == "" {
+			return fmt.Errorf("template pack %q version is required for source", pack.Name)
 		}
 		if seenPacks[pack.Name] {
 			return fmt.Errorf("duplicate template pack %q", pack.Name)

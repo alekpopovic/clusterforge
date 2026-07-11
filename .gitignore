@@ -37,6 +37,7 @@ coverage/
 
 # Local CLI audit trail
 .cf/audit.log
+.cf/cache/
 
 .DS_Store
 *.swp

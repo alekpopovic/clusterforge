@@ -26,10 +26,13 @@ Validate and use:
 
 ```bash
 cf template list
-cf template validate
+cf template validate company-standard
 cf generate dev --template-pack company-standard
 cf app render web --env dev --template-pack company-standard
 ```
 
 Template packs use `text/template` files only. They do not execute arbitrary
 code.
+
+For versioned local, archive, and Git sources, cache behavior, pinning, and
+security guidance, see [Template pack registry](template-pack-registry.md).
