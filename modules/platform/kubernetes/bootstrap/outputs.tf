@@ -13,6 +13,7 @@ output "enabled_addons" {
     var.enable_loki ? "loki" : "",
     var.enable_log_agent ? "alloy" : "",
     var.enable_argocd ? "argocd" : ""
+    , var.enable_opentelemetry_collector ? "opentelemetry-collector" : ""
   ])
 }
 
@@ -34,6 +35,7 @@ output "releases" {
     var.enable_loki ? { loki = module.loki[0].release_name } : {},
     var.enable_log_agent ? { log_agent = module.log_agent[0].release_name } : {},
     var.enable_argocd ? { argocd = module.argocd[0].release_name } : {}
+    , var.enable_opentelemetry_collector ? { opentelemetry_collector = module.opentelemetry_collector[0].release_name } : {}
   )
 }
 

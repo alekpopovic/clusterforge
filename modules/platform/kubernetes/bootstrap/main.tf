@@ -12,6 +12,7 @@ locals {
     loki             = local.namespace_prefix == "" ? "logging" : "${local.namespace_prefix}-logging"
     log_agent        = local.namespace_prefix == "" ? "logging" : "${local.namespace_prefix}-logging"
     argocd           = local.namespace_prefix == "" ? "argocd" : "${local.namespace_prefix}-argocd"
+    opentelemetry    = local.namespace_prefix == "" ? "observability" : "${local.namespace_prefix}-observability"
   }
 }
 
@@ -139,4 +140,15 @@ module "argocd" {
   app_of_apps_revision              = var.argocd_app_of_apps_revision
   app_of_apps_destination_namespace = var.argocd_app_of_apps_destination_namespace
   app_of_apps_project               = var.argocd_app_of_apps_project
+}
+
+module "opentelemetry_collector" {
+  count                       = var.enable_opentelemetry_collector ? 1 : 0
+  source                      = "../opentelemetry-collector"
+  namespace                   = local.namespaces.opentelemetry
+  chart_version               = var.opentelemetry_collector_chart_version
+  mode                        = var.opentelemetry_collector_mode
+  values                      = var.opentelemetry_collector_values
+  service_account_annotations = var.opentelemetry_collector_service_account_annotations
+  labels                      = var.common_labels
 }

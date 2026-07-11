@@ -229,3 +229,29 @@ variable "common_labels" {
   type        = map(string)
   default     = {}
 }
+
+variable "enable_opentelemetry_collector" {
+  description = "Whether to install OpenTelemetry Collector."
+  type        = bool
+  default     = false
+}
+variable "opentelemetry_collector_chart_version" {
+  description = "Optional collector chart version."
+  type        = string
+  default     = ""
+}
+variable "opentelemetry_collector_mode" {
+  description = "Collector deployment mode."
+  type        = string
+  default     = "deployment"
+}
+variable "opentelemetry_collector_values" {
+  description = "Additional collector Helm values."
+  type        = list(string)
+  default     = []
+}
+variable "opentelemetry_collector_service_account_annotations" {
+  description = "Collector service account annotations."
+  type        = map(string)
+  default     = {}
+}
