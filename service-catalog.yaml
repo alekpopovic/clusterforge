@@ -1,0 +1,29 @@
+services:
+  api:
+    owner: payments-team
+    tier: backend
+    lifecycle: production
+    repositories:
+      source: https://github.com/example/api
+      image: ghcr.io/example/api
+    environments:
+      dev:
+        url: https://api.dev.example.com
+      prod:
+        url: https://api.example.com
+    dependencies: [postgres, redis, sqs-jobs]
+    alerts:
+      dashboard: ""
+      runbook: failed-deployment
+  postgres:
+    owner: platform-team
+    tier: data
+    lifecycle: production
+  redis:
+    owner: platform-team
+    tier: data
+    lifecycle: production
+  sqs-jobs:
+    owner: platform-team
+    tier: messaging
+    lifecycle: production

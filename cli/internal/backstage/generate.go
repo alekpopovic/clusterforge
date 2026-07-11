@@ -4,6 +4,7 @@ import (
 	"fmt"
 	cfapp "github.com/textracta/clusterforge/cli/internal/app"
 	"github.com/textracta/clusterforge/cli/internal/config"
+	"github.com/textracta/clusterforge/cli/internal/servicecatalog"
 	"gopkg.in/yaml.v3"
 	"sort"
 )
@@ -20,6 +21,9 @@ type Metadata struct {
 }
 
 func Generate(cfg *config.Config, apps map[string]cfapp.Manifest, appFilter, envFilter string) ([]byte, error) {
+	return GenerateWithServices(cfg, apps, servicecatalog.Catalog{}, appFilter, envFilter)
+}
+func GenerateWithServices(cfg *config.Config, apps map[string]cfapp.Manifest, catalog servicecatalog.Catalog, appFilter, envFilter string) ([]byte, error) {
 	if !cfg.Backstage.Enabled {
 		return nil, fmt.Errorf("Backstage integration is disabled")
 	}
@@ -50,6 +54,13 @@ func Generate(cfg *config.Config, apps map[string]cfapp.Manifest, appFilter, env
 		}
 		m := apps[name]
 		entities = append(entities, Entity{"backstage.io/v1alpha1", "Component", Metadata{name, ""}, map[string]any{"type": "service", "owner": fallback(m.Backstage.Owner, owner), "system": fallback(m.Backstage.System, system), "lifecycle": fallback(m.Backstage.Lifecycle, lifecycle)}})
+	}
+	for _, name := range catalog.Names() {
+		if _, exists := apps[name]; exists {
+			continue
+		}
+		service := catalog.Services[name]
+		entities = append(entities, Entity{"backstage.io/v1alpha1", "Component", Metadata{name, "Service catalog entry"}, map[string]any{"type": "service", "owner": service.Owner, "system": system, "lifecycle": service.Lifecycle}})
 	}
 	var out []byte
 	for i, e := range entities {

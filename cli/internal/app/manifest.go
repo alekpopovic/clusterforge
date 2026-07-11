@@ -30,6 +30,7 @@ type Manifest struct {
 	CloudIdentity CloudIdentity               `yaml:"cloud_identity,omitempty"`
 	Dependencies  map[string]bindings.Request `yaml:"dependencies,omitempty"`
 	Backstage     Backstage                   `yaml:"backstage,omitempty"`
+	Service       string                      `yaml:"service,omitempty"`
 }
 type Backstage struct {
 	Owner     string `yaml:"owner,omitempty"`

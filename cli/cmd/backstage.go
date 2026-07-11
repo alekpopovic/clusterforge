@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 	cfapp "github.com/textracta/clusterforge/cli/internal/app"
 	"github.com/textracta/clusterforge/cli/internal/backstage"
+	"github.com/textracta/clusterforge/cli/internal/servicecatalog"
 	"os"
 )
 
@@ -35,7 +36,11 @@ var backstageGenerateCmd = &cobra.Command{Use: "generate", Args: cobra.NoArgs, R
 			return fmt.Errorf("app %q not found", backstageApp)
 		}
 	}
-	data, err := backstage.Generate(cfg, manifests, backstageApp, backstageEnv)
+	catalog := servicecatalog.Catalog{}
+	if loaded, loadErr := servicecatalog.Load(servicecatalog.DefaultPath); loadErr == nil {
+		catalog = loaded
+	}
+	data, err := backstage.GenerateWithServices(cfg, manifests, catalog, backstageApp, backstageEnv)
 	if err != nil {
 		return err
 	}
