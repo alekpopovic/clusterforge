@@ -1,0 +1,13 @@
+stages: [validate, plan, policy, apply]
+
+drift-check:
+  stage: plan
+  image: hashicorp/terraform:1.8.5
+  variables: {TF_IN_AUTOMATION: "true", TF_INPUT: "false"}
+  script:
+    - test -n "$CF_ENV"
+    - cd "live/$CF_ENV"
+    - terraform init -input=false
+    - terraform plan -input=false -detailed-exitcode || test "$?" -eq 2
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'

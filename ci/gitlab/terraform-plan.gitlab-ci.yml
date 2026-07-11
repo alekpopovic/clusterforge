@@ -1,0 +1,31 @@
+stages: [validate, plan, policy, apply]
+
+.clusterforge_plan:
+  stage: plan
+  image: hashicorp/terraform:1.8.5
+  variables:
+    TF_IN_AUTOMATION: "true"
+    TF_INPUT: "false"
+  script:
+    - test -n "$CF_ENV"
+    - cd "live/$CF_ENV"
+    - terraform init -input=false
+    - terraform plan -input=false -out=tfplan
+    - terraform show -json tfplan > tfplan.json
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths: ["live/$CF_ENV/tfplan", "live/$CF_ENV/tfplan.json"]
+
+aws-eks-plan:
+  extends: .clusterforge_plan
+  variables: {CF_ENV: "dev/aws-eks"}
+  # Add GitLab OIDC id_tokens and a trusted cloud role in the consuming project.
+
+aws-ecs-plan:
+  extends: .clusterforge_plan
+  variables: {CF_ENV: "dev/aws-ecs"}
+
+existing-kubernetes-plan:
+  extends: .clusterforge_plan
+  variables: {CF_ENV: "dev/existing-kubernetes"}

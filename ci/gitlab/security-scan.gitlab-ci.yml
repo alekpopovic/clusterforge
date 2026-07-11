@@ -1,0 +1,15 @@
+stages: [validate, plan, policy, apply]
+
+secret-scan:
+  stage: policy
+  image: zricethezav/gitleaks:v8.30.1
+  script: ["gitleaks git --redact --no-banner ."]
+
+trivy-config:
+  stage: policy
+  image: aquasec/trivy:0.72.0
+  script: ["trivy config --exit-code 1 --severity HIGH,CRITICAL ."]
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths: [gl-sast-report.json]

@@ -245,6 +245,15 @@ See [docs/cli.md](docs/cli.md).
 
 ## Validation
 
+## GitLab CI
+
+GitLab users can compose credential-free CLI/security checks, Terraform plan
+jobs, scheduled drift checks, and manual production apply from the templates in
+[`ci/gitlab/`](ci/gitlab/). See [docs/gitlab-ci.md](docs/gitlab-ci.md). No
+automatic production apply or destroy job is included.
+
+## Validation
+
 Run local checks before opening a pull request:
 
 ```bash

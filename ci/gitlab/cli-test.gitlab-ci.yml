@@ -1,0 +1,12 @@
+stages: [validate, plan, policy, apply]
+
+cli-test:
+  stage: validate
+  image: golang:1.22
+  variables: {GOCACHE: "$CI_PROJECT_DIR/.cache/go-build", GOPATH: "$CI_PROJECT_DIR/.cache/go"}
+  script:
+    - cd cli
+    - go test ./...
+    - go build -o cf .
+  cache:
+    paths: [.cache/go-build, .cache/go/pkg/mod]

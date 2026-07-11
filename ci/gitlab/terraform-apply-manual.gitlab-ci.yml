@@ -1,0 +1,19 @@
+stages: [validate, plan, policy, apply]
+
+production-apply:
+  stage: apply
+  image: hashicorp/terraform:1.8.5
+  when: manual
+  allow_failure: false
+  environment: {name: production}
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: manual
+    - when: never
+  script:
+    - test -n "$CF_ENV"
+    - test -f "live/$CF_ENV/tfplan"
+    - cd "live/$CF_ENV"
+    - terraform init -input=false
+    - terraform apply -input=false tfplan
+  # No destroy job is provided. Define one only with separate approval and warnings.
