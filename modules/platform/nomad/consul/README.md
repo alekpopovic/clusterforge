@@ -1,30 +1,11 @@
-# platform/nomad/consul
+# Nomad Consul integration
 
-## Purpose
-
-This module will manage the ClusterForge platform/nomad/consul component.
-
-## Status
-
-Placeholder. This module currently creates no resources.
-
-## Expected Future Resources
-
-Consul integration, service discovery, and Nomad platform dependencies.
-
-## Usage
+Renders Nomad's Consul integration settings. It does not install Consul or put
+ACL tokens in Terraform state; use an environment-injected token reference.
 
 ```hcl
-module "example" {
-  source = "path/to/modules/platform/nomad/consul"
-
-  name        = "example"
-  environment = "dev"
-  labels      = {}
+module "consul_config" {
+  source  = "../../modules/platform/nomad/consul"
+  address = "127.0.0.1:8500"
 }
 ```
-
-## Generated Terraform Documentation
-
-<!-- BEGIN_TF_DOCS -->
-<!-- END_TF_DOCS -->

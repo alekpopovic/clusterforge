@@ -1,12 +1,1 @@
-locals {
-  module_path     = "platform/nomad/ingress"
-  normalized_name = var.name == null ? null : lower(var.name)
-  environment     = var.environment == null ? "unknown" : lower(var.environment)
-  common_labels = merge(var.labels, {
-    "clusterforge.io/module"      = local.module_path
-    "clusterforge.io/environment" = local.environment
-  })
-}
-
-# TODO: Implement the platform/nomad/ingress module without adding provider configuration
-# to this reusable child module.
+locals { service_tags = concat(["${var.router}.enable=true"], var.entrypoints == "" ? [] : ["${var.router}.http.routers.${var.service_name}.entrypoints=${var.entrypoints}"], var.extra_tags) }

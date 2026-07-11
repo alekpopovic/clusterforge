@@ -1,27 +1,37 @@
 variable "name" {
-  description = "Logical name for this module instance."
+  description = "Logical Nomad cluster name."
   type        = string
-  default     = null
-
-  validation {
-    condition     = var.name == null || can(regex("^[a-z][a-z0-9-]{1,62}$", var.name))
-    error_message = "Name must start with a lowercase letter and contain 2-63 lowercase letters, numbers, or hyphens."
-  }
 }
-
 variable "environment" {
-  description = "Environment identifier such as dev, staging, or prod."
+  description = "Environment identifier."
   type        = string
-  default     = null
-
+}
+variable "datacenter" {
+  description = "Nomad datacenter name."
+  type        = string
+  default     = "dc1"
+}
+variable "data_dir" {
+  description = "Nomad data directory."
+  type        = string
+  default     = "/opt/nomad"
+}
+variable "bind_addr" {
+  description = "Bind address expression."
+  type        = string
+  default     = "0.0.0.0"
+}
+variable "server_count" {
+  description = "Expected Nomad server quorum size."
+  type        = number
+  default     = 3
   validation {
-    condition     = var.environment == null || can(regex("^[a-z][a-z0-9-]{1,30}$", var.environment))
-    error_message = "Environment must start with a lowercase letter and contain 2-31 lowercase letters, numbers, or hyphens."
+    condition     = var.server_count >= 1 && var.server_count % 2 == 1
+    error_message = "server_count must be a positive odd number."
   }
 }
-
-variable "labels" {
-  description = "Labels to apply to resources created by this module once implemented."
-  type        = map(string)
-  default     = {}
+variable "server_addresses" {
+  description = "Nomad server addresses used by clients."
+  type        = list(string)
+  default     = []
 }

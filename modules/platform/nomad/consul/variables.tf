@@ -1,27 +1,25 @@
-variable "name" {
-  description = "Logical name for this module instance."
+variable "address" {
+  description = "Consul HTTP address reachable by Nomad."
   type        = string
-  default     = null
-
-  validation {
-    condition     = var.name == null || can(regex("^[a-z][a-z0-9-]{1,62}$", var.name))
-    error_message = "Name must start with a lowercase letter and contain 2-63 lowercase letters, numbers, or hyphens."
-  }
+  default     = "127.0.0.1:8500"
 }
-
-variable "environment" {
-  description = "Environment identifier such as dev, staging, or prod."
+variable "auto_advertise" {
+  description = "Enable Nomad service advertisement through Consul."
+  type        = bool
+  default     = true
+}
+variable "server_service_name" {
+  description = "Consul service name for Nomad servers."
   type        = string
-  default     = null
-
-  validation {
-    condition     = var.environment == null || can(regex("^[a-z][a-z0-9-]{1,30}$", var.environment))
-    error_message = "Environment must start with a lowercase letter and contain 2-31 lowercase letters, numbers, or hyphens."
-  }
+  default     = "nomad"
 }
-
-variable "labels" {
-  description = "Labels to apply to resources created by this module once implemented."
-  type        = map(string)
-  default     = {}
+variable "client_service_name" {
+  description = "Consul service name for Nomad clients."
+  type        = string
+  default     = "nomad-client"
+}
+variable "token_reference" {
+  description = "Reference placeholder for a Consul ACL token; never pass a real token into Terraform."
+  type        = string
+  default     = "CONSUL_HTTP_TOKEN_FROM_ENV"
 }

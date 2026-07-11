@@ -1,30 +1,14 @@
-# orchestrators/nomad/cluster
+# Nomad cluster configuration
 
-## Purpose
-
-This module will manage the ClusterForge orchestrators/nomad/cluster component.
-
-## Status
-
-Placeholder. This module currently creates no resources.
-
-## Expected Future Resources
-
-Nomad server/client cluster primitives and scheduling metadata.
-
-## Usage
+Experimental configuration-rendering module for operator-managed Nomad hosts.
+It outputs server/client JSON and optional client cloud-init, but provisions no
+VMs, networking, TLS, ACLs, storage, upgrades, or quorum lifecycle.
 
 ```hcl
-module "example" {
-  source = "path/to/modules/orchestrators/nomad/cluster"
-
-  name        = "example"
-  environment = "dev"
-  labels      = {}
+module "nomad" {
+  source = "../../modules/orchestrators/nomad/cluster"
+  name = "platform"
+  environment = "prod"
+  server_addresses = ["10.0.0.10:4647"]
 }
 ```
-
-## Generated Terraform Documentation
-
-<!-- BEGIN_TF_DOCS -->
-<!-- END_TF_DOCS -->

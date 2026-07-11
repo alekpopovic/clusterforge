@@ -175,7 +175,7 @@ func Generate(name string, env config.Environment, opts Options) (*Result, error
 
 func supportedTarget(target string) bool {
 	switch target {
-	case "aws-eks", "aws-ecs", "azure-aks", "gcp-gke", "local-k3s", "local-rke2", "existing-kubernetes":
+	case "aws-eks", "aws-ecs", "azure-aks", "gcp-gke", "local-k3s", "local-rke2", "existing-kubernetes", "existing-nomad":
 		return true
 	default:
 		return false

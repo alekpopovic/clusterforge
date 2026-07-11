@@ -1,30 +1,11 @@
-# platform/nomad/ingress
+# Nomad ingress metadata
 
-## Purpose
-
-This module will manage the ClusterForge platform/nomad/ingress component.
-
-## Status
-
-Placeholder. This module currently creates no resources.
-
-## Expected Future Resources
-
-Nomad ingress integration and routing primitives.
-
-## Usage
+Produces reviewed service-registration tags for an operator-installed ingress
+controller. It does not install, expose, or secure the ingress controller.
 
 ```hcl
-module "example" {
-  source = "path/to/modules/platform/nomad/ingress"
-
-  name        = "example"
-  environment = "dev"
-  labels      = {}
+module "ingress_tags" {
+  source       = "../../modules/platform/nomad/ingress"
+  service_name = "api"
 }
 ```
-
-## Generated Terraform Documentation
-
-<!-- BEGIN_TF_DOCS -->
-<!-- END_TF_DOCS -->

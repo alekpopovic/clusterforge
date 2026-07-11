@@ -1,0 +1,20 @@
+{{ .Header }}
+variable "name" {
+  description = "Logical environment name."
+  type        = string
+  default     = "{{ .Name }}"
+}
+variable "environment" {
+  description = "Environment identifier."
+  type        = string
+  default     = "{{ .Environment }}"
+}
+variable "nomad_address" {
+  description = "Existing Nomad API address."
+  type        = string
+}
+variable "datacenter" {
+  description = "Nomad datacenter."
+  type        = string
+  default     = "dc1"
+}

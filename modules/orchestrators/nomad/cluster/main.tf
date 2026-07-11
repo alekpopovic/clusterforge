@@ -1,12 +1,15 @@
 locals {
-  module_path     = "orchestrators/nomad/cluster"
-  normalized_name = var.name == null ? null : lower(var.name)
-  environment     = var.environment == null ? "unknown" : lower(var.environment)
-  common_labels = merge(var.labels, {
-    "clusterforge.io/module"      = local.module_path
-    "clusterforge.io/environment" = local.environment
-  })
+  server_config = jsonencode({ datacenter = var.datacenter, data_dir = var.data_dir, bind_addr = var.bind_addr, server = true, bootstrap_expect = var.server_count })
+  client_config = jsonencode({ datacenter = var.datacenter, data_dir = var.data_dir, bind_addr = var.bind_addr, client = { enabled = true, servers = var.server_addresses } })
+  cloud_init    = <<-EOT
+    #cloud-config
+    packages: ["nomad"]
+    write_files:
+      - path: /etc/nomad.d/nomad.json
+        permissions: "0640"
+        content: |
+          ${indent(10, local.client_config)}
+    runcmd:
+      - [systemctl, enable, --now, nomad]
+  EOT
 }
-
-# TODO: Implement the orchestrators/nomad/cluster module without adding provider configuration
-# to this reusable child module.

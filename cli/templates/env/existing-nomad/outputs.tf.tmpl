@@ -1,0 +1,5 @@
+{{ .Header }}
+output "install_notes" {
+  description = "Existing-host bootstrap boundary."
+  value       = module.cluster_config.install_notes
+}

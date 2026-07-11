@@ -1,12 +1,1 @@
-locals {
-  module_path     = "platform/nomad/consul"
-  normalized_name = var.name == null ? null : lower(var.name)
-  environment     = var.environment == null ? "unknown" : lower(var.environment)
-  common_labels = merge(var.labels, {
-    "clusterforge.io/module"      = local.module_path
-    "clusterforge.io/environment" = local.environment
-  })
-}
-
-# TODO: Implement the platform/nomad/consul module without adding provider configuration
-# to this reusable child module.
+locals { consul_config = jsonencode({ address = var.address, auto_advertise = var.auto_advertise, server_service_name = var.server_service_name, client_service_name = var.client_service_name, token = var.token_reference }) }

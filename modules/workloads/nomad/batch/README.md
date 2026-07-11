@@ -1,30 +1,14 @@
-# workloads/nomad/batch
+# Nomad batch workload
 
-## Purpose
-
-This module will manage the ClusterForge workloads/nomad/batch component.
-
-## Status
-
-Placeholder. This module currently creates no resources.
-
-## Expected Future Resources
-
-Nomad batch job specification and schedule-related inputs.
-
-## Usage
+Submits a Docker-driver batch job through the root-configured Nomad provider.
+Supports image, arguments, non-secret environment variables, allocation count,
+CPU and memory. Do not pass secret values in `env`.
 
 ```hcl
-module "example" {
-  source = "path/to/modules/workloads/nomad/batch"
-
-  name        = "example"
-  environment = "dev"
-  labels      = {}
+module "batch" {
+  source = "../../modules/workloads/nomad/batch"
+  name   = "backup"
+  image  = "alpine:3.20"
+  args   = ["echo", "reviewed-job"]
 }
 ```
-
-## Generated Terraform Documentation
-
-<!-- BEGIN_TF_DOCS -->
-<!-- END_TF_DOCS -->

@@ -129,6 +129,22 @@ func TestGenerateExistingKubernetes(t *testing.T) {
 	}
 }
 
+func TestGenerateExistingNomad(t *testing.T) {
+	dir := t.TempDir()
+	env := config.Environment{Cloud: "existing", Region: "local", Orchestrator: "nomad", Path: filepath.Join(dir, "live", "dev", "existing-nomad")}
+	result, err := Generate("dev", env, Options{RootDir: dir, Project: "demo"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.Target != "existing-nomad" {
+		t.Fatalf("%s", result.Target)
+	}
+	mainTF := readFile(t, filepath.Join(env.Path, "main.tf"))
+	if !strings.Contains(mainTF, "does not provision Nomad hosts") {
+		t.Fatalf("%s", mainTF)
+	}
+}
+
 func TestGenerateMissingS3BucketFails(t *testing.T) {
 	dir := t.TempDir()
 	env := config.Environment{
