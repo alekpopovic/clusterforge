@@ -188,6 +188,7 @@ func init() {
 	fleetCmd.PersistentFlags().StringVar(&fleetFilter.Cloud, "cloud", "", "Filter by cloud")
 	fleetCmd.PersistentFlags().StringVar(&fleetFilter.Orchestrator, "orchestrator", "", "Filter by orchestrator")
 	fleetCmd.PersistentFlags().StringVar(&fleetFilter.Status, "status", "", "Filter by lifecycle status")
+	fleetCmd.PersistentFlags().StringVar(&fleetFilter.Region, "region", "", "Filter by region")
 	fleetCmd.PersistentFlags().BoolVar(&fleetJSON, "json", false, "Print structured JSON output")
 	fleetDriftCmd.Flags().BoolVar(&fleetFailFast, "fail-fast", false, "Stop and fail on the first cluster error")
 	fleetPolicyCmd.AddCommand(fleetPolicyCheckCmd)

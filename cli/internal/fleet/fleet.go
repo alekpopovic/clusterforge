@@ -13,6 +13,7 @@ type Filter struct {
 	Cloud        string
 	Orchestrator string
 	Status       string
+	Region       string
 }
 
 func Apply(clusters []inventory.Cluster, filter Filter) []inventory.Cluster {
@@ -28,6 +29,9 @@ func Apply(clusters []inventory.Cluster, filter Filter) []inventory.Cluster {
 			continue
 		}
 		if filter.Status != "" && !strings.EqualFold(cluster.Status, filter.Status) {
+			continue
+		}
+		if filter.Region != "" && !strings.EqualFold(cluster.Region, filter.Region) {
 			continue
 		}
 		filtered = append(filtered, cluster)

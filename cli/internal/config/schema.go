@@ -24,6 +24,7 @@ type Config struct {
 	Teams                     map[string]Team        `yaml:"teams,omitempty"`
 	AWSAccounts               map[string]AWSAccount  `yaml:"aws_accounts,omitempty"`
 	AllowSharedProdAWSAccount bool                   `yaml:"allow_shared_prod_aws_account,omitempty"`
+	Regions                   map[string]string      `yaml:"regions,omitempty"`
 }
 
 type Project struct {
@@ -183,6 +184,16 @@ func (c *Config) Validate() error {
 		if account.AccountID == "000000000000" {
 			return fmt.Errorf("AWS account %q must not use a placeholder/root account ID", name)
 		}
+	}
+	seenRegions := map[string]string{}
+	for alias, region := range c.Regions {
+		if strings.TrimSpace(alias) == "" || strings.TrimSpace(region) == "" {
+			return fmt.Errorf("region alias and value must not be empty")
+		}
+		if previous := seenRegions[region]; previous != "" {
+			return fmt.Errorf("region aliases %q and %q both map to %q", previous, alias, region)
+		}
+		seenRegions[region] = alias
 	}
 	for name, cluster := range c.Clusters {
 		if strings.TrimSpace(name) == "" {

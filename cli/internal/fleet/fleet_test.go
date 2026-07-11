@@ -20,6 +20,14 @@ func TestApplyFilters(t *testing.T) {
 	}
 }
 
+func TestApplyFiltersByRegion(t *testing.T) {
+	clusters := []inventory.Cluster{{Name: "eu", Region: "eu-central-1"}, {Name: "west", Region: "eu-west-1"}}
+	filtered := Apply(clusters, Filter{Region: "eu-central-1"})
+	if len(filtered) != 1 || filtered[0].Name != "eu" {
+		t.Fatalf("unexpected filter: %#v", filtered)
+	}
+}
+
 func TestRunContinuesAfterFailure(t *testing.T) {
 	clusters := []inventory.Cluster{{Name: "bad"}, {Name: "good"}}
 	results, err := Run(context.Background(), clusters, "drift", false, func(_ context.Context, cluster inventory.Cluster) (Result, error) {
