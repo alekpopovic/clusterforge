@@ -25,6 +25,7 @@ type Config struct {
 	AWSAccounts               map[string]AWSAccount  `yaml:"aws_accounts,omitempty"`
 	AllowSharedProdAWSAccount bool                   `yaml:"allow_shared_prod_aws_account,omitempty"`
 	Regions                   map[string]string      `yaml:"regions,omitempty"`
+	PlatformVersions          map[string]string      `yaml:"platform_versions,omitempty"`
 }
 
 type Project struct {

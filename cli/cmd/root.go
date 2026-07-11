@@ -76,6 +76,7 @@ func init() {
 	rootCmd.AddCommand(accountCmd)
 	rootCmd.AddCommand(regionCmd)
 	rootCmd.AddCommand(k8sCmd)
+	rootCmd.AddCommand(platformCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)
