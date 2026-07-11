@@ -88,6 +88,7 @@ func init() {
 	rootCmd.AddCommand(complianceCmd)
 	rootCmd.AddCommand(backupCmd)
 	rootCmd.AddCommand(gitopsCmd)
+	rootCmd.AddCommand(bundleCmd)
 	rootCmd.AddCommand(dashboardCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
