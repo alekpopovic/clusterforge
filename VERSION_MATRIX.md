@@ -11,7 +11,7 @@
 | Kubernetes provider | `>= 2.20, < 3.0` | examples | supported | Provider config belongs in roots. |
 | Helm provider | `>= 2.10, < 3.0` | examples | supported | Used by platform modules. |
 | Nomad provider | `>= 2.0, < 3.0` | module validation | experimental | Nomad support is early. |
-| Docker provider | `>= 3.0, < 4.0` | module validation | experimental | Docker targets are local/self-managed. |
+| Docker provider | `>= 3.0, < 4.0` | module validation | experimental | Local/simple self-managed and legacy use only; not recommended for large production platforms. |
 | EKS | AWS | smoke-test runbook | supported | Real pass requires matrix evidence. |
 | ECS | AWS | smoke-test runbook | supported | Real pass requires matrix evidence. |
 | Existing Kubernetes | any conformant cluster | smoke-test runbook | supported | Use disposable namespaces. |

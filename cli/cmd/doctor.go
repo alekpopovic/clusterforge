@@ -254,6 +254,10 @@ func checkSafety(cfg *config.Config) []doctorCheck {
 		}
 		hasProd = true
 		backend := cfg.BackendFor(name)
+		env := cfg.Environments[name]
+		if env.Orchestrator == "docker" || env.Orchestrator == "swarm" {
+			checks = append(checks, doctorCheck{Name: fmt.Sprintf("safety.%s.docker_target", name), Status: doctorWarn, Message: "Docker/Swarm is experimental and not recommended for large production deployments"})
+		}
 		if backend.EffectiveType() == "local" {
 			checks = append(checks, doctorCheck{
 				Name:    fmt.Sprintf("safety.%s.backend", name),

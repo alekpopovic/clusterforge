@@ -104,6 +104,26 @@ backends:
 	assertCheck(t, report, "safety.prod.backend", doctorWarn)
 }
 
+func TestRunDoctorWarnsForDockerProd(t *testing.T) {
+	dir := t.TempDir()
+	envPath := filepath.Join(dir, "live", "prod", "docker")
+	if err := os.MkdirAll(envPath, 0755); err != nil {
+		t.Fatal(err)
+	}
+	configPath := writeDoctorConfig(t, dir, "\nproject:\n  name: demo\nenvironments:\n  prod:\n    cloud: local\n    orchestrator: docker\n    path: "+envPath+"\n")
+	report := runDoctor(context.Background(), configPath, healthyDoctorRunner())
+	assertCheck(t, report, "safety.prod.docker_target", doctorWarn)
+}
+
+func TestDockerTargetWarning(t *testing.T) {
+	if dockerTargetWarning("docker") == "" || dockerTargetWarning("swarm") == "" {
+		t.Fatal("expected warning")
+	}
+	if dockerTargetWarning("eks") != "" {
+		t.Fatal("unexpected warning")
+	}
+}
+
 func TestTrackedSensitiveFilesWarn(t *testing.T) {
 	checks := checkTrackedSensitiveFiles([]string{
 		"live/prod/terraform.tfstate",

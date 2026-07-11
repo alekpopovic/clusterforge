@@ -75,6 +75,9 @@ var envCreateCmd = &cobra.Command{
 			Path:         path,
 			Layout:       "simple",
 		}
+		if warning := dockerTargetWarning(env.Orchestrator); warning != "" {
+			printer.Warn(warning)
+		}
 
 		printer.Info(fmt.Sprintf("environment: %s", name))
 		printer.Info(fmt.Sprintf("cloud: %s", env.Cloud))
@@ -94,6 +97,13 @@ var envCreateCmd = &cobra.Command{
 		printer.Success(fmt.Sprintf("created environment %q at %s", name, env.Path))
 		return nil
 	},
+}
+
+func dockerTargetWarning(orchestrator string) string {
+	if orchestrator == "docker" || orchestrator == "swarm" {
+		return "Docker and Docker Swarm targets are experimental; review security, networking, secrets, and host lifecycle limitations"
+	}
+	return ""
 }
 
 var envListCmd = &cobra.Command{
