@@ -28,6 +28,7 @@ type Config struct {
 	Regions                   map[string]string           `yaml:"regions,omitempty"`
 	PlatformVersions          map[string]string           `yaml:"platform_versions,omitempty"`
 	ExecutionProfiles         map[string]ExecutionProfile `yaml:"execution_profiles,omitempty"`
+	TerraformCloud            TerraformCloud              `yaml:"terraform_cloud,omitempty"`
 }
 
 type Project struct {
@@ -45,6 +46,16 @@ type ExecutionProfile struct {
 	LockTimeout     string `yaml:"lock_timeout,omitempty"`
 	Input           *bool  `yaml:"input,omitempty"`
 	RequirePlanFile bool   `yaml:"require_plan_file,omitempty"`
+}
+
+type TerraformCloud struct {
+	Enabled      bool                               `yaml:"enabled"`
+	Organization string                             `yaml:"organization,omitempty"`
+	Project      string                             `yaml:"project,omitempty"`
+	Workspaces   map[string]TerraformCloudWorkspace `yaml:"workspaces,omitempty"`
+}
+type TerraformCloudWorkspace struct {
+	Name string `yaml:"name"`
 }
 
 type Defaults struct {
@@ -289,6 +300,22 @@ func (c *Config) Validate() error {
 		if profile.LockTimeout != "" {
 			if _, err := time.ParseDuration(profile.LockTimeout); err != nil {
 				return fmt.Errorf("execution profile %q lock_timeout: %w", name, err)
+			}
+		}
+	}
+	if c.TerraformCloud.Enabled {
+		if strings.TrimSpace(c.TerraformCloud.Organization) == "" {
+			return fmt.Errorf("terraform_cloud.organization is required when enabled")
+		}
+		if strings.TrimSpace(c.TerraformCloud.Project) == "" {
+			return fmt.Errorf("terraform_cloud.project is required when enabled")
+		}
+		for env, workspace := range c.TerraformCloud.Workspaces {
+			if _, ok := c.Environments[env]; !ok {
+				return fmt.Errorf("terraform_cloud workspace references unknown environment %q", env)
+			}
+			if strings.TrimSpace(workspace.Name) == "" {
+				return fmt.Errorf("terraform_cloud workspace %q name is required", env)
 			}
 		}
 	}

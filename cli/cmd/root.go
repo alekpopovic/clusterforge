@@ -78,6 +78,7 @@ func init() {
 	rootCmd.AddCommand(k8sCmd)
 	rootCmd.AddCommand(platformCmd)
 	rootCmd.AddCommand(profileCmd)
+	rootCmd.AddCommand(tfeCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)

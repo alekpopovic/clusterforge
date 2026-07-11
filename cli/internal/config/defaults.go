@@ -116,6 +116,9 @@ func (c *Config) ApplyDefaults() {
 	if c.ExecutionProfiles == nil {
 		c.ExecutionProfiles = map[string]ExecutionProfile{}
 	}
+	if c.TerraformCloud.Workspaces == nil {
+		c.TerraformCloud.Workspaces = map[string]TerraformCloudWorkspace{}
+	}
 	for name, backend := range c.Backends {
 		if backend.Type == "" {
 			backend.Type = "local"
