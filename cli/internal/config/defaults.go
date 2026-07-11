@@ -98,6 +98,12 @@ func (c *Config) ApplyDefaults() {
 	if c.Backends == nil {
 		c.Backends = map[string]Backend{}
 	}
+	if c.Workspaces == nil {
+		c.Workspaces = map[string]Workspace{}
+	}
+	if c.Teams == nil {
+		c.Teams = map[string]Team{}
+	}
 	for name, backend := range c.Backends {
 		if backend.Type == "" {
 			backend.Type = "local"

@@ -71,6 +71,8 @@ func init() {
 	rootCmd.AddCommand(moduleCmd)
 	rootCmd.AddCommand(localCmd)
 	rootCmd.AddCommand(pluginCmd)
+	rootCmd.AddCommand(workspaceCmd)
+	rootCmd.AddCommand(teamCmd)
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(planCmd)
 	rootCmd.AddCommand(applyCmd)

@@ -19,6 +19,9 @@ type Config struct {
 	Policies            Policies               `yaml:"policies"`
 	TemplatePacks       []TemplatePack         `yaml:"template_packs,omitempty"`
 	Plugins             Plugins                `yaml:"plugins,omitempty"`
+	Organization        Organization           `yaml:"organization,omitempty"`
+	Workspaces          map[string]Workspace   `yaml:"workspaces,omitempty"`
+	Teams               map[string]Team        `yaml:"teams,omitempty"`
 }
 
 type Project struct {
@@ -97,6 +100,20 @@ type Plugins struct {
 	Disabled         []string `yaml:"disabled,omitempty"`
 }
 
+type Organization struct {
+	Name    string `yaml:"name,omitempty"`
+	Owner   string `yaml:"owner,omitempty"`
+	Contact string `yaml:"contact,omitempty"`
+}
+type Workspace struct {
+	Description  string   `yaml:"description,omitempty"`
+	Environments []string `yaml:"environments,omitempty"`
+}
+type Team struct {
+	Owners     []string `yaml:"owners,omitempty"`
+	Namespaces []string `yaml:"namespaces,omitempty"`
+}
+
 func (c *Config) Validate() error {
 	if strings.TrimSpace(c.Project.Name) == "" {
 		return fmt.Errorf("project.name is required")
@@ -160,6 +177,29 @@ func (c *Config) Validate() error {
 		}
 		if !allowedClusterStatuses[strings.ToLower(strings.TrimSpace(cluster.Status))] {
 			return fmt.Errorf("cluster %q status must be one of experimental, development, staging, production, deprecated", name)
+		}
+	}
+	for name, workspace := range c.Workspaces {
+		if strings.TrimSpace(name) == "" {
+			return fmt.Errorf("workspace name must not be empty")
+		}
+		seen := map[string]bool{}
+		for _, environment := range workspace.Environments {
+			if seen[environment] {
+				return fmt.Errorf("workspace %q contains duplicate environment %q", name, environment)
+			}
+			if _, ok := c.Environments[environment]; !ok {
+				return fmt.Errorf("workspace %q references unknown environment %q", name, environment)
+			}
+			seen[environment] = true
+		}
+	}
+	for name, team := range c.Teams {
+		if strings.TrimSpace(name) == "" {
+			return fmt.Errorf("team name must not be empty")
+		}
+		if len(team.Owners) == 0 {
+			return fmt.Errorf("team %q requires at least one owner", name)
 		}
 	}
 	for name, backend := range c.Backends {
