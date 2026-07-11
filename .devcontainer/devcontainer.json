@@ -1,0 +1,21 @@
+{
+  "name": "ClusterForge",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go",
+        "hashicorp.terraform",
+        "redhat.vscode-yaml"
+      ]
+    }
+  },
+  "postCreateCommand": "go version && terraform version && tofu version && make help",
+  "containerEnv": {
+    "CHECKPOINT_DISABLE": "1"
+  }
+}

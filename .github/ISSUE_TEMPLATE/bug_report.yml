@@ -1,0 +1,65 @@
+name: Bug report
+description: Report reproducible incorrect behavior
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Never include credentials, tokens, private keys, kubeconfigs, state, or unredacted logs.
+  - type: input
+    id: clusterforge-version
+    attributes:
+      label: ClusterForge version or commit
+      placeholder: v0.2.0 or commit SHA
+    validations: {required: true}
+  - type: input
+    id: cli-version
+    attributes:
+      label: CLI version
+      placeholder: Output of cf version
+    validations: {required: true}
+  - type: input
+    id: engine-version
+    attributes:
+      label: Terraform or OpenTofu version
+    validations: {required: true}
+  - type: textarea
+    id: provider-versions
+    attributes:
+      label: Provider versions
+      description: List relevant providers and versions; redact private registry details.
+    validations: {required: true}
+  - type: input
+    id: target
+    attributes:
+      label: Cloud and orchestrator
+      placeholder: AWS / EKS, existing Kubernetes, local K3s
+    validations: {required: true}
+  - type: textarea
+    id: command
+    attributes:
+      label: Command run
+      description: Replace account IDs, hostnames, paths, and sensitive values with placeholders.
+      render: shell
+    validations: {required: true}
+  - type: textarea
+    id: expected
+    attributes: {label: Expected behavior}
+    validations: {required: true}
+  - type: textarea
+    id: actual
+    attributes: {label: Actual behavior}
+    validations: {required: true}
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted logs
+      description: Confirm all secrets, credentials, IDs, state values, and kubeconfig data are removed.
+      render: text
+  - type: checkboxes
+    id: redaction
+    attributes:
+      label: Safety check
+      options:
+        - label: I reviewed this report and removed all secrets and private information.
+          required: true

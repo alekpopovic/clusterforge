@@ -6,7 +6,28 @@ Infrastructure-as-Code readable, reviewable, and production-minded.
 Before contributing, read [`AGENTS.md`](AGENTS.md). It contains the repository
 rules for humans and AI agents.
 
+## Issues and pull requests
+
+Use the structured GitHub form that best matches a bug, feature, module, or
+security-hardening proposal. Suspected exploitable vulnerabilities must follow
+[`SECURITY.md`](SECURITY.md) and must not be filed publicly. Redact credentials,
+state values, kubeconfigs, account identifiers, private hostnames, and other
+sensitive data from every issue and log.
+
+Before opening a pull request, keep the change focused, add tests and docs where
+behavior changes, run the relevant Make targets, and complete the pull request
+checklist. Record checks that could not run instead of claiming they passed.
+Maintainers review generated Terraform readability, production safety,
+backward compatibility, and module documentation in addition to code behavior.
+
 ## Development Setup
+
+The recommended reproducible setup is the optional devcontainer. Install
+Docker, Visual Studio Code, and the Dev Containers extension, then choose
+**Dev Containers: Reopen in Container**. See
+[`docs/development-environment.md`](docs/development-environment.md). Local
+development remains supported, and optional asdf pins are documented in
+[`docs/tool-versions.md`](docs/tool-versions.md).
 
 Install:
 

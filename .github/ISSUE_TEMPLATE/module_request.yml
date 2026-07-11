@@ -1,0 +1,36 @@
+name: Module request
+description: Propose a focused reusable Terraform module
+title: "[Module]: "
+labels: [enhancement, terraform]
+body:
+  - type: input
+    id: module
+    attributes: {label: Proposed module path, placeholder: modules/platform/example}
+    validations: {required: true}
+  - type: textarea
+    id: responsibility
+    attributes:
+      label: Single responsibility
+      description: Explain what this module owns and what remains outside it.
+    validations: {required: true}
+  - type: textarea
+    id: providers
+    attributes: {label: Providers and supported versions}
+    validations: {required: true}
+  - type: textarea
+    id: interface
+    attributes: {label: Proposed inputs and outputs}
+    validations: {required: true}
+  - type: textarea
+    id: validation
+    attributes: {label: Validation and example plan}
+    validations: {required: true}
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Module rules
+      options:
+        - label: Provider configuration will remain in the root module.
+          required: true
+        - label: Examples will use placeholders and contain no real secrets or account data.
+          required: true

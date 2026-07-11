@@ -1,0 +1,8 @@
+# Placeholder ownership until stable maintainer teams are created.
+# Replace the repository owner below with team aliases as responsibilities grow.
+* @alekpopovic
+
+/.github/ @alekpopovic
+/cli/ @alekpopovic
+/modules/ @alekpopovic
+/policies/ @alekpopovic

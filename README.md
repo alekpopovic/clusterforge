@@ -159,6 +159,12 @@ comments where IAM permissions or external secret references must be provided.
   secrets.
 
 See [docs/security.md](docs/security.md) for the detailed safety model.
+The repository also maintains an explicit [security threat
+model](docs/security-threat-model.md), a practical [security
+checklist](docs/security-checklist.md), and private vulnerability reporting
+guidance in [SECURITY.md](SECURITY.md). These controls reduce risk but are not a
+compliance claim; operators must review state, IAM, network exposure, provider
+sources, plans, and Kubernetes permissions for their environment.
 
 ## Operations And DR
 
@@ -213,6 +219,13 @@ Run CLI checks locally:
 ```bash
 make test-cli
 ```
+
+For a reproducible setup, open the repository in the optional
+[devcontainer](docs/development-environment.md). It includes the main Go,
+Terraform/OpenTofu, Kubernetes, documentation, lint, and security tools.
+Contributors who prefer a local toolchain can optionally use the pinned
+[asdf versions](docs/tool-versions.md); neither workflow is required by the
+Makefile.
 
 Install the optional fast pre-commit checks:
 

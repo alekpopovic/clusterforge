@@ -1,0 +1,31 @@
+name: Security hardening
+description: Propose a non-sensitive defense improvement
+title: "[Hardening]: "
+labels: [security]
+body:
+  - type: markdown
+    attributes:
+      value: Do not report exploitable vulnerabilities here. Follow SECURITY.md for private reporting.
+  - type: textarea
+    id: risk
+    attributes: {label: Risk or abuse case}
+    validations: {required: true}
+  - type: textarea
+    id: control
+    attributes: {label: Proposed control}
+    validations: {required: true}
+  - type: textarea
+    id: scope
+    attributes: {label: Scope and trade-offs}
+    validations: {required: true}
+  - type: textarea
+    id: verification
+    attributes: {label: Verification approach}
+    validations: {required: true}
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Disclosure check
+      options:
+        - label: This is a hardening proposal and does not disclose an active vulnerability or sensitive data.
+          required: true
