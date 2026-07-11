@@ -18,6 +18,7 @@ See also:
 - [plugin architecture RFC](rfcs/006-cli-plugin-architecture.md)
 - [workload identity RFC](rfcs/007-workload-identity.md)
 - [service mesh RFC](rfcs/008-service-mesh.md)
+- [cluster federation RFC](rfcs/013-cluster-federation.md)
 
 ClusterForge is being built in practical phases. The order favors a useful AWS
 Kubernetes path first, then broader orchestrator coverage.
@@ -91,3 +92,13 @@ Kubernetes path first, then broader orchestrator coverage.
 - No mesh, injection, strict mTLS, or ingress gateway is enabled by default
 - Implementation starts only after disposable-cluster upgrade, rollback, and
   cleanup acceptance criteria from RFC 008 are automated
+
+## Phase 10: Explicit Multi-cluster Placement
+
+- Maintain multi-cluster inventory, read-only fleet health, GitOps rendering, and
+  documented DNS failover as the initial supported boundary
+- Evaluate Argo CD ApplicationSet after deterministic two-cluster rollout and
+  rollback evidence; evaluate native Flux output separately
+- Treat Cluster API and multi-cluster service mesh as optional future integrations
+- Do not provide an automatic global scheduler, secret/data replication, or hidden
+  failover; see RFC 013
