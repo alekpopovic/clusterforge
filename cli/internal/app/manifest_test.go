@@ -34,6 +34,18 @@ func TestAddAppManifest(t *testing.T) {
 	}
 }
 
+func TestPlatformValidation(t *testing.T) {
+	manifest := NewManifest("api", AddOptions{Image: "example/api:1"})
+	manifest.Platform = Platform{OS: "windows", Architecture: "arm64"}
+	if err := manifest.Validate(); err == nil || !strings.Contains(err.Error(), "windows currently requires amd64") {
+		t.Fatalf("expected Windows architecture validation, got %v", err)
+	}
+	manifest.Platform = Platform{OS: "windows", Architecture: "amd64"}
+	if err := manifest.Validate(); err != nil {
+		t.Fatalf("valid platform rejected: %v", err)
+	}
+}
+
 func TestNewManifestWithAutoscaling(t *testing.T) {
 	manifest := NewManifest("api", AddOptions{
 		Image:       "nginx:1.27",

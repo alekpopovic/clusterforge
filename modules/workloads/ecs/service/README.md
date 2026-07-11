@@ -25,6 +25,21 @@ cluster such as EKS.
 The module validates common Fargate CPU and memory combinations. If AWS adds
 new combinations, update the validation before using them.
 
+## Experimental Windows Runtime
+
+The task definition exposes `runtime_platform`. Linux/X86_64 remains the default.
+Windows is experimental and has not been validated by ClusterForge in a real AWS
+environment. Confirm current regional Fargate support, Windows image/host version,
+CPU/memory combinations, networking, logging, storage, load balancer, patching and
+pricing requirements before use.
+
+```hcl
+runtime_platform = {
+  operating_system_family = "WINDOWS_SERVER_2022_CORE"
+  cpu_architecture        = "X86_64"
+}
+```
+
 ## Basic Service
 
 ```hcl

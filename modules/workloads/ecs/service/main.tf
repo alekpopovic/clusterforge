@@ -85,6 +85,11 @@ resource "aws_ecs_task_definition" "this" {
   task_role_arn            = local.task_role_arn
   tags                     = local.common_tags
 
+  runtime_platform {
+    operating_system_family = var.runtime_platform.operating_system_family
+    cpu_architecture        = var.runtime_platform.cpu_architecture
+  }
+
   container_definitions = jsonencode([
     {
       name      = local.name

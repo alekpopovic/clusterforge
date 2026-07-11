@@ -70,6 +70,36 @@ variable "image" {
   }
 }
 
+variable "runtime_platform" {
+  description = "ECS task runtime OS family and CPU architecture. Windows combinations are experimental and require separate AWS compatibility testing."
+  type = object({
+    operating_system_family = optional(string, "LINUX")
+    cpu_architecture        = optional(string, "X86_64")
+  })
+  default = {}
+
+  validation {
+    condition = contains([
+      "LINUX",
+      "WINDOWS_SERVER_2019_FULL",
+      "WINDOWS_SERVER_2019_CORE",
+      "WINDOWS_SERVER_2022_FULL",
+      "WINDOWS_SERVER_2022_CORE"
+    ], var.runtime_platform.operating_system_family)
+    error_message = "runtime_platform operating_system_family must be LINUX or a supported Windows Server 2019/2022 FULL/CORE value."
+  }
+
+  validation {
+    condition     = contains(["X86_64", "ARM64"], var.runtime_platform.cpu_architecture)
+    error_message = "runtime_platform cpu_architecture must be X86_64 or ARM64."
+  }
+
+  validation {
+    condition     = !startswith(var.runtime_platform.operating_system_family, "WINDOWS_") || var.runtime_platform.cpu_architecture == "X86_64"
+    error_message = "Windows ECS tasks require X86_64 in this experimental module interface."
+  }
+}
+
 variable "cpu" {
   description = "Fargate task CPU units."
   type        = number

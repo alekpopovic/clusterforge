@@ -31,6 +31,12 @@ type Manifest struct {
 	Dependencies  map[string]bindings.Request `yaml:"dependencies,omitempty"`
 	Backstage     Backstage                   `yaml:"backstage,omitempty"`
 	Service       string                      `yaml:"service,omitempty"`
+	Platform      Platform                    `yaml:"platform,omitempty"`
+}
+
+type Platform struct {
+	OS           string `yaml:"os,omitempty"`
+	Architecture string `yaml:"architecture,omitempty"`
 }
 type Backstage struct {
 	Owner     string `yaml:"owner,omitempty"`
@@ -103,6 +109,7 @@ func NewManifest(name string, opts AddOptions) Manifest {
 		Image:    opts.Image,
 		Replicas: opts.Replicas,
 		Env:      map[string]string{},
+		Platform: Platform{OS: "linux", Architecture: "amd64"},
 	}
 	if opts.Port > 0 {
 		manifest.Ports = []Port{{
@@ -243,6 +250,12 @@ func (m *Manifest) ApplyDefaults() {
 	if m.Type == "" {
 		m.Type = "web"
 	}
+	if m.Platform.OS == "" {
+		m.Platform.OS = "linux"
+	}
+	if m.Platform.Architecture == "" {
+		m.Platform.Architecture = "amd64"
+	}
 	if m.Replicas == 0 {
 		m.Replicas = 1
 	}
@@ -299,6 +312,15 @@ func (m Manifest) Validate() error {
 	}
 	if m.Replicas < 0 {
 		errs.Add("replicas must be greater than or equal to 0")
+	}
+	if m.Platform.OS != "" && m.Platform.OS != "linux" && m.Platform.OS != "windows" {
+		errs.Add("platform.os must be linux or windows")
+	}
+	if m.Platform.Architecture != "" && m.Platform.Architecture != "amd64" && m.Platform.Architecture != "arm64" {
+		errs.Add("platform.architecture must be amd64 or arm64")
+	}
+	if m.Platform.OS == "windows" && m.Platform.Architecture != "" && m.Platform.Architecture != "amd64" {
+		errs.Add("platform windows currently requires amd64")
 	}
 	for index, port := range m.Ports {
 		if strings.TrimSpace(port.Name) == "" {
@@ -436,12 +458,37 @@ func validateRawManifestYAML(data []byte) error {
 			validateAutoscalingNode(value, &errs)
 		case "secret_env":
 			validateSecretEnvNode(value, &errs)
+		case "platform":
+			validatePlatformNode(value, &errs)
 		}
 	}
 	if len(errs) > 0 {
 		return errs
 	}
 	return nil
+}
+
+func validatePlatformNode(node *yaml.Node, errs *ValidationErrors) {
+	if node.Kind != yaml.MappingNode {
+		errs.Add("platform must be a mapping")
+		return
+	}
+	for i := 0; i < len(node.Content)-1; i += 2 {
+		key := node.Content[i].Value
+		value := node.Content[i+1].Value
+		switch key {
+		case "os":
+			if value != "linux" && value != "windows" {
+				errs.Add("platform.os must be linux or windows")
+			}
+		case "architecture":
+			if value != "amd64" && value != "arm64" {
+				errs.Add("platform.architecture must be amd64 or arm64")
+			}
+		default:
+			errs.Add(fmt.Sprintf("platform.%s is not allowed", key))
+		}
+	}
 }
 
 func validateIngressNode(node *yaml.Node, errs *ValidationErrors) {
