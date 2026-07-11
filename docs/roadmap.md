@@ -9,6 +9,9 @@ See also:
 
 - [v0.2 roadmap](../ROADMAP_V0.2.md)
 - [v0.3 roadmap](../ROADMAP_V0.3.md)
+- [v0.4 roadmap](../ROADMAP_V0.4.md)
+- [v0.4 release plan](../RELEASE_PLAN_V0.4.md)
+- [v0.4 backlog](../BACKLOG_V0.4.md)
 - [backlog](../BACKLOG.md)
 - [AKS RFC](rfcs/002-aks-support.md)
 - [GKE RFC](rfcs/003-gke-support.md)
