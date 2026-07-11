@@ -113,6 +113,16 @@ func (r Runner) ShowPlanJSON(ctx context.Context, planFile string) ([]byte, erro
 	return stdout.Bytes(), nil
 }
 
+func (r Runner) ShowStateJSON(ctx context.Context) ([]byte, error) {
+	var stdout bytes.Buffer
+	copy := r
+	copy.Stdout = &stdout
+	if err := copy.run(ctx, []string{"show", "-json"}); err != nil {
+		return nil, err
+	}
+	return stdout.Bytes(), nil
+}
+
 func (r Runner) Run(ctx context.Context, args ...string) error {
 	return r.run(ctx, args)
 }
