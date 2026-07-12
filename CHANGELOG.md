@@ -4,6 +4,15 @@ All notable changes to ClusterForge will be documented in this file.
 
 ClusterForge follows semantic versioning while the public interfaces stabilize.
 
+## [0.4.1] - 2026-07-12
+
+### Fixed
+
+- Embedded the built-in environment templates in the CLI binary so `cf generate`
+  works after installation and no longer resolves a Go import path as a local
+  filesystem path.
+- Preserved filesystem loading for explicitly selected local template packs.
+
 ## [0.4.0] - 2026-07-12
 
 ### Changed

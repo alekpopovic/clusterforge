@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://alekpopovic.github.io/clusterforge/">Documentation</a> ·
-  <a href="https://github.com/alekpopovic/clusterforge/releases/tag/v0.4.0">v0.4.0</a> ·
+  <a href="https://github.com/alekpopovic/clusterforge/releases/tag/v0.4.1">v0.4.1</a> ·
   <a href="docs/architecture.md">Architecture</a> ·
   <a href="docs/security.md">Security</a>
 </p>
@@ -84,8 +84,8 @@ The installer verifies the release SHA256 checksum and writes to
 `$HOME/.local/bin` by default. To pin a version or choose a directory:
 
 ```bash
-curl -fsSL https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0/install.sh \
-  | VERSION=v0.4.0 INSTALL_DIR=/usr/local/bin bash
+curl -fsSL https://github.com/alekpopovic/clusterforge/releases/download/v0.4.1/install.sh \
+  | VERSION=v0.4.1 INSTALL_DIR=/usr/local/bin bash
 ```
 
 For development, build from source:

@@ -48,6 +48,23 @@ func TestGenerateAWSEKS(t *testing.T) {
 	}
 }
 
+func TestGenerateUsesEmbeddedTemplatesOutsideSourceTree(t *testing.T) {
+	dir := t.TempDir()
+	env := config.Environment{
+		Cloud:        "aws",
+		Region:       "eu-central-1",
+		Orchestrator: "eks",
+		Path:         filepath.Join(dir, "generated"),
+	}
+
+	if _, err := Generate("dev", env, Options{RootDir: dir, Project: "embedded"}); err != nil {
+		t.Fatalf("generate with embedded templates: %v", err)
+	}
+	if got := readFile(t, filepath.Join(env.Path, "versions.tf")); !strings.Contains(got, "required_version") {
+		t.Fatalf("embedded versions template was not rendered:\n%s", got)
+	}
+}
+
 func TestGenerateAWSProviderAccountProfileAndRole(t *testing.T) {
 	dir := t.TempDir()
 	env := config.Environment{Cloud: "aws", Region: "eu-central-1", Orchestrator: "eks", Path: filepath.Join(dir, "live", "prod")}

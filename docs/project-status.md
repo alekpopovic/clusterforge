@@ -6,7 +6,7 @@ permalink: /project-status/
 
 # Project status
 
-ClusterForge is currently published as `v0.4.0`. This stable version label is
+ClusterForge is currently published as `v0.4.1`. This stable version label is
 not a claim that every target is production-proven. The project has a broad
 implemented module and CLI surface, with maturity varying by provider and
 workflow.
@@ -15,14 +15,14 @@ workflow.
 
 | Signal | Current state |
 |---|---|
-| GitHub Release | `v0.4.0`, published as a stable release with checksum-verified installers |
+| GitHub Release | `v0.4.1`, published as a stable release with checksum-verified installers |
 | CLI tests | Go unit, command, e2e, generator golden, and build checks pass |
 | Terraform validation | 126 real examples, live roots, and modules validate; 7 stored golden snapshots are covered by Go golden tests |
 | Formatting | Terraform recursive format and Go formatting checks pass |
 | Secret scanning | Gitleaks history scan reported no known leaks in the v0.4 assessment |
 | Static security | Checkov findings remain to be triaged; passing Terraform validation is not a security approval |
 | Dependency security | A critical Dependabot alert remains an open release risk until resolved or proven outside shipped scope |
-| Cloud smoke tests | No current production-cloud apply evidence is claimed for v0.4.0 |
+| Cloud smoke tests | No current production-cloud apply evidence is claimed for v0.4.1 |
 
 See the repository `RELEASE_CANDIDATE_V0.4.md` for the recorded v0.4 assessment,
 validation evidence, and open risks.
