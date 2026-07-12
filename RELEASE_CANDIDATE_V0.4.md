@@ -53,9 +53,10 @@ workload support are not included. RFC/scaffolding content is not a support clai
   fails because that directory intentionally has no `clusterforge.yaml`.
 - Module checks return success with warnings for modules lacking explicit status
   declarations.
-- Full repository Terraform validation is long/provider-dependent and was not
-  completed in this run; golden snapshots are intentionally validated by Go
-  golden tests rather than as roots in their storage directory.
+- Full repository Terraform validation is long/provider-dependent but completed:
+  126 real roots/modules validated. Seven golden snapshots are intentionally
+  validated by passing Go golden tests rather than as roots in their storage
+  directory.
 
 ## Test results
 
@@ -64,7 +65,7 @@ workload support are not included. RFC/scaffolding content is not a support clai
 | `make fmt-check` | PASS | Terraform and Go formatting clean |
 | `make lint` | FAIL | TFLint cannot evaluate local module paths in three golden fixture directories; a no-module-call diagnostic also exposes 36 existing warnings |
 | `make test` | INCOMPLETE | Go unit/e2e/golden and CLI build pass; nested Terraform validation did not finish |
-| `make validate` | INCOMPLETE | Golden snapshots skipped with explicit reason; several AWS examples validated before duplicate long-running invocations were terminated |
+| `make validate` | PASS | 126 real example/live/module directories validated; 7 golden snapshot directories skipped with explicit Go-golden-test ownership |
 | `make security` | FAIL | Gitleaks: 150 commits/~1.94 MB, no leaks; Checkov: 481 passed, 128 failed |
 | `make check-modules` | PASS WITH WARNINGS | Exit 0, `status: warn`; multiple modules lack status metadata |
 | `cd cli && go test ./...` | PASS | All CLI unit/e2e packages passed |
@@ -85,8 +86,9 @@ Terraform example.
    narrowly justified suppressions; do not blanket-ignore them.
 3. Investigate GitHub Dependabot alert 2 (critical) and resolve it or prove with
    recorded dependency analysis that it is outside shipped/runtime scope.
-4. Complete `make validate` and `make test` once, serially, from a clean checkout;
-   preserve validated/skipped directory evidence.
+4. Complete the combined `make test` target once from a clean checkout and retain
+   its evidence; its Go/e2e/golden/build phases and the separately run full
+   `make validate` currently pass.
 5. Add explicit module stability/status metadata or make the warning disposition
    part of the supported module catalog.
 6. Run the release workflow/archives, checksums, SBOM and supported-platform
