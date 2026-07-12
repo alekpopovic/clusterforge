@@ -48,6 +48,10 @@ func Target(target string) (cloud, orchestrator, region string) {
 		return "gcp", "gke", "europe-west1"
 	case "existing-kubernetes":
 		return "existing", "kubernetes", "local"
+	case "local-kind":
+		// A kind cluster is consumed through the existing Kubernetes templates;
+		// cluster lifecycle remains explicit through `cf local create kind`.
+		return "existing", "kubernetes", "local"
 	default:
 		return "local", "kubernetes", "local"
 	}

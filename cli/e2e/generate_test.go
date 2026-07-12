@@ -19,3 +19,12 @@ func TestGenerateExistingKubernetesWithoutCloudCredentials(t *testing.T) {
 		t.Fatalf("existing Kubernetes generation should not include cloud infrastructure:\n%s", mainTF)
 	}
 }
+
+func TestDefaultWizardProjectCanGenerate(t *testing.T) {
+	dir := t.TempDir()
+	runCF(t, dir, "--non-interactive", "wizard", "--defaults")
+	runCF(t, dir, "generate", "dev")
+
+	root := filepath.Join(dir, "live", "dev", "existing-kubernetes")
+	assertContains(t, readFile(t, filepath.Join(root, "providers.tf")), "config_path")
+}

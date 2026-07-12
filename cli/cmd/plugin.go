@@ -84,10 +84,9 @@ var pluginInfoCmd = &cobra.Command{
 }
 
 var pluginRunCmd = &cobra.Command{
-	Use:                "run <name> -- <args>",
-	Short:              "Explicitly run a trusted local plugin",
-	Args:               cobra.MinimumNArgs(1),
-	DisableFlagParsing: true,
+	Use:   "run <name> -- <args>",
+	Short: "Explicitly run a trusted local plugin",
+	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		plugin, err := findPlugin(args[0])
 		if err != nil {

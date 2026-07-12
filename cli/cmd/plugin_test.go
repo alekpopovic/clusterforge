@@ -33,6 +33,12 @@ func TestCIRequiresExplicitPluginAllowance(t *testing.T) {
 	}
 }
 
+func TestPluginRunUsesCobraHelpAndFlagParsing(t *testing.T) {
+	if pluginRunCmd.DisableFlagParsing {
+		t.Fatal("plugin run must leave Cobra flag parsing enabled so --help works")
+	}
+}
+
 func TestPluginDisablePersistsConfiguration(t *testing.T) {
 	original := opts
 	t.Cleanup(func() { opts = original })

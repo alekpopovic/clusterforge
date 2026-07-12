@@ -27,6 +27,19 @@ cf init --defaults --non-interactive
 
 Non-interactive scaffolding without `--defaults` fails instead of guessing. The
 default creates a local-kind dev project, local backend, and pinned demo image.
+The generated environment uses the existing-Kubernetes templates because kind
+is a local Kubernetes cluster, while cluster lifecycle remains an explicit
+separate operation:
+
+```bash
+cf local create kind
+cf generate dev
+cf init dev
+cf plan dev
+```
+
+If kind already exists, omit `cf local create kind`. Generation and planning do
+not create or delete a local cluster.
 Cloud targets generate configuration only; review account, region, identity,
 networking, backend, add-ons, and policies before generation.
 

@@ -92,8 +92,8 @@ checksum, verifies it, and installs to `$HOME/.local/bin`. Pin production
 automation instead of following `latest`:
 
 ```bash
-curl -fsSL https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0/install.sh \
-  | VERSION=v0.4.0 INSTALL_DIR="$HOME/bin" bash
+curl -fsSL https://github.com/alekpopovic/clusterforge/releases/download/v0.4.2/install.sh \
+  | VERSION=v0.4.2 INSTALL_DIR="$HOME/bin" bash
 ```
 
 For higher assurance, download `install.sh` and `SHA256SUMS`, inspect the script,
@@ -102,7 +102,7 @@ Windows users should download `cf-windows-amd64.exe` and its checksum manually.
 
 Environment variables:
 
-- `VERSION`: `latest`, `v0.4.0`, or `0.4.0`.
+- `VERSION`: `latest`, `v0.4.2`, or `0.4.2`.
 - `INSTALL_DIR`: destination directory.
 - `BINARY_NAME`: installed filename, default `cf`.
 - `CLUSTERFORGE_REPO`: GitHub `owner/repo`, useful for approved mirrors/forks.
@@ -140,11 +140,15 @@ For a metadata-injected build:
 ```bash
 cd cli
 go build -trimpath \
-  -ldflags "-s -w -X github.com/alekpopovic/clusterforge/cli/cmd.Version=$(git describe --tags --always --dirty) -X github.com/alekpopovic/clusterforge/cli/cmd.Commit=$(git rev-parse --short HEAD) -X github.com/alekpopovic/clusterforge/cli/cmd.Date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  -ldflags "-s -w -X github.com/alekpopovic/clusterforge/cli/cmd.Version=$(git describe --tags --always --dirty) -X github.com/alekpopovic/clusterforge/cli/cmd.Commit=$(git rev-parse --short HEAD) -X github.com/alekpopovic/clusterforge/cli/cmd.Date=$(date -u +%Y-%m-%dT%H:%M:%SZ) -X github.com/alekpopovic/clusterforge/cli/internal/generator.ModuleRef=$(git describe --tags --always --dirty)" \
   -o cf .
 ```
 
 `make build-cli` uses the same ldflags pattern.
+
+Installed release binaries pin generated remote module sources to their own
+release tag. Builds used inside a repository checkout keep local module paths so
+module edits remain directly testable.
 
 ## Version Command
 
