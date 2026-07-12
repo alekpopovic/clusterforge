@@ -33,7 +33,7 @@ Priorities: P0 release blocker, P1 must-have, P2 useful if low risk.
 |---|---|---:|---|---|---|
 | Plugin threat model | P0 | high | planned | Trust boundary, discovery paths and malicious fixture coverage reviewed | Marketplace deferred |
 | Generated artifact secret review | P0 | medium | planned | Scans and explicit state/kubeconfig/credential exclusion tests pass | Includes bundles/exports |
-| Dependency critical finding gate | P0 | medium | blocked | No unresolved critical release-scope finding | Must triage current Dependabot report |
+| Dependency critical finding gate | P0 | medium | done | No unresolved critical release-scope finding | Dependabot alert 2 resolved in merge commit `67a6294` by upgrading `aquasecurity/trivy-action` to `v0.36.0` |
 
 ## Compliance
 

@@ -6,6 +6,11 @@ ClusterForge follows semantic versioning while the public interfaces stabilize.
 
 ## [0.4.3] - 2026-07-12
 
+### Security
+
+- Resolved Dependabot alert 2 by upgrading `aquasecurity/trivy-action` to
+  `v0.36.0` in the image-security example workflow.
+
 ### Fixed
 
 - The default non-interactive wizard now maps local kind projects to the
@@ -102,8 +107,9 @@ ClusterForge follows semantic versioning while the public interfaces stabilize.
   plugin marketplace and production Windows workload support are excluded.
 - Static inventory/migration/offline discovery can miss dynamic or transitive
   dependencies and does not prove runtime state.
-- A critical GitHub Dependabot finding is visible on the default branch and must
-  be triaged/resolved or formally shown outside release scope before v0.4.0.
+- At RC assessment time, a critical GitHub Dependabot finding was visible on the
+  default branch. Alert 2 was later resolved by the
+  `aquasecurity/trivy-action` upgrade recorded under v0.4.3.
 
 ## [0.1.0] - Unreleased
 

@@ -21,7 +21,7 @@ workflow.
 | Formatting | Terraform recursive format and Go formatting checks pass |
 | Secret scanning | Gitleaks history scan reported no known leaks in the v0.4 assessment |
 | Static security | Checkov findings remain to be triaged; passing Terraform validation is not a security approval |
-| Dependency security | A critical Dependabot alert remains an open release risk until resolved or proven outside shipped scope |
+| Dependency security | Dependabot alert 2 was resolved by upgrading `aquasecurity/trivy-action` to `v0.36.0` in merge commit `67a6294`; future critical findings remain release blockers |
 | Cloud smoke tests | No current production-cloud apply evidence is claimed for v0.4.3 |
 
 See the repository `RELEASE_CANDIDATE_V0.4.md` for the recorded v0.4 assessment,

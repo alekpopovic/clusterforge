@@ -4,6 +4,11 @@ Assessment date: 2026-07-12
 Candidate version: `0.4.0-rc.1`  
 Status: **NO-GO / release candidate not ready for final v0.4.0**
 
+> Historical assessment note: Dependabot alert 2, listed below as an RC blocker,
+> was resolved after this assessment in merge commit `67a6294` by upgrading
+> `aquasecurity/trivy-action` to `v0.36.0`. Other recorded findings and missing
+> evidence retain their original assessment status unless superseded elsewhere.
+
 ## Included features
 
 - Plugin MVP, template pack registry and policy engine v2.
@@ -84,8 +89,8 @@ Terraform example.
    intended source roots without hiding genuine warnings.
 2. Triage 128 Checkov failures. Fix release-scope high-risk findings and document
    narrowly justified suppressions; do not blanket-ignore them.
-3. Investigate GitHub Dependabot alert 2 (critical) and resolve it or prove with
-   recorded dependency analysis that it is outside shipped/runtime scope.
+3. **Resolved after assessment:** GitHub Dependabot alert 2 (critical) was closed
+   by the `aquasecurity/trivy-action` upgrade in merge commit `67a6294`.
 4. Complete the combined `make test` target once from a clean checkout and retain
    its evidence; its Go/e2e/golden/build phases and the separately run full
    `make validate` currently pass.
@@ -106,10 +111,12 @@ Terraform example.
 
 ## Security notes
 
-Gitleaks found no leaks in the scanned history. This does not clear the Checkov or
-Dependabot blockers. No credentials were supplied, no cloud APIs or Terraform
-apply were invoked, and no state/kubeconfig was generated or committed. The local
-`cli/cf` smoke binary is ignored build output and is not a release artifact.
+Gitleaks found no leaks in the scanned history. At assessment time this did not
+clear the Checkov or Dependabot blockers; Dependabot alert 2 was subsequently
+resolved in merge commit `67a6294`. No credentials were supplied, no cloud APIs
+or Terraform apply were invoked, and no state/kubeconfig was generated or
+committed. The local `cli/cf` smoke binary is ignored build output and is not a
+release artifact.
 
 ## Recommended release decision
 

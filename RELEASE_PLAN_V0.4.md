@@ -97,6 +97,8 @@ create a new RC after remediation—do not waive a safety gate to meet a date.
 `v0.4.0-rc.1` is currently **no-go**. Formatting, Go tests/build, CLI version,
 temporary-project doctor, Gitleaks and module contract execution succeeded.
 Release blockers are recorded in `RELEASE_CANDIDATE_V0.4.md`: lint failures,
-128 Checkov findings, an untriaged critical Dependabot alert, and absent
-production-cloud smoke evidence. Full Terraform validation now passes with golden
-snapshots explicitly delegated to the passing Go golden tests. M6 remains open.
+128 Checkov findings, a then-untriaged critical Dependabot alert, and absent
+production-cloud smoke evidence. Dependabot alert 2 was subsequently resolved in
+merge commit `67a6294` by upgrading `aquasecurity/trivy-action` to `v0.36.0`.
+Full Terraform validation now passes with golden snapshots explicitly delegated
+to the passing Go golden tests. M6 remains open.
