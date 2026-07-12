@@ -1,5 +1,8 @@
 # Security checklist
 
+See [security scanner exceptions](security-scanner-exceptions.md) for the rules
+governing resource-scoped Checkov and Trivy annotations.
+
 Use this checklist for changes and release gates. A checked item means evidence
 was reviewed for the specific environment; it is not a compliance attestation.
 

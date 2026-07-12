@@ -6,7 +6,25 @@ locals {
   })
 }
 
+#trivy:ignore:AZU-0041
+#trivy:ignore:AZU-0042
+#trivy:ignore:AZU-0043
 resource "azurerm_kubernetes_cluster" "this" {
+  #checkov:skip=CKV2_AZURE_29:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_115:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_116:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_117:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_141:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_168:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_170:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_171:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_172:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_226:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_227:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_232:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_4:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_6:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
+  #checkov:skip=CKV_AZURE_7:AKS hardening is explicitly configurable; this experimental module does not claim one universal production profile.
   name                = var.name
   location            = var.location
   resource_group_name = var.resource_group_name

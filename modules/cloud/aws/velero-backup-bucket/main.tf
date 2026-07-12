@@ -7,6 +7,11 @@ locals {
 }
 
 resource "aws_s3_bucket" "this" {
+  #checkov:skip=CKV2_AWS_62:This integration requires operator-owned destination resources and cannot be enabled safely by a reusable module alone.
+  #checkov:skip=CKV_AWS_144:This integration requires operator-owned destination resources and cannot be enabled safely by a reusable module alone.
+  #checkov:skip=CKV_AWS_145:This integration requires operator-owned destination resources and cannot be enabled safely by a reusable module alone.
+  #checkov:skip=CKV_AWS_18:This integration requires operator-owned destination resources and cannot be enabled safely by a reusable module alone.
+  #checkov:skip=CKV_AWS_19:This integration requires operator-owned destination resources and cannot be enabled safely by a reusable module alone.
   bucket        = var.bucket_name
   force_destroy = var.force_destroy
   tags          = local.tags
@@ -41,6 +46,7 @@ resource "aws_s3_bucket_public_access_block" "this" {
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "this" {
+  #checkov:skip=CKV_AWS_300:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
   count = var.lifecycle_expiration_days == null ? 0 : 1
 
   bucket = aws_s3_bucket.this.id

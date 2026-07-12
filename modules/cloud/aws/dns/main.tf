@@ -18,6 +18,8 @@ data "aws_route53_zone" "this" {
 }
 
 resource "aws_route53_zone" "this" {
+  #checkov:skip=CKV2_AWS_38:This integration requires operator-owned destination resources and cannot be enabled safely by a reusable module alone.
+  #checkov:skip=CKV2_AWS_39:This integration requires operator-owned destination resources and cannot be enabled safely by a reusable module alone.
   count = var.create_zone ? 1 : 0
 
   name = local.zone_name

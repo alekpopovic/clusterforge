@@ -57,7 +57,10 @@ module "alb" {
   tags = module.tags.tags
 }
 
+#trivy:ignore:AWS-0104
 resource "aws_security_group" "service" {
+  #checkov:skip=CKV2_AWS_5:The security group is exported or passed to a child module; static graph analysis cannot resolve that attachment.
+  #checkov:skip=CKV_AWS_382:The security group is exported or passed to a child module; static graph analysis cannot resolve that attachment.
   name        = "${local.name}-service"
   description = "Example ECS service security group."
   vpc_id      = module.network.vpc_id

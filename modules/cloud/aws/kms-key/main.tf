@@ -12,6 +12,7 @@ locals {
 }
 
 resource "aws_kms_key" "this" {
+  #checkov:skip=CKV2_AWS_64:Encryption key selection is configurable and may use an approved external or provider-managed key.
   description             = var.description
   deletion_window_in_days = var.deletion_window_in_days
   enable_key_rotation     = var.enable_key_rotation

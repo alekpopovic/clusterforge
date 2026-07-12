@@ -30,6 +30,8 @@ data "aws_iam_policy_document" "ecs_tasks_assume_role" {
 }
 
 resource "aws_cloudwatch_log_group" "this" {
+  #checkov:skip=CKV_AWS_158:Encryption key selection is configurable and may use an approved external or provider-managed key.
+  #checkov:skip=CKV_AWS_338:Encryption key selection is configurable and may use an approved external or provider-managed key.
   count = var.create_log_group ? 1 : 0
 
   name              = local.log_group

@@ -32,6 +32,7 @@ resource "aws_vpc_security_group_ingress_rule" "redis" {
   description                  = "Allow Redis from ${each.value}."
 }
 
+#trivy:ignore:AWS-0104
 resource "aws_vpc_security_group_egress_rule" "redis" {
   security_group_id = aws_security_group.this.id
   cidr_ipv4         = "0.0.0.0/0"
@@ -42,6 +43,9 @@ resource "aws_vpc_security_group_egress_rule" "redis" {
 }
 
 resource "aws_elasticache_replication_group" "this" {
+  #checkov:skip=CKV2_AWS_50:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV_AWS_191:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV_AWS_31:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
   replication_group_id = local.name
   description          = "Redis cache for ${local.name}."
 

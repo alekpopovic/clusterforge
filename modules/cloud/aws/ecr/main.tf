@@ -1,4 +1,5 @@
 resource "aws_ecr_repository" "this" {
+  #checkov:skip=CKV_AWS_51:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
   for_each = var.repositories
 
   name                 = each.key

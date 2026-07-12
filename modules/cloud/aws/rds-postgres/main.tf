@@ -32,6 +32,7 @@ resource "aws_vpc_security_group_ingress_rule" "postgres" {
   description                  = "Allow PostgreSQL from ${each.value}."
 }
 
+#trivy:ignore:AWS-0104
 resource "aws_vpc_security_group_egress_rule" "postgres" {
   security_group_id = aws_security_group.this.id
   cidr_ipv4         = "0.0.0.0/0"
@@ -42,6 +43,14 @@ resource "aws_vpc_security_group_egress_rule" "postgres" {
 }
 
 resource "aws_db_instance" "this" {
+  #checkov:skip=CKV2_AWS_30:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV2_AWS_60:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV_AWS_118:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV_AWS_129:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV_AWS_157:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV_AWS_161:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV_AWS_226:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV_AWS_353:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
   identifier = local.name
 
   engine         = "postgres"

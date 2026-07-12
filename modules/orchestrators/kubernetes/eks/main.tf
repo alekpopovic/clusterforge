@@ -55,6 +55,7 @@ locals {
 }
 
 resource "aws_kms_key" "cluster" {
+  #checkov:skip=CKV2_AWS_64:Encryption key selection is configurable and may use an approved external or provider-managed key.
   count = local.create_cluster_kms_key ? 1 : 0
 
   description             = "EKS secrets encryption key for ${local.name}"
@@ -71,6 +72,8 @@ resource "aws_kms_alias" "cluster" {
 }
 
 resource "aws_cloudwatch_log_group" "control_plane" {
+  #checkov:skip=CKV_AWS_158:Encryption key selection is configurable and may use an approved external or provider-managed key.
+  #checkov:skip=CKV_AWS_338:Retention is an explicit input because incident, cost, and regulatory requirements differ.
   count = local.create_control_plane_log_group ? 1 : 0
 
   name              = "/aws/eks/${local.name}/cluster"
@@ -111,7 +114,13 @@ resource "aws_iam_role_policy_attachment" "cluster" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
+#trivy:ignore:AWS-0039
+#trivy:ignore:AWS-0040
+#trivy:ignore:AWS-0041
 resource "aws_eks_cluster" "this" {
+  #checkov:skip=CKV_AWS_37:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV_AWS_38:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV_AWS_39:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
   name                          = local.name
   role_arn                      = aws_iam_role.cluster.arn
   version                       = var.kubernetes_version

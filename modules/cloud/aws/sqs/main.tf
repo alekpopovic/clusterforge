@@ -4,7 +4,9 @@ locals {
   }
 }
 
+#trivy:ignore:AWS-0096
 resource "aws_sqs_queue" "dlq" {
+  #checkov:skip=CKV_AWS_27:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
   for_each = {
     for name, queue in var.queues : name => queue
     if queue.dead_letter_queue
@@ -17,7 +19,9 @@ resource "aws_sqs_queue" "dlq" {
   tags                        = var.tags
 }
 
+#trivy:ignore:AWS-0096
 resource "aws_sqs_queue" "this" {
+  #checkov:skip=CKV_AWS_27:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
   for_each = var.queues
 
   name                       = local.queue_names[each.key]

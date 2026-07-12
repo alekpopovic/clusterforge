@@ -10,6 +10,8 @@ locals {
 data "aws_partition" "current" {}
 
 data "aws_iam_policy_document" "controller" {
+  #checkov:skip=CKV_AWS_108:AWS Karpenter discovery actions require wildcard resources where the API does not support resource-level permissions.
+  #checkov:skip=CKV_AWS_356:AWS Karpenter discovery actions require wildcard resources where the API does not support resource-level permissions.
   # Read-only discovery permissions are intentionally broad because Karpenter
   # evaluates instance offerings, launch templates, subnets, security groups,
   # AMIs, and pricing data while making scheduling decisions.

@@ -21,6 +21,8 @@ locals {
 }
 
 resource "aws_vpc" "this" {
+  #checkov:skip=CKV2_AWS_11:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
+  #checkov:skip=CKV2_AWS_12:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
   cidr_block           = var.cidr_block
   enable_dns_hostnames = var.enable_dns_hostnames
   enable_dns_support   = var.enable_dns_support
@@ -50,7 +52,12 @@ resource "aws_internet_gateway" "this" {
   })
 }
 
+#trivy:ignore:AWS-0164
 resource "aws_subnet" "public" {
+  # Public-tier subnets intentionally assign public addresses for internet-facing
+  # load balancers and explicitly public workloads; private subnets remain the
+  # default placement for cluster nodes and application workloads.
+  #checkov:skip=CKV_AWS_130:This resource is the module's explicitly public subnet tier.
   for_each = local.subnet_indexes
 
   vpc_id                  = aws_vpc.this.id

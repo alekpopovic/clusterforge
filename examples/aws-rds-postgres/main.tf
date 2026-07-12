@@ -21,6 +21,7 @@ module "network" {
 }
 
 resource "aws_security_group" "app" {
+  #checkov:skip=CKV2_AWS_5:The security group is exported or passed to a child module; static graph analysis cannot resolve that attachment.
   name        = "clusterforge-postgres-app"
   description = "Example app security group allowed to reach Postgres."
   vpc_id      = module.network.vpc_id

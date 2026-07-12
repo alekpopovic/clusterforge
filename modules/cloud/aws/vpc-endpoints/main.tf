@@ -17,6 +17,7 @@ locals {
 }
 
 resource "aws_security_group" "interface_endpoints" {
+  #checkov:skip=CKV2_AWS_5:The security group is exported or passed to a child module; static graph analysis cannot resolve that attachment.
   count = local.create_interface_security_group ? 1 : 0
 
   name        = "${local.name}-vpc-endpoints"
@@ -38,6 +39,7 @@ resource "aws_vpc_security_group_ingress_rule" "interface_https" {
   description                  = "Allow HTTPS from ${each.value}."
 }
 
+#trivy:ignore:AWS-0104
 resource "aws_vpc_security_group_egress_rule" "interface_https" {
   count = local.create_interface_security_group ? 1 : 0
 

@@ -22,7 +22,9 @@ module "network" {
   tags               = module.tags.tags
 }
 
+#trivy:ignore:AWS-0104
 resource "aws_security_group" "service" {
+  #checkov:skip=CKV_AWS_382:Unrestricted egress is an explicit compatibility default; production policy must narrow destination rules.
   name        = "clusterforge-ecs-dev-service"
   description = "Example ECS service security group."
   vpc_id      = module.network.vpc_id

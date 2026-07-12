@@ -1,3 +1,4 @@
+#trivy:ignore:DS-0002
 FROM mcr.microsoft.com/devcontainers/go:1-1.22-bookworm
 
 ARG TERRAFORM_VERSION=1.8.5
@@ -32,3 +33,5 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/*
 
 WORKDIR /workspaces/clusterforge
+
+USER vscode

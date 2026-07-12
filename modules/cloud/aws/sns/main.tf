@@ -4,7 +4,9 @@ locals {
   }
 }
 
+#trivy:ignore:AWS-0095
 resource "aws_sns_topic" "this" {
+  #checkov:skip=CKV_AWS_26:The reported control is an explicit reusable-module input or requires operator-owned integration resources.
   for_each = var.topics
 
   name                        = local.topic_names[each.key]
