@@ -14,11 +14,20 @@
   <a href="https://github.com/alekpopovic/clusterforge/releases/tag/v0.4.3"><img alt="Release v0.4.3" src="https://img.shields.io/badge/release-v0.4.3-f97316?style=for-the-badge&logo=github"></a>
   <a href="https://github.com/alekpopovic/clusterforge/actions/workflows/cli-test.yml"><img alt="CLI tests" src="https://img.shields.io/github/actions/workflow/status/alekpopovic/clusterforge/cli-test.yml?branch=main&style=for-the-badge&label=CLI%20tests&logo=go&logoColor=white"></a>
   <a href="https://github.com/alekpopovic/clusterforge/actions/workflows/terraform-validate.yml"><img alt="Terraform validation" src="https://img.shields.io/github/actions/workflow/status/alekpopovic/clusterforge/terraform-validate.yml?branch=main&style=for-the-badge&label=Terraform&logo=terraform&logoColor=white"></a>
-  <a href="https://github.com/alekpopovic/clusterforge/actions/workflows/pages.yml"><img alt="Documentation" src="https://img.shields.io/github/actions/workflow/status/alekpopovic/clusterforge/pages.yml?branch=main&style=for-the-badge&label=Docs&logo=githubpages&logoColor=white"></a>
+  <a href="https://github.com/alekpopovic/clusterforge/actions/workflows/security-scan.yml"><img alt="Security scan" src="https://img.shields.io/github/actions/workflow/status/alekpopovic/clusterforge/security-scan.yml?branch=main&style=for-the-badge&label=Security&logo=securityscorecard&logoColor=white"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/alekpopovic/clusterforge/actions/workflows/govulncheck.yml"><img alt="Go vulnerability check" src="https://img.shields.io/github/actions/workflow/status/alekpopovic/clusterforge/govulncheck.yml?branch=main&style=flat-square&label=govulncheck&logo=go&logoColor=white"></a>
+  <a href="https://github.com/alekpopovic/clusterforge/actions/workflows/module-conformance.yml"><img alt="Module conformance" src="https://img.shields.io/github/actions/workflow/status/alekpopovic/clusterforge/module-conformance.yml?branch=main&style=flat-square&label=module%20conformance&logo=terraform&logoColor=white"></a>
+  <a href="https://github.com/alekpopovic/clusterforge/actions/workflows/pages.yml"><img alt="Documentation" src="https://img.shields.io/github/actions/workflow/status/alekpopovic/clusterforge/pages.yml?branch=main&style=flat-square&label=Docs&logo=githubpages&logoColor=white"></a>
+  <a href="https://github.com/alekpopovic/clusterforge/wiki"><img alt="ClusterForge Wiki" src="https://img.shields.io/badge/Wiki-Explore-8b5cf6?style=flat-square&logo=github&logoColor=white"></a>
 </p>
 
 <p align="center">
   <a href="https://alekpopovic.github.io/clusterforge/"><strong>📚 Documentation</strong></a>
+  &nbsp;•&nbsp;
+  <a href="https://github.com/alekpopovic/clusterforge/wiki"><strong>🌐 Wiki</strong></a>
   &nbsp;•&nbsp;
   <a href="https://alekpopovic.github.io/clusterforge/installation/"><strong>⚡ Install</strong></a>
   &nbsp;•&nbsp;
