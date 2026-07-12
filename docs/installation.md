@@ -1,0 +1,167 @@
+---
+title: Install the ClusterForge CLI
+description: Install checksum-verified ClusterForge CLI releases on Linux, macOS, and Windows.
+permalink: /installation/
+---
+
+# Install the ClusterForge CLI
+
+The supported release artifacts are Linux amd64/arm64, macOS amd64/arm64, and
+Windows amd64. The current published candidate is `v0.4.0-rc.1`. Install
+Terraform or OpenTofu separately; `cf` does not bundle an IaC engine.
+
+## Linux
+
+The installer detects `amd64` or `arm64`, downloads the binary and its `.sha256`
+file, verifies it, and installs to `$HOME/.local/bin`:
+
+```bash
+curl -fsSL \
+  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0-rc.1/install.sh \
+  | VERSION=v0.4.0-rc.1 bash
+```
+
+If the directory is not already on `PATH`:
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.profile
+source ~/.profile
+cf version
+```
+
+System-wide installation uses sudo only for the final verified copy:
+
+```bash
+curl -fsSL \
+  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0-rc.1/install.sh \
+  | VERSION=v0.4.0-rc.1 INSTALL_DIR=/usr/local/bin bash
+```
+
+## macOS
+
+The same installer supports Intel and Apple Silicon:
+
+```bash
+curl -fsSL \
+  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0-rc.1/install.sh \
+  | VERSION=v0.4.0-rc.1 bash
+```
+
+Add the default install directory for zsh if needed:
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zprofile
+source ~/.zprofile
+cf version
+```
+
+The binary is not currently distributed through Homebrew and is not
+Apple-notarized. Review your organization's Gatekeeper and software approval
+policy before installation.
+
+## Windows PowerShell
+
+Download the amd64 executable and its checksum from the release, verify it, then
+place it in a user-owned directory:
+
+```powershell
+$Version = "v0.4.0-rc.1"
+$Base = "https://github.com/alekpopovic/clusterforge/releases/download/$Version"
+$InstallDir = "$HOME\bin"
+
+New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
+Invoke-WebRequest "$Base/cf-windows-amd64.exe" -OutFile "$env:TEMP\cf.exe"
+Invoke-WebRequest "$Base/cf-windows-amd64.exe.sha256" -OutFile "$env:TEMP\cf.exe.sha256"
+
+$Expected = (Get-Content "$env:TEMP\cf.exe.sha256").Split()[0].ToLower()
+$Actual = (Get-FileHash "$env:TEMP\cf.exe" -Algorithm SHA256).Hash.ToLower()
+if ($Actual -ne $Expected) { throw "ClusterForge checksum mismatch" }
+
+Move-Item -Force "$env:TEMP\cf.exe" "$InstallDir\cf.exe"
+$UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
+if (($UserPath -split ';') -notcontains $InstallDir) {
+  [Environment]::SetEnvironmentVariable("Path", "$UserPath;$InstallDir", "User")
+}
+& "$InstallDir\cf.exe" version
+```
+
+Open a new terminal after changing `PATH`. Windows arm64 is not currently a
+published target.
+
+## Manual Linux or macOS verification
+
+For a review-first workflow, download both files and compare the digest:
+
+```bash
+VERSION=v0.4.0-rc.1
+OS=linux       # linux or darwin
+ARCH=amd64     # amd64 or arm64
+BASE="https://github.com/alekpopovic/clusterforge/releases/download/$VERSION"
+
+curl -fLO "$BASE/cf-$OS-$ARCH"
+curl -fLO "$BASE/cf-$OS-$ARCH.sha256"
+sha256sum --check "cf-$OS-$ARCH.sha256"  # macOS: shasum -a 256 -c ...
+install -m 0755 "cf-$OS-$ARCH" "$HOME/.local/bin/cf"
+```
+
+Release assets also include `SHA256SUMS`. Checksums protect integrity relative to
+the GitHub release but are not an independent publisher signature. For high
+assurance, pin a reviewed tag/commit and use your organization's trusted artifact
+mirror and provenance controls.
+
+## Build from source
+
+Requires the Go version declared in `cli/go.mod`:
+
+```bash
+git clone https://github.com/alekpopovic/clusterforge.git
+cd clusterforge
+./scripts/install-cli.sh "$HOME/.local/bin"
+```
+
+The source installer builds locally and injects Git version metadata. It is
+different from the release `install.sh`, which downloads a prebuilt binary.
+
+## Upgrade
+
+Re-run the pinned installer with the new version after reviewing release notes:
+
+```bash
+curl -fsSL https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0-rc.1/install.sh \
+  | VERSION=v0.4.0-rc.1 bash
+cf version
+cf upgrade check
+cf upgrade plan
+```
+
+The CLI upgrade does not apply infrastructure or migrate project files
+automatically.
+
+## Uninstall
+
+Remove only the installed CLI binary:
+
+```bash
+rm "$HOME/.local/bin/cf"
+```
+
+PowerShell:
+
+```powershell
+Remove-Item "$HOME\bin\cf.exe"
+```
+
+This does not remove projects, Terraform state, caches, cloud resources, or
+configuration. Never delete state or infrastructure as part of CLI uninstall.
+
+## Verify the installation
+
+```bash
+cf version
+cf completion --help
+cf doctor
+```
+
+`cf doctor` expects to run inside a ClusterForge project when checking project
+configuration. Start with [the scaffolding wizard]({{ '/wizard.html' | relative_url }})
+or [getting started]({{ '/getting-started.html' | relative_url }}).

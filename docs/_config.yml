@@ -1,7 +1,10 @@
 title: ClusterForge
-description: Terraform/OpenTofu framework and CLI for container platforms.
+description: Readable Terraform/OpenTofu platform engineering for Kubernetes, ECS, Nomad, and Docker.
 baseurl: "/clusterforge"
 url: "https://alekpopovic.github.io"
+repository: "alekpopovic/clusterforge"
+release: "v0.4.0-rc.1"
+logo: "/assets/clusterforge-logo.svg"
 
 markdown: kramdown
 highlighter: rouge

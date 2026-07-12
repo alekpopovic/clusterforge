@@ -1,39 +1,129 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth" data-theme="auto">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
     <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
-    <meta name="description" content="{{ site.description }}">
+    <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+    <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
+    <script>
+      (() => {
+        const saved = localStorage.getItem('clusterforge-theme') || 'auto';
+        const dark = saved === 'dark' || (saved === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = saved;
+        document.documentElement.classList.toggle('dark', dark);
+      })();
+    </script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              forge: { 50:'#f0fdfa', 100:'#ccfbf1', 400:'#2dd4bf', 500:'#14b8a6', 600:'#0d9488', 700:'#0f766e', 950:'#042f2e' },
+              ember: { 400:'#fbbf24', 500:'#f59e0b' },
+              steel: { 850:'#172033', 950:'#080d18' }
+            },
+            boxShadow: { forge: '0 18px 60px -24px rgba(20,184,166,.45)' }
+          }
+        }
+      }
+    </script>
     <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
   </head>
-  <body>
-    <header class="site-header">
-      <a class="brand" href="{{ '/' | relative_url }}">ClusterForge</a>
-      <nav class="site-nav" aria-label="Documentation navigation">
-        <a href="{{ '/' | relative_url }}">Home</a>
-        <a href="{{ '/architecture/' | relative_url }}">Architecture</a>
-        <a href="{{ '/cli/' | relative_url }}">CLI</a>
-        <a href="{{ '/cli-json/' | relative_url }}">CLI JSON</a>
-        <a href="{{ '/environments/' | relative_url }}">Environments</a>
-        <a href="{{ '/backends/' | relative_url }}">Backends</a>
-        <a href="{{ '/app-manifest/' | relative_url }}">Apps</a>
-        <a href="{{ '/module-conventions/' | relative_url }}">Modules</a>
-        <a href="{{ '/gitops/' | relative_url }}">GitOps</a>
-        <a href="{{ '/autoscaling/' | relative_url }}">Autoscaling</a>
-        <a href="{{ '/observability/' | relative_url }}">Observability</a>
-        <a href="{{ '/security/' | relative_url }}">Security</a>
-        <a href="{{ '/roadmap/' | relative_url }}">Roadmap</a>
-      </nav>
+  <body class="min-h-screen bg-slate-50 text-slate-800 antialiased dark:bg-steel-950 dark:text-slate-200">
+    <header class="fixed inset-x-0 top-0 z-50 h-16 border-b border-slate-200/80 bg-white/85 backdrop-blur-xl dark:border-slate-800 dark:bg-steel-950/85">
+      <div class="flex h-full items-center gap-3 px-4 lg:px-6">
+        <button id="menu-toggle" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden dark:hover:bg-slate-800" aria-label="Open navigation" aria-expanded="false">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a href="{{ '/' | relative_url }}" class="flex items-center gap-2.5 no-underline">
+          <img src="{{ '/assets/clusterforge-mark.svg' | relative_url }}" class="h-10 w-10" alt="">
+          <span class="text-lg font-bold tracking-tight text-slate-950 dark:text-white">Cluster<span class="text-forge-600 dark:text-forge-400">Forge</span></span>
+          <span class="hidden rounded-full border border-forge-200 bg-forge-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-forge-700 sm:inline dark:border-forge-900 dark:bg-forge-950 dark:text-forge-400">v0.4 RC</span>
+        </a>
+        <div class="ml-auto flex items-center gap-2">
+          <a href="{{ '/installation/' | relative_url }}" class="hidden rounded-lg bg-forge-600 px-3 py-2 text-sm font-semibold text-white no-underline shadow-sm hover:bg-forge-700 sm:block">Install CLI</a>
+          <a href="https://github.com/alekpopovic/clusterforge" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-white" aria-label="ClusterForge on GitHub">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .7a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.3c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .7Z"/></svg>
+          </a>
+          <div class="relative">
+            <button id="theme-toggle" class="flex items-center gap-2 rounded-lg border border-slate-200 px-2.5 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800" aria-label="Change color theme">
+              <span id="theme-icon">◐</span><span id="theme-label" class="hidden sm:inline">Auto</span>
+            </button>
+            <div id="theme-menu" class="absolute right-0 mt-2 hidden w-32 overflow-hidden rounded-xl border border-slate-200 bg-white p-1 shadow-xl dark:border-slate-700 dark:bg-slate-900">
+              <button data-theme-choice="light" class="theme-choice">☀ Light</button>
+              <button data-theme-choice="dark" class="theme-choice">● Dark</button>
+              <button data-theme-choice="auto" class="theme-choice">◐ Auto</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
 
-    <main class="page">
-      {{ content }}
-    </main>
+    <div class="mx-auto flex max-w-[1600px] pt-16">
+      <div id="sidebar-backdrop" class="fixed inset-0 z-30 hidden bg-slate-950/50 pt-16 lg:hidden"></div>
+      <aside id="sidebar" class="fixed bottom-0 left-0 top-16 z-40 w-72 -translate-x-full overflow-y-auto border-r border-slate-200 bg-white px-4 py-5 transition-transform lg:translate-x-0 dark:border-slate-800 dark:bg-steel-950">
+        <label class="relative block">
+          <span class="sr-only">Filter documentation</span>
+          <input id="nav-search" type="search" placeholder="Filter docs…" class="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm outline-none ring-forge-500 placeholder:text-slate-400 focus:ring-2 dark:border-slate-700 dark:bg-slate-900">
+          <svg class="absolute left-3 top-2.5 h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+        </label>
+        <nav id="docs-nav" class="mt-6 space-y-6 text-sm" aria-label="Documentation">
+          <div class="nav-group"><h2>Get started</h2><a href="{{ '/' | relative_url }}">Overview</a><a href="{{ '/project-status/' | relative_url }}">Project status</a><a href="{{ '/installation/' | relative_url }}">Install CLI</a><a href="{{ '/getting-started.html' | relative_url }}">Getting started</a><a href="{{ '/wizard.html' | relative_url }}">Scaffolding wizard</a><a href="{{ '/cli/' | relative_url }}">CLI reference</a></div>
+          <div class="nav-group"><h2>Core concepts</h2><a href="{{ '/architecture/' | relative_url }}">Architecture</a><a href="{{ '/environments/' | relative_url }}">Environments</a><a href="{{ '/backends/' | relative_url }}">State backends</a><a href="{{ '/app-manifest/' | relative_url }}">App manifests</a><a href="{{ '/modules.html' | relative_url }}">Module catalog</a><a href="{{ '/execution-profiles.html' | relative_url }}">Execution profiles</a></div>
+          <div class="nav-group"><h2>Platforms</h2><a href="{{ '/aws-eks-production.html' | relative_url }}">AWS EKS</a><a href="{{ '/aws-multi-account.html' | relative_url }}">AWS multi-account</a><a href="{{ '/azure-aks-production.html' | relative_url }}">Azure AKS</a><a href="{{ '/gcp-gke-production.html' | relative_url }}">Google GKE</a><a href="{{ '/nomad.html' | relative_url }}">Nomad</a><a href="{{ '/docker-target.html' | relative_url }}">Docker targets</a></div>
+          <div class="nav-group"><h2>Operations</h2><a href="{{ '/operations.html' | relative_url }}">Operations guide</a><a href="{{ '/fleet-operations.html' | relative_url }}">Fleet operations</a><a href="{{ '/platform-health.html' | relative_url }}">Health &amp; SLOs</a><a href="{{ '/kubernetes-upgrades.html' | relative_url }}">Upgrades</a><a href="{{ '/backup-validation.html' | relative_url }}">Backup validation</a><a href="{{ '/incident-response/' | relative_url }}">Incident response</a></div>
+          <div class="nav-group"><h2>Enterprise</h2><a href="{{ '/plugins.html' | relative_url }}">Plugins</a><a href="{{ '/template-pack-registry.html' | relative_url }}">Template registry</a><a href="{{ '/policy-engine.html' | relative_url }}">Policy engine</a><a href="{{ '/terraform-cloud.html' | relative_url }}">Terraform Cloud</a><a href="{{ '/service-catalog.html' | relative_url }}">Service catalog</a><a href="{{ '/compliance/' | relative_url }}">Compliance mappings</a><a href="{{ '/air-gapped.html' | relative_url }}">Air-gapped use</a></div>
+          <div class="nav-group"><h2>Security &amp; delivery</h2><a href="{{ '/security/' | relative_url }}">Security model</a><a href="{{ '/kubernetes-admission-security.html' | relative_url }}">Admission security</a><a href="{{ '/gitops/' | relative_url }}">GitOps</a><a href="{{ '/gitops-multi-cluster.html' | relative_url }}">Multi-cluster GitOps</a><a href="{{ '/testing.html' | relative_url }}">Testing</a><a href="{{ '/release-process.html' | relative_url }}">Release process</a><a href="{{ '/roadmap/' | relative_url }}">Roadmap</a></div>
+        </nav>
+      </aside>
 
-    <footer class="site-footer">
-      <span>ClusterForge keeps Terraform visible, reviewable, and boring in the best possible way.</span>
-      <a href="https://github.com/alekpopovic/clusterforge">GitHub</a>
-    </footer>
+      <main class="min-w-0 flex-1 px-5 py-10 lg:ml-72 lg:px-12 xl:px-16">
+        <article class="prose-docs mx-auto max-w-4xl">
+          {{ content }}
+        </article>
+        <footer class="mx-auto mt-16 flex max-w-4xl flex-col gap-3 border-t border-slate-200 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+          <span>Built for visible, reviewable infrastructure.</span>
+          <span><a href="https://github.com/alekpopovic/clusterforge/issues" class="hover:text-forge-600">Report a docs issue</a> · Apache-2.0</span>
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const media = matchMedia('(prefers-color-scheme: dark)');
+        const menu = document.getElementById('theme-menu');
+        const label = document.getElementById('theme-label');
+        const icon = document.getElementById('theme-icon');
+        const names = { light:['Light','☀'], dark:['Dark','●'], auto:['Auto','◐'] };
+        function apply(value) {
+          localStorage.setItem('clusterforge-theme', value);
+          root.dataset.theme = value;
+          root.classList.toggle('dark', value === 'dark' || (value === 'auto' && media.matches));
+          label.textContent = names[value][0]; icon.textContent = names[value][1];
+        }
+        apply(localStorage.getItem('clusterforge-theme') || 'auto');
+        document.getElementById('theme-toggle').addEventListener('click', () => menu.classList.toggle('hidden'));
+        document.querySelectorAll('[data-theme-choice]').forEach(button => button.addEventListener('click', () => { apply(button.dataset.themeChoice); menu.classList.add('hidden'); }));
+        media.addEventListener('change', () => { if (root.dataset.theme === 'auto') apply('auto'); });
+
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebar-backdrop');
+        const toggle = document.getElementById('menu-toggle');
+        function mobileNav(open) { sidebar.classList.toggle('-translate-x-full', !open); backdrop.classList.toggle('hidden', !open); toggle.setAttribute('aria-expanded', String(open)); }
+        toggle.addEventListener('click', () => mobileNav(toggle.getAttribute('aria-expanded') !== 'true'));
+        backdrop.addEventListener('click', () => mobileNav(false));
+
+        document.getElementById('nav-search').addEventListener('input', event => {
+          const query = event.target.value.toLowerCase().trim();
+          document.querySelectorAll('#docs-nav a').forEach(link => link.classList.toggle('hidden', query && !link.textContent.toLowerCase().includes(query)));
+          document.querySelectorAll('#docs-nav .nav-group').forEach(group => group.classList.toggle('hidden', !group.querySelector('a:not(.hidden)')));
+        });
+      })();
+    </script>
   </body>
 </html>

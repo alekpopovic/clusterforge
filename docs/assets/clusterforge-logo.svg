@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 72" role="img" aria-labelledby="title desc">
+  <title id="title">ClusterForge</title>
+  <desc id="desc">ClusterForge logo with a cluster-connected forge mark.</desc>
+  <defs>
+    <linearGradient id="forge" x1="8" y1="8" x2="60" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38bdf8"/>
+      <stop offset="0.52" stop-color="#2dd4bf"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(4 4)">
+    <path d="M9 18h46l-8 10H32v5h15l-6 9H23l-6-9h8v-5H14l-5-10Z" fill="url(#forge)"/>
+    <path d="M26 42h12l3 12H23l3-12ZM18 58h30" fill="#0f172a" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/>
+    <g fill="#f8fafc" stroke="#0f172a" stroke-width="2.5">
+      <circle cx="14" cy="10" r="5"/><circle cx="32" cy="6" r="5"/><circle cx="50" cy="10" r="5"/>
+    </g>
+    <path d="m19 11 8-3m10 0 8 3M32 11v8" stroke="#2dd4bf" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  <text x="78" y="46" fill="#0f172a" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="38" font-weight="750" letter-spacing="-1.5">Cluster<tspan fill="#0f766e">Forge</tspan></text>
+</svg>

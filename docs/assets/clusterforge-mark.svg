@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">ClusterForge mark</title>
+  <desc id="desc">A geometric anvil connected to three infrastructure cluster nodes.</desc>
+  <defs>
+    <linearGradient id="forge" x1="10" y1="8" x2="52" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38bdf8"/>
+      <stop offset="0.52" stop-color="#2dd4bf"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <path d="M13 18h38l-7 9H31v5h13l-5 8H25l-5-8h6v-5H17l-4-9Z" fill="url(#forge)"/>
+  <path d="M27 40h10l3 11H24l3-11Z" fill="#0f172a"/>
+  <path d="M19 54h26" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/>
+  <g fill="#f8fafc" stroke="#0f172a" stroke-width="2.5">
+    <circle cx="16" cy="11" r="5"/>
+    <circle cx="32" cy="7" r="5"/>
+    <circle cx="48" cy="11" r="5"/>
+  </g>
+  <path d="M20 12.5 27 9M37 9l7 3.5M32 12v7" stroke="#2dd4bf" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

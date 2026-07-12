@@ -1,4 +1,17 @@
-# ClusterForge
+<p align="center">
+  <img src="docs/assets/clusterforge-logo.svg" alt="ClusterForge" width="420">
+</p>
+
+<p align="center">
+  Readable Terraform/OpenTofu platform engineering for Kubernetes, ECS, Nomad, and Docker.
+</p>
+
+<p align="center">
+  <a href="https://alekpopovic.github.io/clusterforge/">Documentation</a> ·
+  <a href="https://github.com/alekpopovic/clusterforge/releases/tag/v0.4.0-rc.1">v0.4.0-rc.1</a> ·
+  <a href="docs/architecture.md">Architecture</a> ·
+  <a href="docs/security.md">Security</a>
+</p>
 
 ClusterForge is a Terraform/OpenTofu framework and CLI for Kubernetes, ECS,
 Nomad, and Docker-based container platforms.
