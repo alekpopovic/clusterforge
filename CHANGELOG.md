@@ -4,6 +4,49 @@ All notable changes to ClusterForge will be documented in this file.
 
 ClusterForge follows semantic versioning while the public interfaces stabilize.
 
+## [0.4.0-rc.1] - 2026-07-12
+
+### Added
+
+- Local plugin MVP, versioned template pack registry, policy engine v2, execution
+  profiles, Terraform Cloud metadata, AWS account/region configuration, upgrade
+  planners, fleet health and inventory exports.
+- Service catalog and Backstage generation, dashboard data export, audit/SIEM
+  export, secret rotation planning, backup evidence checks, compliance mapping,
+  cross-cluster GitOps rendering, offline bundles and migration analysis.
+- Enterprise and operations documentation covering multi-account, FinOps,
+  incident/DR, admission security, compliance, air-gapped environments and v0.4
+  release scope.
+
+### Changed
+
+- CLI project scaffolding now supports a summary-first wizard and safe
+  non-interactive defaults.
+- Kubernetes admission examples default to audit/dry-run, and the ECS service
+  module exposes an experimental task runtime platform while retaining
+  Linux/X86_64 defaults.
+- Generated/exported operational data uses explicit versioning and stronger
+  redaction/exclusion rules.
+
+### Security
+
+- Plugins remain disabled by default and require explicit trust in CI.
+- Offline bundles reject state, kubeconfig, credential-like files, symlinks,
+  checksum modifications and unlisted additions.
+- Audit, dashboard, migration and secret workflows avoid secret values and cloud
+  mutations; compliance mappings make no certification claim.
+
+### Known limitations
+
+- This release candidate has no current production-cloud apply evidence. AWS,
+  Azure and GCP workflows still require environment-specific review and testing.
+- Cluster federation, edge lifecycle, automatic failover/remediation, hosted SaaS,
+  plugin marketplace and production Windows workload support are excluded.
+- Static inventory/migration/offline discovery can miss dynamic or transitive
+  dependencies and does not prove runtime state.
+- A critical GitHub Dependabot finding is visible on the default branch and must
+  be triaged/resolved or formally shown outside release scope before v0.4.0.
+
 ## [0.1.0] - Unreleased
 
 ### Added

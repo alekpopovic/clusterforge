@@ -91,3 +91,11 @@ Must-have backlog items are complete; no known secret exposure or unresolved
 critical release-scope vulnerability exists; schemas and migrations are reviewed;
 cloud support claims match evidence; artifacts reproduce and verify. Otherwise
 create a new RC after remediation—do not waive a safety gate to meet a date.
+
+## RC1 execution status (2026-07-12)
+
+`v0.4.0-rc.1` is currently **no-go**. Formatting, Go tests/build, CLI version,
+temporary-project doctor, Gitleaks and module contract execution succeeded.
+Release blockers are recorded in `RELEASE_CANDIDATE_V0.4.md`: lint failures,
+128 Checkov findings, an untriaged critical Dependabot alert, incomplete full
+Terraform validation, and absent production-cloud smoke evidence. M6 remains open.

@@ -2,6 +2,10 @@
 
 Use this checklist for ClusterForge release candidates.
 
+For v0.4 candidates, also review `ROADMAP_V0.4.md`, `RELEASE_PLAN_V0.4.md`,
+`BACKLOG_V0.4.md`, `RELEASE_NOTES_V0.4.md`, and
+`RELEASE_CANDIDATE_V0.4.md`.
+
 ## Version and Changelog
 
 - Confirm `VERSION` contains the intended release version.
@@ -24,6 +28,12 @@ Use this checklist for ClusterForge release candidates.
   - `docs/security.md`
   - `docs/gitops.md`
   - `docs/roadmap.md`
+  - `docs/plugins.md`
+  - `docs/template-pack-registry.md`
+  - `docs/policy-engine.md`
+  - `docs/aws-multi-account.md`
+  - `docs/compliance/index.md`
+  - `docs/air-gapped.md`
 - Confirm module READMEs include useful examples.
 - Review `MODULE_CATALOG.md` and confirm stability labels are honest.
 - Confirm no example contains real credentials, account IDs, private keys, or
@@ -34,12 +44,15 @@ Use this checklist for ClusterForge release candidates.
 Run from the repository root:
 
 ```bash
-make fmt
+make fmt-check
 make lint
 make test
 make validate
 make security
+make check-modules
 cd cli && go build -o cf .
+./cf version
+./cf doctor
 ```
 
 Record each command and its result in `FINAL_MVP_REPORT.md` or the release
@@ -90,8 +103,8 @@ Do not run `terraform apply` as a release smoke check.
 - Create and push the tag only after local checks are reviewed:
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.4.0-rc.1
+git push origin v0.4.0-rc.1
 ```
 
 - Verify GitHub release artifacts are uploaded by the release workflow.

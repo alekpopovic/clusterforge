@@ -40,6 +40,11 @@ validate_module_contracts() {
 should_skip_root() {
   local dir="$1"
 
+  if [[ "${dir}" == ./cli/testdata/golden/* || "${dir}" == cli/testdata/golden/* ]]; then
+    echo "golden generator snapshot; validated by Go golden tests in its generated project context"
+    return 0
+  fi
+
   if [[ ! -f "${dir}/versions.tf" ]]; then
     echo "missing versions.tf; not treated as a complete Terraform root"
     return 0
