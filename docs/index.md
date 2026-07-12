@@ -6,7 +6,7 @@ permalink: /
 
 <section class="hero-shell">
   <div class="relative z-10">
-    <span class="status-pill">● v0.4.2 available</span>
+    <span class="status-pill">● v0.4.3 available</span>
     <p class="hero-kicker mt-6">Visible infrastructure. Safer operations.</p>
     <h1>Forge consistent container platforms without hiding Terraform.</h1>
     <p class="hero-lead">ClusterForge combines readable Terraform/OpenTofu modules with a Go CLI for generation, policy, fleet visibility, upgrades, compliance mappings, GitOps, and operational evidence.</p>
@@ -54,8 +54,8 @@ Linux or macOS:
 
 ```bash
 curl -fsSL \
-  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.2/install.sh \
-  | VERSION=v0.4.2 bash
+  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.3/install.sh \
+  | VERSION=v0.4.3 bash
 
 cf wizard --defaults --non-interactive
 cf generate dev

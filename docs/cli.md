@@ -92,8 +92,8 @@ checksum, verifies it, and installs to `$HOME/.local/bin`. Pin production
 automation instead of following `latest`:
 
 ```bash
-curl -fsSL https://github.com/alekpopovic/clusterforge/releases/download/v0.4.2/install.sh \
-  | VERSION=v0.4.2 INSTALL_DIR="$HOME/bin" bash
+curl -fsSL https://github.com/alekpopovic/clusterforge/releases/download/v0.4.3/install.sh \
+  | VERSION=v0.4.3 INSTALL_DIR="$HOME/bin" bash
 ```
 
 For higher assurance, download `install.sh` and `SHA256SUMS`, inspect the script,
@@ -102,7 +102,7 @@ Windows users should download `cf-windows-amd64.exe` and its checksum manually.
 
 Environment variables:
 
-- `VERSION`: `latest`, `v0.4.2`, or `0.4.2`.
+- `VERSION`: `latest`, `v0.4.3`, or `0.4.3`.
 - `INSTALL_DIR`: destination directory.
 - `BINARY_NAME`: installed filename, default `cf`.
 - `CLUSTERFORGE_REPO`: GitHub `owner/repo`, useful for approved mirrors/forks.

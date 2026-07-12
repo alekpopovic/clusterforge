@@ -4,6 +4,21 @@ All notable changes to ClusterForge will be documented in this file.
 
 ClusterForge follows semantic versioning while the public interfaces stabilize.
 
+## [0.4.3] - 2026-07-12
+
+### Fixed
+
+- The default non-interactive wizard now maps local kind projects to the
+  supported existing-Kubernetes generator, so a fresh project can complete
+  `wizard`, `generate`, `init`, and `plan`.
+- `cf plugin run --help` now displays Cobra help without trying to discover or
+  execute a plugin or requiring `clusterforge.yaml`.
+
+### Documentation
+
+- Updated the CLI build, installation, local-kind wizard, and credential-free
+  getting-started instructions to match the tested release workflow.
+
 ## [0.4.2] - 2026-07-12
 
 ### Fixed
