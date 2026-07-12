@@ -4,6 +4,30 @@ All notable changes to ClusterForge will be documented in this file.
 
 ClusterForge follows semantic versioning while the public interfaces stabilize.
 
+## [0.4.0] - 2026-07-12
+
+### Changed
+
+- Rebuilt the GitHub Pages documentation around the ClusterForge visual identity,
+  with responsive navigation and light, dark, and system color modes.
+- Corrected the canonical Go module and all internal imports to
+  `github.com/alekpopovic/clusterforge/cli` so source builds and release version
+  metadata match the repository location.
+- Updated release, installer, CLI, and documentation links to the canonical
+  `alekpopovic/clusterforge` repository.
+
+### Validation
+
+- The complete CLI unit, command, end-to-end, golden, formatting, vet, and build
+  checks pass with the corrected module path.
+- Release artifacts remain checksum verified for Linux amd64/arm64, macOS
+  amd64/arm64, and Windows amd64.
+
+### Known limitations
+
+- The open risks recorded in the release assessment still apply; this release
+  does not claim production-cloud validation for every supported target.
+
 ## [0.4.0-rc.1] - 2026-07-12
 
 ### Added

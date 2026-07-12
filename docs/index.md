@@ -6,7 +6,7 @@ permalink: /
 
 <section class="hero-shell">
   <div class="relative z-10">
-    <span class="status-pill">● v0.4.0-rc.1 available</span>
+    <span class="status-pill">● v0.4.0 available</span>
     <p class="hero-kicker mt-6">Visible infrastructure. Safer operations.</p>
     <h1>Forge consistent container platforms without hiding Terraform.</h1>
     <p class="hero-lead">ClusterForge combines readable Terraform/OpenTofu modules with a Go CLI for generation, policy, fleet visibility, upgrades, compliance mappings, GitOps, and operational evidence.</p>
@@ -54,8 +54,8 @@ Linux or macOS:
 
 ```bash
 curl -fsSL \
-  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0-rc.1/install.sh \
-  | VERSION=v0.4.0-rc.1 bash
+  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0/install.sh \
+  | VERSION=v0.4.0 bash
 
 cf wizard --defaults --non-interactive
 cf generate dev
@@ -85,9 +85,9 @@ values do not belong in generated files, and read-only commands do not call clou
 APIs unless explicitly documented. Compliance documents are implementation aids,
 not certifications.
 
-The current release is a candidate. Terraform validation and CLI tests pass, but
-the release assessment still tracks lint, Checkov, dependency, and production
-cloud evidence before recommending final `v0.4.0`. Read
+The current stable release has passing Terraform validation and CLI tests. The
+release assessment still tracks lint, Checkov, dependency, and production-cloud
+evidence; stable versioning does not imply every target is production-proven. Read
 [the roadmap]({{ '/roadmap/' | relative_url }}) and
 [release process]({{ '/release-process.html' | relative_url }}) for the exact boundary.
 

@@ -7,7 +7,7 @@ permalink: /installation/
 # Install the ClusterForge CLI
 
 The supported release artifacts are Linux amd64/arm64, macOS amd64/arm64, and
-Windows amd64. The current published candidate is `v0.4.0-rc.1`. Install
+Windows amd64. The current stable release is `v0.4.0`. Install
 Terraform or OpenTofu separately; `cf` does not bundle an IaC engine.
 
 ## Linux
@@ -17,8 +17,8 @@ file, verifies it, and installs to `$HOME/.local/bin`:
 
 ```bash
 curl -fsSL \
-  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0-rc.1/install.sh \
-  | VERSION=v0.4.0-rc.1 bash
+  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0/install.sh \
+  | VERSION=v0.4.0 bash
 ```
 
 If the directory is not already on `PATH`:
@@ -33,8 +33,8 @@ System-wide installation uses sudo only for the final verified copy:
 
 ```bash
 curl -fsSL \
-  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0-rc.1/install.sh \
-  | VERSION=v0.4.0-rc.1 INSTALL_DIR=/usr/local/bin bash
+  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0/install.sh \
+  | VERSION=v0.4.0 INSTALL_DIR=/usr/local/bin bash
 ```
 
 ## macOS
@@ -43,8 +43,8 @@ The same installer supports Intel and Apple Silicon:
 
 ```bash
 curl -fsSL \
-  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0-rc.1/install.sh \
-  | VERSION=v0.4.0-rc.1 bash
+  https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0/install.sh \
+  | VERSION=v0.4.0 bash
 ```
 
 Add the default install directory for zsh if needed:
@@ -65,7 +65,7 @@ Download the amd64 executable and its checksum from the release, verify it, then
 place it in a user-owned directory:
 
 ```powershell
-$Version = "v0.4.0-rc.1"
+$Version = "v0.4.0"
 $Base = "https://github.com/alekpopovic/clusterforge/releases/download/$Version"
 $InstallDir = "$HOME\bin"
 
@@ -93,7 +93,7 @@ published target.
 For a review-first workflow, download both files and compare the digest:
 
 ```bash
-VERSION=v0.4.0-rc.1
+VERSION=v0.4.0
 OS=linux       # linux or darwin
 ARCH=amd64     # amd64 or arm64
 BASE="https://github.com/alekpopovic/clusterforge/releases/download/$VERSION"
@@ -127,8 +127,8 @@ different from the release `install.sh`, which downloads a prebuilt binary.
 Re-run the pinned installer with the new version after reviewing release notes:
 
 ```bash
-curl -fsSL https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0-rc.1/install.sh \
-  | VERSION=v0.4.0-rc.1 bash
+curl -fsSL https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0/install.sh \
+  | VERSION=v0.4.0 bash
 cf version
 cf upgrade check
 cf upgrade plan

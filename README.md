@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://alekpopovic.github.io/clusterforge/">Documentation</a> ·
-  <a href="https://github.com/alekpopovic/clusterforge/releases/tag/v0.4.0-rc.1">v0.4.0-rc.1</a> ·
+  <a href="https://github.com/alekpopovic/clusterforge/releases/tag/v0.4.0">v0.4.0</a> ·
   <a href="docs/architecture.md">Architecture</a> ·
   <a href="docs/security.md">Security</a>
 </p>

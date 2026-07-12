@@ -6,7 +6,7 @@ permalink: /project-status/
 
 # Project status
 
-ClusterForge is currently published as `v0.4.0-rc.1`. It is a release candidate,
+ClusterForge is currently published as `v0.4.0`. This stable version label is
 not a claim that every target is production-proven. The project has a broad
 implemented module and CLI surface, with maturity varying by provider and
 workflow.
@@ -15,7 +15,7 @@ workflow.
 
 | Signal | Current state |
 |---|---|
-| GitHub Release | `v0.4.0-rc.1`, published as a prerelease with checksum-verified installers |
+| GitHub Release | `v0.4.0`, published as a stable release with checksum-verified installers |
 | CLI tests | Go unit, command, e2e, generator golden, and build checks pass |
 | Terraform validation | 126 real examples, live roots, and modules validate; 7 stored golden snapshots are covered by Go golden tests |
 | Formatting | Terraform recursive format and Go formatting checks pass |
