@@ -60,7 +60,22 @@ clusterforge/
 
 ## Quickstart
 
-Install Terraform or OpenTofu first. Then build the CLI:
+Install Terraform or OpenTofu first. Install the latest released CLI on Linux or
+macOS:
+
+```bash
+curl -fsSL https://github.com/alekpopovic/clusterforge/releases/latest/download/install.sh | bash
+```
+
+The installer verifies the release SHA256 checksum and writes to
+`$HOME/.local/bin` by default. To pin a version or choose a directory:
+
+```bash
+curl -fsSL https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0/install.sh \
+  | VERSION=v0.4.0 INSTALL_DIR=/usr/local/bin bash
+```
+
+For development, build from source:
 
 ```bash
 cd cli

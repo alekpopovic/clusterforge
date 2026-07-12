@@ -114,6 +114,9 @@ git push origin v0.4.0-rc.1
   - macOS amd64
   - macOS arm64
   - Windows amd64
+- Verify `install.sh`, every per-binary `.sha256`, and `SHA256SUMS` are attached.
+- Run the installer against the published pinned tag in a clean Linux/macOS
+  environment and confirm `cf version` matches the tag.
 
 ## Post-Release
 

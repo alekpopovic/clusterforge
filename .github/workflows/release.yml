@@ -31,6 +31,9 @@ jobs:
       - name: Build CLI artifacts
         run: |
           set -euo pipefail
+          version="${GITHUB_REF_NAME}"
+          commit="${GITHUB_SHA}"
+          date="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           mkdir -p dist
           for target in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64; do
             os="${target%/*}"
@@ -38,9 +41,23 @@ jobs:
             ext=""
             if [ "${os}" = "windows" ]; then ext=".exe"; fi
             output="dist/cf-${os}-${arch}${ext}"
-            (cd cli && GOOS="${os}" GOARCH="${arch}" go build -trimpath -o "../${output}" .)
+            (cd cli && GOOS="${os}" GOARCH="${arch}" go build -trimpath \
+              -ldflags "-s -w -X github.com/textracta/clusterforge/cli/cmd.Version=${version} -X github.com/textracta/clusterforge/cli/cmd.Commit=${commit} -X github.com/textracta/clusterforge/cli/cmd.Date=${date}" \
+              -o "../${output}" .)
+            (cd dist && sha256sum "cf-${os}-${arch}${ext}" > "cf-${os}-${arch}${ext}.sha256")
           done
+          install -m 0755 scripts/install.sh dist/install.sh
           (cd dist && sha256sum * > SHA256SUMS)
+
+      - name: Smoke test release installer
+        run: |
+          set -euo pipefail
+          install_dir="${RUNNER_TEMP}/clusterforge-bin"
+          CLUSTERFORGE_DOWNLOAD_BASE_URL="file://${GITHUB_WORKSPACE}/dist" \
+            INSTALL_DIR="${install_dir}" \
+            VERSION="${GITHUB_REF_NAME}" \
+            scripts/install.sh
+          "${install_dir}/cf" version | grep -F "version: ${GITHUB_REF_NAME}"
 
       - name: Generate release notes
         run: scripts/release-notes.sh "${GITHUB_REF_NAME}" > dist/RELEASE_NOTES.md

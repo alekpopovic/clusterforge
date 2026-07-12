@@ -78,6 +78,37 @@ cf --non-interactive env create dev --cloud aws --orchestrator eks --region eu-c
 cf --non-interactive app add api --image ghcr.io/company/api:1.0.0 --port 8080 --autoscaling
 ```
 
+## Install From GitHub Releases
+
+Linux and macOS releases include `install.sh`, platform binaries, individual
+`.sha256` files, and `SHA256SUMS`:
+
+```bash
+curl -fsSL https://github.com/alekpopovic/clusterforge/releases/latest/download/install.sh | bash
+```
+
+The installer detects `linux|darwin` and `amd64|arm64`, downloads `cf` plus its
+checksum, verifies it, and installs to `$HOME/.local/bin`. Pin production
+automation instead of following `latest`:
+
+```bash
+curl -fsSL https://github.com/alekpopovic/clusterforge/releases/download/v0.4.0/install.sh \
+  | VERSION=v0.4.0 INSTALL_DIR="$HOME/bin" bash
+```
+
+For higher assurance, download `install.sh` and `SHA256SUMS`, inspect the script,
+verify the release through the organization's trusted process, then execute it.
+Windows users should download `cf-windows-amd64.exe` and its checksum manually.
+
+Environment variables:
+
+- `VERSION`: `latest`, `v0.4.0`, or `0.4.0`.
+- `INSTALL_DIR`: destination directory.
+- `BINARY_NAME`: installed filename, default `cf`.
+- `CLUSTERFORGE_REPO`: GitHub `owner/repo`, useful for approved mirrors/forks.
+- `CLUSTERFORGE_DOWNLOAD_BASE_URL`: explicit release asset base URL for testing or
+  an internal mirror.
+
 ## Install From Source
 
 Use the install script to build `cf` and install it into `/usr/local/bin`:
