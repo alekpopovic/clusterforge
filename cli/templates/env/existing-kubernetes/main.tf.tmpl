@@ -7,7 +7,7 @@
 # Optional platform bootstrap. Enable only after reviewing the target cluster.
 #
 # module "platform_bootstrap" {
-#   source = "{{ .ModulesPath }}/platform/kubernetes/bootstrap"
+#   source = "{{ .ModulesPath }}/platform/kubernetes/bootstrap{{ .ModulesRef }}"
 #
 #   enable_ingress_nginx    = false
 #   enable_cert_manager     = false

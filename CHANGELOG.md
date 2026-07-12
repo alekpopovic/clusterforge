@@ -4,6 +4,16 @@ All notable changes to ClusterForge will be documented in this file.
 
 ClusterForge follows semantic versioning while the public interfaces stabilize.
 
+## [0.4.2] - 2026-07-12
+
+### Fixed
+
+- Standalone CLI projects now generate Git module sources pinned to the matching
+  ClusterForge release instead of referencing a nonexistent local `modules/`
+  directory.
+- Repository checkouts still use local module paths so contributors can edit and
+  validate modules without fetching them from GitHub.
+
 ## [0.4.1] - 2026-07-12
 
 ### Fixed

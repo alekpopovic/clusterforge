@@ -1,7 +1,7 @@
 {{ .Header }}
 
 module "rke2" {
-  source = "{{ .ModulesPath }}/orchestrators/kubernetes/rke2"
+  source = "{{ .ModulesPath }}/orchestrators/kubernetes/rke2{{ .ModulesRef }}"
 
   cluster_name = var.name
   environment  = var.environment

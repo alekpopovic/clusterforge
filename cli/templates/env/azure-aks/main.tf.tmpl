@@ -1,7 +1,7 @@
 {{ .Header }}
 
 module "network" {
-  source = "{{ .ModulesPath }}/cloud/azure/network"
+  source = "{{ .ModulesPath }}/cloud/azure/network{{ .ModulesRef }}"
 
   name                = var.name
   environment         = var.environment
@@ -13,7 +13,7 @@ module "network" {
 }
 
 module "aks" {
-  source = "{{ .ModulesPath }}/orchestrators/kubernetes/aks"
+  source = "{{ .ModulesPath }}/orchestrators/kubernetes/aks{{ .ModulesRef }}"
 
   name                = var.name
   environment         = var.environment

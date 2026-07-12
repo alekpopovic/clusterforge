@@ -1,7 +1,7 @@
 {{ .Header }}
 
 module "tags" {
-  source = "{{ .ModulesPath }}/core/tags"
+  source = "{{ .ModulesPath }}/core/tags{{ .ModulesRef }}"
 
   project     = var.project
   environment = var.environment
@@ -12,7 +12,7 @@ module "tags" {
 }
 
 module "network" {
-  source = "{{ .ModulesPath }}/cloud/aws/network"
+  source = "{{ .ModulesPath }}/cloud/aws/network{{ .ModulesRef }}"
 
   name               = var.name
   environment        = var.environment
@@ -28,7 +28,7 @@ module "network" {
 }
 
 module "ecs_cluster" {
-  source = "{{ .ModulesPath }}/orchestrators/ecs/cluster"
+  source = "{{ .ModulesPath }}/orchestrators/ecs/cluster{{ .ModulesRef }}"
 
   name                      = var.name
   environment               = var.environment

@@ -12,6 +12,9 @@ import (
 
 func TestGenerateAWSEKS(t *testing.T) {
 	dir := t.TempDir()
+	if err := os.Mkdir(filepath.Join(dir, "modules"), 0o755); err != nil {
+		t.Fatal(err)
+	}
 	env := config.Environment{
 		Cloud:        "aws",
 		Region:       "eu-central-1",
@@ -62,6 +65,10 @@ func TestGenerateUsesEmbeddedTemplatesOutsideSourceTree(t *testing.T) {
 	}
 	if got := readFile(t, filepath.Join(env.Path, "versions.tf")); !strings.Contains(got, "required_version") {
 		t.Fatalf("embedded versions template was not rendered:\n%s", got)
+	}
+	mainTF := readFile(t, filepath.Join(env.Path, "main.tf"))
+	if !strings.Contains(mainTF, `git::https://github.com/alekpopovic/clusterforge.git//modules/orchestrators/kubernetes/eks?ref=main`) {
+		t.Fatalf("standalone generation did not use versioned remote modules:\n%s", mainTF)
 	}
 }
 
@@ -206,6 +213,9 @@ func TestGenerateProdLocalBackendWarns(t *testing.T) {
 
 func TestGenerateStackedAWSEKS(t *testing.T) {
 	dir := t.TempDir()
+	if err := os.Mkdir(filepath.Join(dir, "modules"), 0o755); err != nil {
+		t.Fatal(err)
+	}
 	env := config.Environment{
 		Cloud:        "aws",
 		Region:       "eu-central-1",

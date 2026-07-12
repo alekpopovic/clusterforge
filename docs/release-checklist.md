@@ -103,8 +103,8 @@ Do not run `terraform apply` as a release smoke check.
 - Create and push the tag only after local checks are reviewed:
 
 ```bash
-git tag v0.4.1
-git push origin v0.4.1
+git tag v0.4.2
+git push origin v0.4.2
 ```
 
 - Verify GitHub release artifacts are uploaded by the release workflow.

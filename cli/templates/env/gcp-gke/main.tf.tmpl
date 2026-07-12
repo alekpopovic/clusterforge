@@ -1,7 +1,7 @@
 {{ .Header }}
 
 module "network" {
-  source = "{{ .ModulesPath }}/cloud/gcp/network"
+  source = "{{ .ModulesPath }}/cloud/gcp/network{{ .ModulesRef }}"
 
   project_id  = var.project_id
   name        = var.name
@@ -10,7 +10,7 @@ module "network" {
 }
 
 module "gke" {
-  source = "{{ .ModulesPath }}/orchestrators/kubernetes/gke"
+  source = "{{ .ModulesPath }}/orchestrators/kubernetes/gke{{ .ModulesRef }}"
 
   project_id = var.project_id
   name       = var.name

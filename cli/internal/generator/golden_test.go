@@ -83,6 +83,9 @@ func TestGoldenTemplatePackOverride(t *testing.T) {
 func assertGoldenEnvironment(t *testing.T, goldenName string, env config.Environment, opts Options) {
 	t.Helper()
 	dir := t.TempDir()
+	if err := os.Mkdir(filepath.Join(dir, "modules"), 0o755); err != nil {
+		t.Fatalf("mkdir modules: %v", err)
+	}
 	env.Path = filepath.Join(dir, "live", "dev", env.Cloud+"-"+env.Orchestrator)
 	opts.RootDir = dir
 

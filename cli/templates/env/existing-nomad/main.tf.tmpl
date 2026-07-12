@@ -1,7 +1,7 @@
 {{ .Header }}
 # ClusterForge does not provision Nomad hosts in this target.
 module "cluster_config" {
-  source = "{{ .ModulesPath }}/orchestrators/nomad/cluster"
+  source = "{{ .ModulesPath }}/orchestrators/nomad/cluster{{ .ModulesRef }}"
   name = var.name
   environment = var.environment
   datacenter = var.datacenter

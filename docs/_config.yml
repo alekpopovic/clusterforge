@@ -3,7 +3,7 @@ description: Readable Terraform/OpenTofu platform engineering for Kubernetes, EC
 baseurl: "/clusterforge"
 url: "https://alekpopovic.github.io"
 repository: "alekpopovic/clusterforge"
-release: "v0.4.1"
+release: "v0.4.2"
 logo: "/assets/clusterforge-logo.svg"
 
 markdown: kramdown
