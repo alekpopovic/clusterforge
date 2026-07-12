@@ -12,6 +12,7 @@ See also:
 - [v0.4 roadmap](../ROADMAP_V0.4.md)
 - [v0.4 release plan](../RELEASE_PLAN_V0.4.md)
 - [v0.4 backlog](../BACKLOG_V0.4.md)
+- [v0.5 backlog](../BACKLOG_V0.5.md)
 - [backlog](../BACKLOG.md)
 - [AKS RFC](rfcs/002-aks-support.md)
 - [GKE RFC](rfcs/003-gke-support.md)
@@ -26,6 +27,30 @@ See also:
 
 ClusterForge is being built in practical phases. The order favors a useful AWS
 Kubernetes path first, then broader orchestrator coverage.
+
+## Current focus: v0.5 hardening
+
+The v0.4 line established the broad CLI, module, policy, metadata, and
+operational-documentation surface. The v0.5 release does not treat additional
+surface area as proof of support. Its release scope is:
+
+- explicit module maturity and support metadata;
+- tested Terraform/OpenTofu and provider compatibility;
+- stable, versioned CLI machine-readable contracts;
+- stronger secret-exclusion and dependency-finding gates;
+- reproducible archives, checksums, SBOMs, provenance metadata, and
+  supported-platform install smoke tests; and
+- attributable real-cloud lifecycle evidence for support claims.
+
+Credential-free validation is mandatory for the release. Cloud lifecycle tests
+are separately credential-gated, explicitly approved, budgeted, and cleaned up.
+Missing cloud evidence must remain visible and limits the corresponding support
+claim; it is never counted as a pass. See the [v0.5 backlog](../BACKLOG_V0.5.md)
+for acceptance criteria and safety boundaries.
+
+The historical phases below describe how the current repository surface was
+built. They are not, by themselves, evidence that every target is production
+ready.
 
 ## Phase 1: AWS EKS
 

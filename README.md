@@ -229,13 +229,14 @@ Contributor and AI-agent rules live in [AGENTS.md](AGENTS.md).
 ## 🧭 Direction
 
 The v0.4 line delivers the broad CLI, module, policy, enterprise-metadata, and
-operational-documentation surface. The next work is focused on hardening rather
-than hiding more automation: real-cloud evidence, security finding triage,
-explicit module maturity, signed/provenance-aware releases, and deeper provider
-compatibility testing.
+operational-documentation surface. The v0.5 work is focused on hardening:
+real-cloud evidence, security finding triage, explicit module maturity,
+provenance-aware releases, stable CLI contracts, and deeper provider
+compatibility testing. Credential-gated checks remain explicit and their absence
+limits support claims rather than being reported as a pass.
 
-See the [roadmap](docs/roadmap.md), [v0.4 assessment](RELEASE_CANDIDATE_V0.4.md),
-and [changelog](CHANGELOG.md).
+See the [roadmap](docs/roadmap.md), [v0.5 backlog](BACKLOG_V0.5.md),
+[v0.4 assessment](RELEASE_CANDIDATE_V0.4.md), and [changelog](CHANGELOG.md).
 
 ---
 
