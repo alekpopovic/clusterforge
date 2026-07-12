@@ -5,9 +5,9 @@ import (
 	"os"
 	"sort"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/ui"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/config"
-	"github.com/textracta/clusterforge/cli/internal/ui"
 )
 
 var envCreateCloud string

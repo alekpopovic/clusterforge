@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/textracta/clusterforge/cli/internal/bindings"
+	"github.com/alekpopovic/clusterforge/cli/internal/bindings"
 	"gopkg.in/yaml.v3"
 )
 

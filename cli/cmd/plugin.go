@@ -8,8 +8,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/plugins"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/plugins"
 )
 
 var pluginCmd = &cobra.Command{

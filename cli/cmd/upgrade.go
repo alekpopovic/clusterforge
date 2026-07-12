@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/config"
 )
 
 const supportedConfigVersion = "0.1.0"

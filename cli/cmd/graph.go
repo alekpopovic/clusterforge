@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
+	cfgraph "github.com/alekpopovic/clusterforge/cli/internal/graph"
+	cfterraform "github.com/alekpopovic/clusterforge/cli/internal/terraform"
 	"github.com/spf13/cobra"
-	cfgraph "github.com/textracta/clusterforge/cli/internal/graph"
-	cfterraform "github.com/textracta/clusterforge/cli/internal/terraform"
 )
 
 var graphStack string

@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	cfcost "github.com/alekpopovic/clusterforge/cli/internal/cost"
+	cfterraform "github.com/alekpopovic/clusterforge/cli/internal/terraform"
+	"github.com/alekpopovic/clusterforge/cli/internal/ui"
 	"github.com/spf13/cobra"
-	cfcost "github.com/textracta/clusterforge/cli/internal/cost"
-	cfterraform "github.com/textracta/clusterforge/cli/internal/terraform"
-	"github.com/textracta/clusterforge/cli/internal/ui"
 )
 
 var costPlanFile, costStack string

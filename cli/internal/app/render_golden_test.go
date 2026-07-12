@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/textracta/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
 )
 
 var updateAppGolden = flag.Bool("update-golden", false, "update golden files")

@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/secrets"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/secrets"
 )
 
 var secretsApp string

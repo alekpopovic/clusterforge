@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/textracta/clusterforge/cli/internal/config"
-	"github.com/textracta/clusterforge/cli/internal/terraform/planjson"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/terraform/planjson"
 )
 
 const (

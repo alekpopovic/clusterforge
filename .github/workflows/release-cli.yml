@@ -50,7 +50,7 @@ jobs:
           artifact="cf-${version}-${{ matrix.goos }}-${{ matrix.goarch }}"
           GOOS="${{ matrix.goos }}" GOARCH="${{ matrix.goarch }}" \
             go build -C cli -trimpath \
-              -ldflags "-s -w -X github.com/textracta/clusterforge/cli/cmd.Version=${version} -X github.com/textracta/clusterforge/cli/cmd.Commit=${commit} -X github.com/textracta/clusterforge/cli/cmd.Date=${date}" \
+              -ldflags "-s -w -X github.com/alekpopovic/clusterforge/cli/cmd.Version=${version} -X github.com/alekpopovic/clusterforge/cli/cmd.Commit=${commit} -X github.com/alekpopovic/clusterforge/cli/cmd.Date=${date}" \
               -o "../dist/${artifact}${ext}" .
           (cd dist && sha256sum "${artifact}${ext}" > "${artifact}${ext}.sha256")
 

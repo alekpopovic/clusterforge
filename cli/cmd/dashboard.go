@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 
+	cfapp "github.com/alekpopovic/clusterforge/cli/internal/app"
+	"github.com/alekpopovic/clusterforge/cli/internal/dashboard"
+	"github.com/alekpopovic/clusterforge/cli/internal/runbooks"
+	"github.com/alekpopovic/clusterforge/cli/internal/servicecatalog"
 	"github.com/spf13/cobra"
-	cfapp "github.com/textracta/clusterforge/cli/internal/app"
-	"github.com/textracta/clusterforge/cli/internal/dashboard"
-	"github.com/textracta/clusterforge/cli/internal/runbooks"
-	"github.com/textracta/clusterforge/cli/internal/servicecatalog"
 )
 
 var dashboardEnv, dashboardOutput string

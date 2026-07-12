@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/textracta/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
 )
 
 func resolveStackPaths(env config.Environment, stack string) ([]string, error) {

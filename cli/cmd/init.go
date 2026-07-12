@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	cfterraform "github.com/alekpopovic/clusterforge/cli/internal/terraform"
 	"github.com/spf13/cobra"
-	cfterraform "github.com/textracta/clusterforge/cli/internal/terraform"
 )
 
 var initStack string

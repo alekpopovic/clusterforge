@@ -12,7 +12,7 @@ DATE="${DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}"
 GOCACHE="${GOCACHE:-/tmp/clusterforge-go-cache}"
 GOPATH="${GOPATH:-/tmp/clusterforge-go}"
 
-LDFLAGS="-s -w -X github.com/textracta/clusterforge/cli/cmd.Version=${VERSION} -X github.com/textracta/clusterforge/cli/cmd.Commit=${COMMIT} -X github.com/textracta/clusterforge/cli/cmd.Date=${DATE}"
+LDFLAGS="-s -w -X github.com/alekpopovic/clusterforge/cli/cmd.Version=${VERSION} -X github.com/alekpopovic/clusterforge/cli/cmd.Commit=${COMMIT} -X github.com/alekpopovic/clusterforge/cli/cmd.Date=${DATE}"
 
 tmpdir="$(mktemp -d)"
 cleanup() {

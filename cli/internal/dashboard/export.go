@@ -3,11 +3,11 @@ package dashboard
 import (
 	"time"
 
-	cfapp "github.com/textracta/clusterforge/cli/internal/app"
-	"github.com/textracta/clusterforge/cli/internal/config"
-	"github.com/textracta/clusterforge/cli/internal/inventory"
-	"github.com/textracta/clusterforge/cli/internal/runbooks"
-	"github.com/textracta/clusterforge/cli/internal/servicecatalog"
+	cfapp "github.com/alekpopovic/clusterforge/cli/internal/app"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/inventory"
+	"github.com/alekpopovic/clusterforge/cli/internal/runbooks"
+	"github.com/alekpopovic/clusterforge/cli/internal/servicecatalog"
 )
 
 const SchemaVersion = "1.0"

@@ -2,7 +2,7 @@ package terraform
 
 import (
 	"fmt"
-	"github.com/textracta/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
 	"strconv"
 )
 

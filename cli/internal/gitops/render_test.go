@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	cfapp "github.com/textracta/clusterforge/cli/internal/app"
-	"github.com/textracta/clusterforge/cli/internal/config"
+	cfapp "github.com/alekpopovic/clusterforge/cli/internal/app"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
 )
 
 func TestRenderTwoClustersAndSpecificCluster(t *testing.T) {

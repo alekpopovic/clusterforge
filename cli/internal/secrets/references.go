@@ -9,7 +9,7 @@ import (
 	"sort"
 	"strings"
 
-	cfapp "github.com/textracta/clusterforge/cli/internal/app"
+	cfapp "github.com/alekpopovic/clusterforge/cli/internal/app"
 )
 
 type Reference struct {

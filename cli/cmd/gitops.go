@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
+	cfapp "github.com/alekpopovic/clusterforge/cli/internal/app"
+	"github.com/alekpopovic/clusterforge/cli/internal/gitops"
 	"github.com/spf13/cobra"
-	cfapp "github.com/textracta/clusterforge/cli/internal/app"
-	"github.com/textracta/clusterforge/cli/internal/gitops"
 )
 
 var gitopsCluster string

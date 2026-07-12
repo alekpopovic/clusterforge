@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/textracta/clusterforge/cli/internal/audit"
+	"github.com/alekpopovic/clusterforge/cli/internal/audit"
 )
 
 func TestAuditedCommandWritesEntry(t *testing.T) {

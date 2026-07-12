@@ -3,8 +3,8 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/alekpopovic/clusterforge/cli/internal/upgradeplanner"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/upgradeplanner"
 	"os"
 )
 

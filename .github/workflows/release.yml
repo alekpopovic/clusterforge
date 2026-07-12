@@ -42,7 +42,7 @@ jobs:
             if [ "${os}" = "windows" ]; then ext=".exe"; fi
             output="dist/cf-${os}-${arch}${ext}"
             (cd cli && GOOS="${os}" GOARCH="${arch}" go build -trimpath \
-              -ldflags "-s -w -X github.com/textracta/clusterforge/cli/cmd.Version=${version} -X github.com/textracta/clusterforge/cli/cmd.Commit=${commit} -X github.com/textracta/clusterforge/cli/cmd.Date=${date}" \
+              -ldflags "-s -w -X github.com/alekpopovic/clusterforge/cli/cmd.Version=${version} -X github.com/alekpopovic/clusterforge/cli/cmd.Commit=${commit} -X github.com/alekpopovic/clusterforge/cli/cmd.Date=${date}" \
               -o "../${output}" .)
             (cd dist && sha256sum "cf-${os}-${arch}${ext}" > "cf-${os}-${arch}${ext}.sha256")
           done

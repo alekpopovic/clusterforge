@@ -3,8 +3,8 @@ package policy
 import (
 	"testing"
 
-	"github.com/textracta/clusterforge/cli/internal/config"
-	"github.com/textracta/clusterforge/cli/internal/terraform/planjson"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/terraform/planjson"
 )
 
 func TestCheckApplyRequiresPlanFileForProd(t *testing.T) {

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/textracta/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
 )
 
 func TestNoPluginsGlobalOptionDisablesDiscovery(t *testing.T) {

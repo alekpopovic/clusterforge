@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/migration"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/migration"
 )
 
 var migratePath string

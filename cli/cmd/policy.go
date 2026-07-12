@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	cfapp "github.com/alekpopovic/clusterforge/cli/internal/app"
+	"github.com/alekpopovic/clusterforge/cli/internal/policyengine"
+	cfterraform "github.com/alekpopovic/clusterforge/cli/internal/terraform"
 	"github.com/spf13/cobra"
-	cfapp "github.com/textracta/clusterforge/cli/internal/app"
-	"github.com/textracta/clusterforge/cli/internal/policyengine"
-	cfterraform "github.com/textracta/clusterforge/cli/internal/terraform"
 )
 
 var policyPlanFile, policyPack, policyStack, policyApp, policyFormat string

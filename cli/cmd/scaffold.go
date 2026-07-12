@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	cfapp "github.com/alekpopovic/clusterforge/cli/internal/app"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/scaffold"
 	"github.com/spf13/cobra"
-	cfapp "github.com/textracta/clusterforge/cli/internal/app"
-	"github.com/textracta/clusterforge/cli/internal/config"
-	"github.com/textracta/clusterforge/cli/internal/scaffold"
 )
 
 var wizardDefaults bool

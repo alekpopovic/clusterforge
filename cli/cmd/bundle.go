@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/bundle"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/bundle"
 )
 
 var bundleEnv, bundleOutput string

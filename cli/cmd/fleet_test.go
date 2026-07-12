@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/textracta/clusterforge/cli/internal/fleet"
+	"github.com/alekpopovic/clusterforge/cli/internal/fleet"
 )
 
 func TestFleetListWithFiltersJSON(t *testing.T) {

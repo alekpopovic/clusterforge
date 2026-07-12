@@ -140,7 +140,7 @@ For a metadata-injected build:
 ```bash
 cd cli
 go build -trimpath \
-  -ldflags "-s -w -X github.com/textracta/clusterforge/cli/cmd.Version=$(git describe --tags --always --dirty) -X github.com/textracta/clusterforge/cli/cmd.Commit=$(git rev-parse --short HEAD) -X github.com/textracta/clusterforge/cli/cmd.Date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  -ldflags "-s -w -X github.com/alekpopovic/clusterforge/cli/cmd.Version=$(git describe --tags --always --dirty) -X github.com/alekpopovic/clusterforge/cli/cmd.Commit=$(git rev-parse --short HEAD) -X github.com/alekpopovic/clusterforge/cli/cmd.Date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   -o cf .
 ```
 

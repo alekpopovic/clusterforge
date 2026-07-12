@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/textracta/clusterforge/cli/internal/inventory"
+	"github.com/alekpopovic/clusterforge/cli/internal/inventory"
 )
 
 type Filter struct {

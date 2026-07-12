@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/textracta/clusterforge/cli/internal/policyengine"
-	"github.com/textracta/clusterforge/cli/internal/terraform/planjson"
+	"github.com/alekpopovic/clusterforge/cli/internal/policyengine"
+	"github.com/alekpopovic/clusterforge/cli/internal/terraform/planjson"
 )
 
 func TestEnvListJSONOutputCanBeUnmarshaled(t *testing.T) {

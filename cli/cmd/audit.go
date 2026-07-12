@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/audit"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/textracta/clusterforge/cli/internal/audit"
-	"github.com/textracta/clusterforge/cli/internal/config"
 )
 
 var auditJSON bool

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/textracta/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
 )
 
 func TestPlanStackPathResolution(t *testing.T) {

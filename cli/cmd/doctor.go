@@ -11,10 +11,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/policy"
+	"github.com/alekpopovic/clusterforge/cli/internal/ui"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/config"
-	"github.com/textracta/clusterforge/cli/internal/policy"
-	"github.com/textracta/clusterforge/cli/internal/ui"
 )
 
 const terraformMinimumVersion = "1.6.0"

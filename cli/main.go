@@ -1,6 +1,6 @@
 package main
 
-import "github.com/textracta/clusterforge/cli/cmd"
+import "github.com/alekpopovic/clusterforge/cli/cmd"
 
 func main() {
 	cmd.Execute()

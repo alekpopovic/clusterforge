@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	cfhealth "github.com/alekpopovic/clusterforge/cli/internal/health"
 	"github.com/spf13/cobra"
-	cfhealth "github.com/textracta/clusterforge/cli/internal/health"
 )
 
 var healthJSON bool

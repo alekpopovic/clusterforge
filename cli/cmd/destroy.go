@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/policy"
+	cfterraform "github.com/alekpopovic/clusterforge/cli/internal/terraform"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/policy"
-	cfterraform "github.com/textracta/clusterforge/cli/internal/terraform"
 )
 
 var allowDestroy bool

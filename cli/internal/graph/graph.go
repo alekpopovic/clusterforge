@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/textracta/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
 )
 
 type Edge struct {

@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/policy"
+	cfterraform "github.com/alekpopovic/clusterforge/cli/internal/terraform"
+	"github.com/alekpopovic/clusterforge/cli/internal/terraform/planjson"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/config"
-	"github.com/textracta/clusterforge/cli/internal/policy"
-	cfterraform "github.com/textracta/clusterforge/cli/internal/terraform"
-	"github.com/textracta/clusterforge/cli/internal/terraform/planjson"
 )
 
 var applyPlanFile string

@@ -8,9 +8,9 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/templatepacks"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/config"
-	"github.com/textracta/clusterforge/cli/internal/templatepacks"
 	"gopkg.in/yaml.v3"
 )
 

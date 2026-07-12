@@ -8,7 +8,7 @@ GOPATH ?= /tmp/clusterforge-go
 CLI_VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 CLI_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
 CLI_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
-CLI_LDFLAGS := -s -w -X github.com/textracta/clusterforge/cli/cmd.Version=$(CLI_VERSION) -X github.com/textracta/clusterforge/cli/cmd.Commit=$(CLI_COMMIT) -X github.com/textracta/clusterforge/cli/cmd.Date=$(CLI_DATE)
+CLI_LDFLAGS := -s -w -X github.com/alekpopovic/clusterforge/cli/cmd.Version=$(CLI_VERSION) -X github.com/alekpopovic/clusterforge/cli/cmd.Commit=$(CLI_COMMIT) -X github.com/alekpopovic/clusterforge/cli/cmd.Date=$(CLI_DATE)
 
 .PHONY: help fmt fmt-check validate lint test test-cli test-terraform test-terraform-aws check-modules build-cli security secret-scan docs docs-serve docs-build clean ci
 

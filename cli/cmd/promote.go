@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	cfapp "github.com/alekpopovic/clusterforge/cli/internal/app"
+	"github.com/alekpopovic/clusterforge/cli/internal/ui"
 	"github.com/spf13/cobra"
-	cfapp "github.com/textracta/clusterforge/cli/internal/app"
-	"github.com/textracta/clusterforge/cli/internal/ui"
 )
 
 var promoteFrom string

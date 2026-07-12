@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/textracta/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
 )
 
 func TestGenerateAWSEKS(t *testing.T) {

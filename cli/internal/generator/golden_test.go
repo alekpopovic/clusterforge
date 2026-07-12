@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/textracta/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
 )
 
 var updateGeneratorGolden = flag.Bool("update-golden", false, "update golden files")

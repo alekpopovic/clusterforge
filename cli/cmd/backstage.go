@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	cfapp "github.com/alekpopovic/clusterforge/cli/internal/app"
+	"github.com/alekpopovic/clusterforge/cli/internal/backstage"
+	"github.com/alekpopovic/clusterforge/cli/internal/servicecatalog"
 	"github.com/spf13/cobra"
-	cfapp "github.com/textracta/clusterforge/cli/internal/app"
-	"github.com/textracta/clusterforge/cli/internal/backstage"
-	"github.com/textracta/clusterforge/cli/internal/servicecatalog"
 	"os"
 )
 

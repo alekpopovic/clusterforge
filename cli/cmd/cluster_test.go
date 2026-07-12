@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/textracta/clusterforge/cli/internal/inventory"
+	"github.com/alekpopovic/clusterforge/cli/internal/inventory"
 )
 
 func TestClusterListAndShow(t *testing.T) {

@@ -5,10 +5,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/inventory"
+	cfterraform "github.com/alekpopovic/clusterforge/cli/internal/terraform"
+	"github.com/alekpopovic/clusterforge/cli/internal/ui"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/inventory"
-	cfterraform "github.com/textracta/clusterforge/cli/internal/terraform"
-	"github.com/textracta/clusterforge/cli/internal/ui"
 )
 
 var clusterListJSON bool

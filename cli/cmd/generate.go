@@ -5,9 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/generator"
 	"github.com/spf13/cobra"
-	"github.com/textracta/clusterforge/cli/internal/config"
-	"github.com/textracta/clusterforge/cli/internal/generator"
 )
 
 var generateForce bool
