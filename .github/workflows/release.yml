@@ -65,6 +65,8 @@ jobs:
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
+          name: ClusterForge ${{ github.ref_name }}
+          prerelease: ${{ contains(github.ref_name, '-rc.') }}
           body_path: dist/RELEASE_NOTES.md
           files: |
             dist/*
