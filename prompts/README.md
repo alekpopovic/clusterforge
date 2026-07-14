@@ -1,249 +1,305 @@
-# ClusterForge promptovi 000–200
+# ClusterForge Prompt Index
 
-Ovaj direktorijum sadrži kompletan, numerisan niz promptova za razvoj
-ClusterForge projekta. Promptove je preporučljivo izvršavati redom jer kasniji
-koraci često pretpostavljaju rezultate ranijih promptova.
+This directory contains the numbered prompt backlog for ClusterForge. Use this index to jump directly to a prompt file before executing or reviewing it.
 
-Svaki unos ispod vodi direktno na odgovarajući Markdown fajl na GitHub `main`
-grani. Pre izvršavanja proveri trenutno stanje repozitorijuma: već završene
-zahteve ne treba ponavljati, a svaki prompt mora poštovati aktuelni
-[`AGENTS.md`](https://github.com/alekpopovic/clusterforge/blob/main/AGENTS.md).
+The canonical execution pointer is tracked in [../.codex/prompt-state.md](../.codex/prompt-state.md).
 
-## Osnova i MVP (000–025)
+## Prompts 000-040
 
-Početna arhitektura repozitorijuma, Terraform moduli, CLI, CI/CD, dokumentacija i završni MVP pregled.
+- [000-master-prompt-za-ceo-projekat.md](./000-master-prompt-za-ceo-projekat.md) - Master prompt za ceo projekat
+- [001-agents-md.md](./001-agents-md.md) - AGENTS.md
+- [002-repo-skeleton.md](./002-repo-skeleton.md) - Repo skeleton
+- [003-terraform-standardi-i-module-templates.md](./003-terraform-standardi-i-module-templates.md) - Terraform standardi i module templates
+- [004-core-naming-modul.md](./004-core-naming-modul.md) - Core naming modul
+- [005-core-labels-tags-moduli.md](./005-core-labels-tags-moduli.md) - Core labels/tags moduli
+- [006-aws-network-modul.md](./006-aws-network-modul.md) - AWS network modul
+- [007-eks-orchestrator-modul.md](./007-eks-orchestrator-modul.md) - EKS orchestrator modul
+- [008-kubernetes-generic-provider-bootstrap-root-primer.md](./008-kubernetes-generic-provider-bootstrap-root-primer.md) - Kubernetes generic provider/bootstrap root primer
+- [009-kubernetes-platform-bootstrap.md](./009-kubernetes-platform-bootstrap.md) - Kubernetes platform bootstrap
+- [010-kubernetes-workload-app-modul.md](./010-kubernetes-workload-app-modul.md) - Kubernetes workload app modul
+- [011-kubernetes-cronjob-modul.md](./011-kubernetes-cronjob-modul.md) - Kubernetes cronjob modul
+- [012-ecs-cluster-modul.md](./012-ecs-cluster-modul.md) - ECS cluster modul
+- [013-ecs-service-workload-modul.md](./013-ecs-service-workload-modul.md) - ECS service workload modul
+- [014-nomad-job-modul.md](./014-nomad-job-modul.md) - Nomad job modul
+- [015-docker-container-i-swarm-service-moduli.md](./015-docker-container-i-swarm-service-moduli.md) - Docker container i Swarm service moduli
+- [016-cli-osnova-u-go-cobra.md](./016-cli-osnova-u-go-cobra.md) - CLI osnova u Go + Cobra
+- [017-cli-config-loader.md](./017-cli-config-loader.md) - CLI config loader
+- [018-cli-terraform-runner.md](./018-cli-terraform-runner.md) - CLI Terraform runner
+- [019-cli-generator-terraform-fajlova.md](./019-cli-generator-terraform-fajlova.md) - CLI generator Terraform fajlova
+- [020-app-manifest-i-app-generator.md](./020-app-manifest-i-app-generator.md) - App manifest i app generator
+- [021-policy-i-risk-summary.md](./021-policy-i-risk-summary.md) - Policy i risk summary
+- [022-ci-cd-workflows.md](./022-ci-cd-workflows.md) - CI/CD workflows
+- [023-dokumentacija.md](./023-dokumentacija.md) - Dokumentacija
+- [024-testovi-i-examples.md](./024-testovi-i-examples.md) - Testovi i examples
+- [025-zavr-ni-refactor-i-review.md](./025-zavr-ni-refactor-i-review.md) - Završni refactor i review
+- [026-audit-trenutnog-stanja-projekta.md](./026-audit-trenutnog-stanja-projekta.md) - Audit trenutnog stanja projekta
+- [027-makefile-developer-workflow.md](./027-makefile-developer-workflow.md) - Makefile / developer workflow
+- [028-stabilizuj-terraform-validaciju.md](./028-stabilizuj-terraform-validaciju.md) - Stabilizuj Terraform validaciju
+- [029-automatska-dokumentacija-za-terraform-module.md](./029-automatska-dokumentacija-za-terraform-module.md) - Automatska dokumentacija za Terraform module
+- [030-tflint-checkov-i-trivy-config-scanning.md](./030-tflint-checkov-i-trivy-config-scanning.md) - TFLint, Checkov i Trivy config scanning
+- [031-eks-hardening-oidc-irsa-i-add-on-role-support.md](./031-eks-hardening-oidc-irsa-i-add-on-role-support.md) - EKS hardening: OIDC, IRSA i add-on role support
+- [032-external-secrets-operator-integracija.md](./032-external-secrets-operator-integracija.md) - External Secrets Operator integracija
+- [033-argo-cd-gitops-module-i-app-of-apps.md](./033-argo-cd-gitops-module-i-app-of-apps.md) - Argo CD GitOps module i app-of-apps
+- [034-kubernetes-autoscaling-cluster-autoscaler-ili-karpenter.md](./034-kubernetes-autoscaling-cluster-autoscaler-ili-karpenter.md) - Kubernetes autoscaling: Cluster Autoscaler ili Karpenter
+- [035-ecs-alb-module-i-povezivanje-sa-ecs-servisom.md](./035-ecs-alb-module-i-povezivanje-sa-ecs-servisom.md) - ECS ALB module i povezivanje sa ECS servisom
+- [036-route53-dns-module.md](./036-route53-dns-module.md) - Route53 DNS module
+- [037-cert-manager-clusterissuer-module.md](./037-cert-manager-clusterissuer-module.md) - Cert-manager ClusterIssuer module
+- [038-cli-install-shell-completion-i-release-build.md](./038-cli-install-shell-completion-i-release-build.md) - CLI install, shell completion i release build
+- [039-cli-interactive-wizard.md](./039-cli-interactive-wizard.md) - CLI interactive wizard
+- [040-app-manifest-schema-validation.md](./040-app-manifest-schema-validation.md) - App manifest schema validation
 
-- [`000-master-prompt-za-ceo-projekat.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/000-master-prompt-za-ceo-projekat.md) — Master prompt za ceo projekat
-- [`001-agents-md.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/001-agents-md.md) — Agents md
-- [`002-repo-skeleton.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/002-repo-skeleton.md) — Repo skeleton
-- [`003-terraform-standardi-i-module-templates.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/003-terraform-standardi-i-module-templates.md) — Terraform standardi i module templates
-- [`004-core-naming-modul.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/004-core-naming-modul.md) — Core naming modul
-- [`005-core-labels-tags-moduli.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/005-core-labels-tags-moduli.md) — Core labels tags moduli
-- [`006-aws-network-modul.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/006-aws-network-modul.md) — AWS network modul
-- [`007-eks-orchestrator-modul.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/007-eks-orchestrator-modul.md) — EKS orchestrator modul
-- [`008-kubernetes-generic-provider-bootstrap-root-primer.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/008-kubernetes-generic-provider-bootstrap-root-primer.md) — Kubernetes generic provider bootstrap root primer
-- [`009-kubernetes-platform-bootstrap.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/009-kubernetes-platform-bootstrap.md) — Kubernetes platform bootstrap
-- [`010-kubernetes-workload-app-modul.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/010-kubernetes-workload-app-modul.md) — Kubernetes workload app modul
-- [`011-kubernetes-cronjob-modul.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/011-kubernetes-cronjob-modul.md) — Kubernetes cronjob modul
-- [`012-ecs-cluster-modul.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/012-ecs-cluster-modul.md) — ECS cluster modul
-- [`013-ecs-service-workload-modul.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/013-ecs-service-workload-modul.md) — ECS service workload modul
-- [`014-nomad-job-modul.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/014-nomad-job-modul.md) — Nomad job modul
-- [`015-docker-container-i-swarm-service-moduli.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/015-docker-container-i-swarm-service-moduli.md) — Docker container i swarm service moduli
-- [`016-cli-osnova-u-go-cobra.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/016-cli-osnova-u-go-cobra.md) — CLI osnova u go cobra
-- [`017-cli-config-loader.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/017-cli-config-loader.md) — CLI config loader
-- [`018-cli-terraform-runner.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/018-cli-terraform-runner.md) — CLI Terraform runner
-- [`019-cli-generator-terraform-fajlova.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/019-cli-generator-terraform-fajlova.md) — CLI generator Terraform fajlova
-- [`020-app-manifest-i-app-generator.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/020-app-manifest-i-app-generator.md) — App manifest i app generator
-- [`021-policy-i-risk-summary.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/021-policy-i-risk-summary.md) — Policy i risk summary
-- [`022-ci-cd-workflows.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/022-ci-cd-workflows.md) — CI CD workflows
-- [`023-dokumentacija.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/023-dokumentacija.md) — Dokumentacija
-- [`024-testovi-i-examples.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/024-testovi-i-examples.md) — Testovi i examples
-- [`025-zavr-ni-refactor-i-review.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/025-zavr-ni-refactor-i-review.md) — Zavr ni refactor i review
+## Prompts 041-080
 
-## Stabilizacija i produkcioni temelji (026–050)
+- [041-environment-manifest-i-multi-stack-layout.md](./041-environment-manifest-i-multi-stack-layout.md) - Environment manifest i multi-stack layout
+- [042-remote-backend-generator.md](./042-remote-backend-generator.md) - Remote backend generator
+- [043-backend-bootstrap-module-za-aws-tfstate.md](./043-backend-bootstrap-module-za-aws-tfstate.md) - Backend bootstrap module za AWS tfstate
+- [044-observability-stack-prometheus-loki-grafana-values.md](./044-observability-stack-prometheus-loki-grafana-values.md) - Observability stack: Prometheus, Loki, Grafana values
+- [045-kubernetes-worker-workload-modul.md](./045-kubernetes-worker-workload-modul.md) - Kubernetes worker workload modul
+- [046-workload-module-helm-app-wrapper.md](./046-workload-module-helm-app-wrapper.md) - Workload module: Helm app wrapper
+- [047-cli-doctor-command-hardening.md](./047-cli-doctor-command-hardening.md) - CLI doctor command hardening
+- [048-cli-json-output-za-automatizaciju.md](./048-cli-json-output-za-automatizaciju.md) - CLI JSON output za automatizaciju
+- [049-pod-security-i-networkpolicy-module.md](./049-pod-security-i-networkpolicy-module.md) - Pod Security i NetworkPolicy module
+- [050-final-mvp-packaging.md](./050-final-mvp-packaging.md) - Final MVP packaging
+- [051-real-mvp-acceptance-test.md](./051-real-mvp-acceptance-test.md) - Real MVP acceptance test
+- [052-terraform-native-tests-for-core-modules.md](./052-terraform-native-tests-for-core-modules.md) - Terraform native tests for core modules
+- [053-plan-mode-tests-for-aws-modules.md](./053-plan-mode-tests-for-aws-modules.md) - Plan-mode tests for AWS modules
+- [054-real-cloud-smoke-test-runbook.md](./054-real-cloud-smoke-test-runbook.md) - Real cloud smoke test runbook
+- [055-ephemeral-integration-test-harness.md](./055-ephemeral-integration-test-harness.md) - Ephemeral integration test harness
+- [056-version-support-matrix.md](./056-version-support-matrix.md) - Version support matrix
+- [057-module-release-packaging.md](./057-module-release-packaging.md) - Module release packaging
+- [058-github-release-automation-for-v0-1-x.md](./058-github-release-automation-for-v0-1-x.md) - GitHub release automation for v0.1.x
+- [059-supply-chain-security-baseline.md](./059-supply-chain-security-baseline.md) - Supply chain security baseline
+- [060-public-private-module-registry-strategy.md](./060-public-private-module-registry-strategy.md) - Public/private module registry strategy
+- [061-drift-detection-command.md](./061-drift-detection-command.md) - Drift detection command
+- [062-state-inspection-and-safety-helpers.md](./062-state-inspection-and-safety-helpers.md) - State inspection and safety helpers
+- [063-upgrade-and-migration-framework.md](./063-upgrade-and-migration-framework.md) - Upgrade and migration framework
+- [064-import-adopt-existing-infrastructure-strategy.md](./064-import-adopt-existing-infrastructure-strategy.md) - Import/adopt existing infrastructure strategy
+- [065-environment-promotion-workflow.md](./065-environment-promotion-workflow.md) - Environment promotion workflow
+- [066-aks-module-design-rfc.md](./066-aks-module-design-rfc.md) - AKS module design RFC
+- [067-implement-azure-network-and-aks-mvp.md](./067-implement-azure-network-and-aks-mvp.md) - Implement Azure network and AKS MVP
+- [068-gke-module-design-rfc.md](./068-gke-module-design-rfc.md) - GKE module design RFC
+- [069-implement-gcp-network-and-gke-mvp.md](./069-implement-gcp-network-and-gke-mvp.md) - Implement GCP network and GKE MVP
+- [070-k3s-and-rke2-self-hosted-kubernetes-support.md](./070-k3s-and-rke2-self-hosted-kubernetes-support.md) - K3s and RKE2 self-hosted Kubernetes support
+- [071-enterprise-policy-packs.md](./071-enterprise-policy-packs.md) - Enterprise policy packs
+- [072-rbac-and-service-account-workload-support.md](./072-rbac-and-service-account-workload-support.md) - RBAC and service account workload support
+- [073-advanced-kubernetes-workload-features.md](./073-advanced-kubernetes-workload-features.md) - Advanced Kubernetes workload features
+- [074-ecs-blue-green-deployment-design.md](./074-ecs-blue-green-deployment-design.md) - ECS blue/green deployment design
+- [075-cost-estimation-hooks.md](./075-cost-estimation-hooks.md) - Cost estimation hooks
+- [076-plugin-architecture-rfc.md](./076-plugin-architecture-rfc.md) - Plugin architecture RFC
+- [077-template-pack-support.md](./077-template-pack-support.md) - Template pack support
+- [078-product-website-docs-skeleton.md](./078-product-website-docs-skeleton.md) - Product website docs skeleton
+- [079-user-onboarding-examples.md](./079-user-onboarding-examples.md) - User onboarding examples
+- [080-v0-2-0-planning-and-milestone-board.md](./080-v0-2-0-planning-and-milestone-board.md) - v0.2.0 planning and milestone board
 
-Validacija, security skeneri, hardening, GitOps, observability, CLI automatizacija i MVP pakovanje.
+## Prompts 081-120
 
-- [`026-audit-trenutnog-stanja-projekta.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/026-audit-trenutnog-stanja-projekta.md) — Audit trenutnog stanja projekta
-- [`027-makefile-developer-workflow.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/027-makefile-developer-workflow.md) — Makefile developer workflow
-- [`028-stabilizuj-terraform-validaciju.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/028-stabilizuj-terraform-validaciju.md) — Stabilizuj Terraform validaciju
-- [`029-automatska-dokumentacija-za-terraform-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/029-automatska-dokumentacija-za-terraform-module.md) — Automatska dokumentacija za Terraform module
-- [`030-tflint-checkov-i-trivy-config-scanning.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/030-tflint-checkov-i-trivy-config-scanning.md) — TFLint Checkov i Trivy config scanning
-- [`031-eks-hardening-oidc-irsa-i-add-on-role-support.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/031-eks-hardening-oidc-irsa-i-add-on-role-support.md) — EKS hardening OIDC IRSA i add on role support
-- [`032-external-secrets-operator-integracija.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/032-external-secrets-operator-integracija.md) — External secrets operator integracija
-- [`033-argo-cd-gitops-module-i-app-of-apps.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/033-argo-cd-gitops-module-i-app-of-apps.md) — Argo CD gitops module i app of apps
-- [`034-kubernetes-autoscaling-cluster-autoscaler-ili-karpenter.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/034-kubernetes-autoscaling-cluster-autoscaler-ili-karpenter.md) — Kubernetes autoscaling cluster autoscaler ili karpenter
-- [`035-ecs-alb-module-i-povezivanje-sa-ecs-servisom.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/035-ecs-alb-module-i-povezivanje-sa-ecs-servisom.md) — ECS ALB module i povezivanje sa ECS servisom
-- [`036-route53-dns-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/036-route53-dns-module.md) — Route 53 DNS module
-- [`037-cert-manager-clusterissuer-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/037-cert-manager-clusterissuer-module.md) — Cert manager clusterissuer module
-- [`038-cli-install-shell-completion-i-release-build.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/038-cli-install-shell-completion-i-release-build.md) — CLI install shell completion i release build
-- [`039-cli-interactive-wizard.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/039-cli-interactive-wizard.md) — CLI interactive wizard
-- [`040-app-manifest-schema-validation.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/040-app-manifest-schema-validation.md) — App manifest schema validation
-- [`041-environment-manifest-i-multi-stack-layout.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/041-environment-manifest-i-multi-stack-layout.md) — Environment manifest i multi stack layout
-- [`042-remote-backend-generator.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/042-remote-backend-generator.md) — Remote backend generator
-- [`043-backend-bootstrap-module-za-aws-tfstate.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/043-backend-bootstrap-module-za-aws-tfstate.md) — Backend bootstrap module za AWS tfstate
-- [`044-observability-stack-prometheus-loki-grafana-values.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/044-observability-stack-prometheus-loki-grafana-values.md) — Observability stack prometheus loki grafana values
-- [`045-kubernetes-worker-workload-modul.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/045-kubernetes-worker-workload-modul.md) — Kubernetes worker workload modul
-- [`046-workload-module-helm-app-wrapper.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/046-workload-module-helm-app-wrapper.md) — Workload module helm app wrapper
-- [`047-cli-doctor-command-hardening.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/047-cli-doctor-command-hardening.md) — CLI doctor command hardening
-- [`048-cli-json-output-za-automatizaciju.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/048-cli-json-output-za-automatizaciju.md) — CLI JSON output za automatizaciju
-- [`049-pod-security-i-networkpolicy-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/049-pod-security-i-networkpolicy-module.md) — Pod security i networkpolicy module
-- [`050-final-mvp-packaging.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/050-final-mvp-packaging.md) — Final MVP packaging
+- [081-v0-2-release-gate-review.md](./081-v0-2-release-gate-review.md) - v0.2 release gate review
+- [082-local-kubernetes-development-target-with-kind-or-k3d.md](./082-local-kubernetes-development-target-with-kind-or-k3d.md) - Local Kubernetes development target with Kind or K3d
+- [083-existing-kubernetes-environment-support.md](./083-existing-kubernetes-environment-support.md) - Existing Kubernetes environment support
+- [084-provider-compatibility-matrix-ci.md](./084-provider-compatibility-matrix-ci.md) - Provider compatibility matrix CI
+- [085-golden-tests-for-cli-generators.md](./085-golden-tests-for-cli-generators.md) - Golden tests for CLI generators
+- [086-cli-end-to-end-non-cloud-tests.md](./086-cli-end-to-end-non-cloud-tests.md) - CLI end-to-end non-cloud tests
+- [087-module-conformance-checker.md](./087-module-conformance-checker.md) - Module conformance checker
+- [088-platform-conformance-tests-for-kubernetes-add-ons.md](./088-platform-conformance-tests-for-kubernetes-add-ons.md) - Platform conformance tests for Kubernetes add-ons
+- [089-eks-production-hardening-options.md](./089-eks-production-hardening-options.md) - EKS production hardening options
+- [090-aws-kms-reusable-module.md](./090-aws-kms-reusable-module.md) - AWS KMS reusable module
+- [091-aws-vpc-endpoints-module.md](./091-aws-vpc-endpoints-module.md) - AWS VPC endpoints module
+- [092-ecr-registry-module.md](./092-ecr-registry-module.md) - ECR registry module
+- [093-container-image-security-workflow.md](./093-container-image-security-workflow.md) - Container image security workflow
+- [094-velero-backup-module.md](./094-velero-backup-module.md) - Velero backup module
+- [095-disaster-recovery-runbooks.md](./095-disaster-recovery-runbooks.md) - Disaster recovery runbooks
+- [096-external-dns-production-hardening.md](./096-external-dns-production-hardening.md) - External DNS production hardening
+- [097-cert-manager-route53-dns01-iam-module.md](./097-cert-manager-route53-dns01-iam-module.md) - Cert-manager Route53 DNS01 IAM module
+- [098-aws-rds-postgresql-module.md](./098-aws-rds-postgresql-module.md) - AWS RDS PostgreSQL module
+- [099-aws-elasticache-redis-module.md](./099-aws-elasticache-redis-module.md) - AWS ElastiCache Redis module
+- [100-aws-messaging-modules-sqs-and-sns.md](./100-aws-messaging-modules-sqs-and-sns.md) - AWS messaging modules: SQS and SNS
+- [101-workload-cloud-identity-abstraction.md](./101-workload-cloud-identity-abstraction.md) - Workload cloud identity abstraction
+- [102-service-binding-pattern-for-apps.md](./102-service-binding-pattern-for-apps.md) - Service binding pattern for apps
+- [103-kubernetes-tenant-model.md](./103-kubernetes-tenant-model.md) - Kubernetes tenant model
+- [104-resourcequota-and-limitrange-baseline-modules.md](./104-resourcequota-and-limitrange-baseline-modules.md) - ResourceQuota and LimitRange baseline modules
+- [105-kyverno-policy-module.md](./105-kyverno-policy-module.md) - Kyverno policy module
+- [106-opa-gatekeeper-alternative-module.md](./106-opa-gatekeeper-alternative-module.md) - OPA Gatekeeper alternative module
+- [107-progressive-delivery-with-argo-rollouts.md](./107-progressive-delivery-with-argo-rollouts.md) - Progressive delivery with Argo Rollouts
+- [108-service-mesh-rfc.md](./108-service-mesh-rfc.md) - Service mesh RFC
+- [109-multi-cluster-inventory-model.md](./109-multi-cluster-inventory-model.md) - Multi-cluster inventory model
+- [110-fleet-operations-cli.md](./110-fleet-operations-cli.md) - Fleet operations CLI
+- [111-environment-graph-visualization.md](./111-environment-graph-visualization.md) - Environment graph visualization
+- [112-scheduled-drift-check-workflow-templates.md](./112-scheduled-drift-check-workflow-templates.md) - Scheduled drift check workflow templates
+- [113-cli-audit-log.md](./113-cli-audit-log.md) - CLI audit log
+- [114-pre-commit-hooks.md](./114-pre-commit-hooks.md) - Pre-commit hooks
+- [115-secret-scanning-baseline.md](./115-secret-scanning-baseline.md) - Secret scanning baseline
+- [116-devcontainer-and-reproducible-dev-environment.md](./116-devcontainer-and-reproducible-dev-environment.md) - Devcontainer and reproducible dev environment
+- [117-nix-flake-or-asdf-tool-versions.md](./117-nix-flake-or-asdf-tool-versions.md) - Nix flake or asdf tool versions
+- [118-github-issue-and-pr-templates.md](./118-github-issue-and-pr-templates.md) - GitHub issue and PR templates
+- [119-security-threat-model.md](./119-security-threat-model.md) - Security threat model
+- [120-v0-3-release-planning.md](./120-v0-3-release-planning.md) - v0.3 release planning
 
-## Testiranje, distribucija i proširenje platformi (051–080)
+## Prompts 121-160
 
-Acceptance i cloud testovi, release/supply-chain proces, migracije, Azure/GCP/self-hosted podrška, plugin strategija i v0.2 plan.
+- [121-v0-3-release-gate-review.md](./121-v0-3-release-gate-review.md) - v0.3 release gate review
+- [122-cli-plugin-system-mvp.md](./122-cli-plugin-system-mvp.md) - CLI plugin system MVP
+- [123-template-pack-registry-support.md](./123-template-pack-registry-support.md) - Template pack registry support
+- [124-policy-engine-v2.md](./124-policy-engine-v2.md) - Policy engine v2
+- [125-organization-and-workspace-model.md](./125-organization-and-workspace-model.md) - Organization and workspace model
+- [126-aws-multi-account-strategy.md](./126-aws-multi-account-strategy.md) - AWS multi-account strategy
+- [127-multi-region-environment-strategy.md](./127-multi-region-environment-strategy.md) - Multi-region environment strategy
+- [128-kubernetes-upgrade-planner.md](./128-kubernetes-upgrade-planner.md) - Kubernetes upgrade planner
+- [129-platform-add-on-upgrade-planner.md](./129-platform-add-on-upgrade-planner.md) - Platform add-on upgrade planner
+- [130-terraform-opentofu-execution-profiles.md](./130-terraform-opentofu-execution-profiles.md) - Terraform/OpenTofu execution profiles
+- [131-terraform-cloud-hcp-terraform-integration.md](./131-terraform-cloud-hcp-terraform-integration.md) - Terraform Cloud / HCP Terraform integration
+- [132-gitlab-ci-templates.md](./132-gitlab-ci-templates.md) - GitLab CI templates
+- [133-azure-and-gcp-production-hardening-docs.md](./133-azure-and-gcp-production-hardening-docs.md) - Azure and GCP production hardening docs
+- [134-nomad-production-mvp.md](./134-nomad-production-mvp.md) - Nomad production MVP
+- [135-docker-target-policy-and-lifecycle-decision.md](./135-docker-target-policy-and-lifecycle-decision.md) - Docker target policy and lifecycle decision
+- [136-slo-and-platform-health-model.md](./136-slo-and-platform-health-model.md) - SLO and platform health model
+- [137-opentelemetry-platform-module.md](./137-opentelemetry-platform-module.md) - OpenTelemetry platform module
+- [138-incident-response-documentation.md](./138-incident-response-documentation.md) - Incident response documentation
+- [139-runbook-cli-scaffolding.md](./139-runbook-cli-scaffolding.md) - Runbook CLI scaffolding
+- [140-finops-v2-with-infracost-integration.md](./140-finops-v2-with-infracost-integration.md) - FinOps v2 with Infracost integration
+- [141-cloud-asset-inventory-export.md](./141-cloud-asset-inventory-export.md) - Cloud asset inventory export
+- [142-backstage-integration.md](./142-backstage-integration.md) - Backstage integration
+- [143-service-catalog-manifest.md](./143-service-catalog-manifest.md) - Service catalog manifest
+- [144-platform-api-rfc.md](./144-platform-api-rfc.md) - Platform API RFC
+- [145-web-dashboard-prototype-rfc.md](./145-web-dashboard-prototype-rfc.md) - Web dashboard prototype RFC
+- [146-dashboard-data-export.md](./146-dashboard-data-export.md) - Dashboard data export
+- [147-audit-event-export-and-siem-integration.md](./147-audit-event-export-and-siem-integration.md) - Audit event export and SIEM integration
+- [148-secret-rotation-workflow.md](./148-secret-rotation-workflow.md) - Secret rotation workflow
+- [149-kubernetes-admission-security-extended-pack.md](./149-kubernetes-admission-security-extended-pack.md) - Kubernetes admission security extended pack
+- [150-compliance-mapping-packs.md](./150-compliance-mapping-packs.md) - Compliance mapping packs
+- [151-backup-validation-tests.md](./151-backup-validation-tests.md) - Backup validation tests
+- [152-cross-cluster-gitops-support.md](./152-cross-cluster-gitops-support.md) - Cross-cluster GitOps support
+- [153-cluster-federation-rfc.md](./153-cluster-federation-rfc.md) - Cluster federation RFC
+- [154-edge-deployment-support-rfc.md](./154-edge-deployment-support-rfc.md) - Edge deployment support RFC
+- [155-air-gapped-and-offline-support.md](./155-air-gapped-and-offline-support.md) - Air-gapped and offline support
+- [156-windows-containers-support-assessment.md](./156-windows-containers-support-assessment.md) - Windows containers support assessment
+- [157-migration-analyzer-for-existing-terraform-repos.md](./157-migration-analyzer-for-existing-terraform-repos.md) - Migration analyzer for existing Terraform repos
+- [158-project-scaffolding-wizard-v2.md](./158-project-scaffolding-wizard-v2.md) - Project scaffolding wizard v2
+- [159-v0-4-roadmap-and-scope.md](./159-v0-4-roadmap-and-scope.md) - v0.4 roadmap and scope
+- [160-v0-4-release-candidate-packaging.md](./160-v0-4-release-candidate-packaging.md) - v0.4 release candidate packaging
 
-- [`051-real-mvp-acceptance-test.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/051-real-mvp-acceptance-test.md) — Real MVP acceptance test
-- [`052-terraform-native-tests-for-core-modules.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/052-terraform-native-tests-for-core-modules.md) — Terraform native tests for core modules
-- [`053-plan-mode-tests-for-aws-modules.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/053-plan-mode-tests-for-aws-modules.md) — Plan mode tests for AWS modules
-- [`054-real-cloud-smoke-test-runbook.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/054-real-cloud-smoke-test-runbook.md) — Real cloud smoke test runbook
-- [`055-ephemeral-integration-test-harness.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/055-ephemeral-integration-test-harness.md) — Ephemeral integration test harness
-- [`056-version-support-matrix.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/056-version-support-matrix.md) — Version support matrix
-- [`057-module-release-packaging.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/057-module-release-packaging.md) — Module release packaging
-- [`058-github-release-automation-for-v0-1-x.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/058-github-release-automation-for-v0-1-x.md) — GitHub release automation for v0 1 x
-- [`059-supply-chain-security-baseline.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/059-supply-chain-security-baseline.md) — Supply chain security baseline
-- [`060-public-private-module-registry-strategy.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/060-public-private-module-registry-strategy.md) — Public private module registry strategy
-- [`061-drift-detection-command.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/061-drift-detection-command.md) — Drift detection command
-- [`062-state-inspection-and-safety-helpers.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/062-state-inspection-and-safety-helpers.md) — State inspection and safety helpers
-- [`063-upgrade-and-migration-framework.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/063-upgrade-and-migration-framework.md) — Upgrade and migration framework
-- [`064-import-adopt-existing-infrastructure-strategy.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/064-import-adopt-existing-infrastructure-strategy.md) — Import adopt existing infrastructure strategy
-- [`065-environment-promotion-workflow.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/065-environment-promotion-workflow.md) — Environment promotion workflow
-- [`066-aks-module-design-rfc.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/066-aks-module-design-rfc.md) — AKS module design RFC
-- [`067-implement-azure-network-and-aks-mvp.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/067-implement-azure-network-and-aks-mvp.md) — Implement azure network and AKS MVP
-- [`068-gke-module-design-rfc.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/068-gke-module-design-rfc.md) — GKE module design RFC
-- [`069-implement-gcp-network-and-gke-mvp.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/069-implement-gcp-network-and-gke-mvp.md) — Implement gcp network and GKE MVP
-- [`070-k3s-and-rke2-self-hosted-kubernetes-support.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/070-k3s-and-rke2-self-hosted-kubernetes-support.md) — K3s and RKE2 self hosted Kubernetes support
-- [`071-enterprise-policy-packs.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/071-enterprise-policy-packs.md) — Enterprise policy packs
-- [`072-rbac-and-service-account-workload-support.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/072-rbac-and-service-account-workload-support.md) — RBAC and service account workload support
-- [`073-advanced-kubernetes-workload-features.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/073-advanced-kubernetes-workload-features.md) — Advanced Kubernetes workload features
-- [`074-ecs-blue-green-deployment-design.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/074-ecs-blue-green-deployment-design.md) — ECS blue green deployment design
-- [`075-cost-estimation-hooks.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/075-cost-estimation-hooks.md) — Cost estimation hooks
-- [`076-plugin-architecture-rfc.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/076-plugin-architecture-rfc.md) — Plugin architecture RFC
-- [`077-template-pack-support.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/077-template-pack-support.md) — Template pack support
-- [`078-product-website-docs-skeleton.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/078-product-website-docs-skeleton.md) — Product website docs skeleton
-- [`079-user-onboarding-examples.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/079-user-onboarding-examples.md) — User onboarding examples
-- [`080-v0-2-0-planning-and-milestone-board.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/080-v0-2-0-planning-and-milestone-board.md) — V0 2 0 planning and milestone board
+## Prompts 161-200
 
-## Conformance, bezbednost i napredne platforme (081–120)
+- [161-v0-4-final-release-gate-review.md](./161-v0-4-final-release-gate-review.md) - v0.4 final release gate review
+- [162-clusterforge-control-plane-architecture-rfc.md](./162-clusterforge-control-plane-architecture-rfc.md) - ClusterForge Control Plane architecture RFC
+- [163-control-plane-api-server-scaffold.md](./163-control-plane-api-server-scaffold.md) - Control Plane API server scaffold
+- [164-control-plane-database-schema-mvp.md](./164-control-plane-database-schema-mvp.md) - Control Plane database schema MVP
+- [165-control-plane-rest-api-resources.md](./165-control-plane-rest-api-resources.md) - Control Plane REST API resources
+- [166-control-plane-authentication-mvp.md](./166-control-plane-authentication-mvp.md) - Control Plane authentication MVP
+- [167-cli-integration-with-control-plane.md](./167-cli-integration-with-control-plane.md) - CLI integration with Control Plane
+- [168-runner-architecture-rfc.md](./168-runner-architecture-rfc.md) - Runner architecture RFC
+- [169-runner-agent-mvp.md](./169-runner-agent-mvp.md) - Runner agent MVP
+- [170-plan-request-workflow.md](./170-plan-request-workflow.md) - Plan request workflow
+- [171-approval-workflow-mvp.md](./171-approval-workflow-mvp.md) - Approval workflow MVP
+- [172-apply-job-execution-mvp.md](./172-apply-job-execution-mvp.md) - Apply job execution MVP
+- [173-server-side-audit-trail.md](./173-server-side-audit-trail.md) - Server-side audit trail
+- [174-notification-system-mvp.md](./174-notification-system-mvp.md) - Notification system MVP
+- [175-dashboard-mvp-scaffold.md](./175-dashboard-mvp-scaffold.md) - Dashboard MVP scaffold
+- [176-dashboard-inventory-pages.md](./176-dashboard-inventory-pages.md) - Dashboard inventory pages
+- [177-dashboard-operations-pages.md](./177-dashboard-operations-pages.md) - Dashboard operations pages
+- [178-service-catalog-api-and-dashboard.md](./178-service-catalog-api-and-dashboard.md) - Service catalog API and dashboard
+- [179-runbook-api-and-dashboard.md](./179-runbook-api-and-dashboard.md) - Runbook API and dashboard
+- [180-git-provider-integration-rfc.md](./180-git-provider-integration-rfc.md) - Git provider integration RFC
+- [181-github-pr-plan-comments.md](./181-github-pr-plan-comments.md) - GitHub PR plan comments
+- [182-gitlab-merge-request-plan-comments.md](./182-gitlab-merge-request-plan-comments.md) - GitLab merge request plan comments
+- [183-sarif-and-code-scanning-integration.md](./183-sarif-and-code-scanning-integration.md) - SARIF and code scanning integration
+- [184-secrets-reference-inventory.md](./184-secrets-reference-inventory.md) - Secrets reference inventory
+- [185-scheduled-drift-checks-in-control-plane.md](./185-scheduled-drift-checks-in-control-plane.md) - Scheduled drift checks in Control Plane
+- [186-scheduled-cost-reports-in-control-plane.md](./186-scheduled-cost-reports-in-control-plane.md) - Scheduled cost reports in Control Plane
+- [187-runner-deployment-on-kubernetes.md](./187-runner-deployment-on-kubernetes.md) - Runner deployment on Kubernetes
+- [188-control-plane-helm-chart.md](./188-control-plane-helm-chart.md) - Control Plane Helm chart
+- [189-terraform-module-for-control-plane-deployment.md](./189-terraform-module-for-control-plane-deployment.md) - Terraform module for Control Plane deployment
+- [190-control-plane-external-database-module.md](./190-control-plane-external-database-module.md) - Control Plane external database module
+- [191-control-plane-observability.md](./191-control-plane-observability.md) - Control Plane observability
+- [192-control-plane-backup-and-restore.md](./192-control-plane-backup-and-restore.md) - Control Plane backup and restore
+- [193-control-plane-e2e-tests.md](./193-control-plane-e2e-tests.md) - Control Plane E2E tests
+- [194-control-plane-load-and-reliability-tests.md](./194-control-plane-load-and-reliability-tests.md) - Control Plane load and reliability tests
+- [195-control-plane-security-hardening.md](./195-control-plane-security-hardening.md) - Control Plane security hardening
+- [196-docker-images-and-container-release.md](./196-docker-images-and-container-release.md) - Docker images and container release
+- [197-container-signing-and-provenance-plan.md](./197-container-signing-and-provenance-plan.md) - Container signing and provenance plan
+- [198-control-plane-documentation-site-section.md](./198-control-plane-documentation-site-section.md) - Control Plane documentation site section
+- [199-v0-5-roadmap-and-release-plan.md](./199-v0-5-roadmap-and-release-plan.md) - v0.5 roadmap and release plan
+- [200-v0-5-release-candidate-packaging.md](./200-v0-5-release-candidate-packaging.md) - v0.5 release candidate packaging
 
-Release gate, lokalni Kubernetes, compatibility i golden testovi, AWS/Kubernetes proširenja, fleet operacije, developer tooling i v0.3 plan.
+## Prompts 201-240
 
-- [`081-v0-2-release-gate-review.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/081-v0-2-release-gate-review.md) — V0 2 release gate review
-- [`082-local-kubernetes-development-target-with-kind-or-k3d.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/082-local-kubernetes-development-target-with-kind-or-k3d.md) — Local Kubernetes development target with kind or k3d
-- [`083-existing-kubernetes-environment-support.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/083-existing-kubernetes-environment-support.md) — Existing Kubernetes environment support
-- [`084-provider-compatibility-matrix-ci.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/084-provider-compatibility-matrix-ci.md) — Provider compatibility matrix CI
-- [`085-golden-tests-for-cli-generators.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/085-golden-tests-for-cli-generators.md) — Golden tests for CLI generators
-- [`086-cli-end-to-end-non-cloud-tests.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/086-cli-end-to-end-non-cloud-tests.md) — CLI end to end non cloud tests
-- [`087-module-conformance-checker.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/087-module-conformance-checker.md) — Module conformance checker
-- [`088-platform-conformance-tests-for-kubernetes-add-ons.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/088-platform-conformance-tests-for-kubernetes-add-ons.md) — Platform conformance tests for Kubernetes add ons
-- [`089-eks-production-hardening-options.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/089-eks-production-hardening-options.md) — EKS production hardening options
-- [`090-aws-kms-reusable-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/090-aws-kms-reusable-module.md) — AWS KMS reusable module
-- [`091-aws-vpc-endpoints-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/091-aws-vpc-endpoints-module.md) — AWS vpc endpoints module
-- [`092-ecr-registry-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/092-ecr-registry-module.md) — ECR registry module
-- [`093-container-image-security-workflow.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/093-container-image-security-workflow.md) — Container image security workflow
-- [`094-velero-backup-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/094-velero-backup-module.md) — Velero backup module
-- [`095-disaster-recovery-runbooks.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/095-disaster-recovery-runbooks.md) — Disaster recovery runbooks
-- [`096-external-dns-production-hardening.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/096-external-dns-production-hardening.md) — External DNS production hardening
-- [`097-cert-manager-route53-dns01-iam-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/097-cert-manager-route53-dns01-iam-module.md) — Cert manager Route 53 dns01 IAM module
-- [`098-aws-rds-postgresql-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/098-aws-rds-postgresql-module.md) — AWS RDS postgresql module
-- [`099-aws-elasticache-redis-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/099-aws-elasticache-redis-module.md) — AWS elasticache redis module
-- [`100-aws-messaging-modules-sqs-and-sns.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/100-aws-messaging-modules-sqs-and-sns.md) — AWS messaging modules SQS and SNS
-- [`101-workload-cloud-identity-abstraction.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/101-workload-cloud-identity-abstraction.md) — Workload cloud identity abstraction
-- [`102-service-binding-pattern-for-apps.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/102-service-binding-pattern-for-apps.md) — Service binding pattern for apps
-- [`103-kubernetes-tenant-model.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/103-kubernetes-tenant-model.md) — Kubernetes tenant model
-- [`104-resourcequota-and-limitrange-baseline-modules.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/104-resourcequota-and-limitrange-baseline-modules.md) — Resourcequota and limitrange baseline modules
-- [`105-kyverno-policy-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/105-kyverno-policy-module.md) — Kyverno policy module
-- [`106-opa-gatekeeper-alternative-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/106-opa-gatekeeper-alternative-module.md) — OPA Gatekeeper alternative module
-- [`107-progressive-delivery-with-argo-rollouts.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/107-progressive-delivery-with-argo-rollouts.md) — Progressive delivery with argo rollouts
-- [`108-service-mesh-rfc.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/108-service-mesh-rfc.md) — Service mesh RFC
-- [`109-multi-cluster-inventory-model.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/109-multi-cluster-inventory-model.md) — Multi cluster inventory model
-- [`110-fleet-operations-cli.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/110-fleet-operations-cli.md) — Fleet operations CLI
-- [`111-environment-graph-visualization.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/111-environment-graph-visualization.md) — Environment graph visualization
-- [`112-scheduled-drift-check-workflow-templates.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/112-scheduled-drift-check-workflow-templates.md) — Scheduled drift check workflow templates
-- [`113-cli-audit-log.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/113-cli-audit-log.md) — CLI audit log
-- [`114-pre-commit-hooks.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/114-pre-commit-hooks.md) — Pre commit hooks
-- [`115-secret-scanning-baseline.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/115-secret-scanning-baseline.md) — Secret scanning baseline
-- [`116-devcontainer-and-reproducible-dev-environment.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/116-devcontainer-and-reproducible-dev-environment.md) — Devcontainer and reproducible dev environment
-- [`117-nix-flake-or-asdf-tool-versions.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/117-nix-flake-or-asdf-tool-versions.md) — Nix flake or asdf tool versions
-- [`118-github-issue-and-pr-templates.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/118-github-issue-and-pr-templates.md) — GitHub issue and pr templates
-- [`119-security-threat-model.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/119-security-threat-model.md) — Security threat model
-- [`120-v0-3-release-planning.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/120-v0-3-release-planning.md) — V0 3 release planning
+- [201-v0-5-final-release-gate-review.md](./201-v0-5-final-release-gate-review.md) - v0.5 final release gate review
+- [202-control-plane-multi-tenancy-rfc.md](./202-control-plane-multi-tenancy-rfc.md) - Control Plane multi-tenancy RFC
+- [203-control-plane-rbac-v2.md](./203-control-plane-rbac-v2.md) - Control Plane RBAC v2
+- [204-oidc-sso-authentication.md](./204-oidc-sso-authentication.md) - OIDC / SSO authentication
+- [205-user-group-and-service-account-management.md](./205-user-group-and-service-account-management.md) - User, group and service account management
+- [206-token-rotation-and-runner-credential-lifecycle.md](./206-token-rotation-and-runner-credential-lifecycle.md) - Token rotation and runner credential lifecycle
+- [207-artifact-storage-rfc.md](./207-artifact-storage-rfc.md) - Artifact storage RFC
+- [208-artifact-storage-implementation.md](./208-artifact-storage-implementation.md) - Artifact storage implementation
+- [209-s3-compatible-artifact-backend.md](./209-s3-compatible-artifact-backend.md) - S3-compatible artifact backend
+- [210-artifact-retention-and-cleanup.md](./210-artifact-retention-and-cleanup.md) - Artifact retention and cleanup
+- [211-job-queue-hardening.md](./211-job-queue-hardening.md) - Job queue hardening
+- [212-runner-pools-and-labels.md](./212-runner-pools-and-labels.md) - Runner pools and labels
+- [213-runner-sandboxing-and-execution-isolation.md](./213-runner-sandboxing-and-execution-isolation.md) - Runner sandboxing and execution isolation
+- [214-remote-execution-profiles.md](./214-remote-execution-profiles.md) - Remote execution profiles
+- [215-plan-artifact-encryption-strategy.md](./215-plan-artifact-encryption-strategy.md) - Plan artifact encryption strategy
+- [216-environment-locks-and-freeze-windows.md](./216-environment-locks-and-freeze-windows.md) - Environment locks and freeze windows
+- [217-rollback-workflow-design.md](./217-rollback-workflow-design.md) - Rollback workflow design
+- [218-apply-history-and-change-records.md](./218-apply-history-and-change-records.md) - Apply history and change records
+- [219-rollback-planner-mvp.md](./219-rollback-planner-mvp.md) - Rollback planner MVP
+- [220-deployment-freeze-policy-integration.md](./220-deployment-freeze-policy-integration.md) - Deployment freeze policy integration
+- [221-github-webhook-integration.md](./221-github-webhook-integration.md) - GitHub webhook integration
+- [222-gitlab-webhook-integration.md](./222-gitlab-webhook-integration.md) - GitLab webhook integration
+- [223-pr-mr-check-status-api.md](./223-pr-mr-check-status-api.md) - PR/MR check status API
+- [224-pull-request-environment-preview-rfc.md](./224-pull-request-environment-preview-rfc.md) - Pull request environment preview RFC
+- [225-preview-environments-mvp-for-kubernetes.md](./225-preview-environments-mvp-for-kubernetes.md) - Preview environments MVP for Kubernetes
+- [226-preview-ttl-controller-job.md](./226-preview-ttl-controller-job.md) - Preview TTL controller job
+- [227-environment-promotion-through-control-plane.md](./227-environment-promotion-through-control-plane.md) - Environment promotion through Control Plane
+- [228-deployment-windows-and-release-calendar.md](./228-deployment-windows-and-release-calendar.md) - Deployment windows and release calendar
+- [229-incident-mode.md](./229-incident-mode.md) - Incident mode
+- [230-emergency-break-glass-workflow.md](./230-emergency-break-glass-workflow.md) - Emergency break-glass workflow
+- [231-high-availability-deployment-architecture.md](./231-high-availability-deployment-architecture.md) - High availability deployment architecture
+- [232-database-migrations-and-zero-downtime-upgrade-policy.md](./232-database-migrations-and-zero-downtime-upgrade-policy.md) - Database migrations and zero-downtime upgrade policy
+- [233-control-plane-backup-automation-integration.md](./233-control-plane-backup-automation-integration.md) - Control Plane backup automation integration
+- [234-control-plane-observability-dashboards.md](./234-control-plane-observability-dashboards.md) - Control Plane observability dashboards
+- [235-performance-profiling-and-optimization.md](./235-performance-profiling-and-optimization.md) - Performance profiling and optimization
+- [236-enterprise-audit-export-integrations.md](./236-enterprise-audit-export-integrations.md) - Enterprise audit export integrations
+- [237-data-retention-policies.md](./237-data-retention-policies.md) - Data retention policies
+- [238-control-plane-disaster-recovery-drill.md](./238-control-plane-disaster-recovery-drill.md) - Control Plane disaster recovery drill
+- [239-v0-6-roadmap-and-release-plan.md](./239-v0-6-roadmap-and-release-plan.md) - v0.6 roadmap and release plan
+- [240-v0-6-release-candidate-packaging.md](./240-v0-6-release-candidate-packaging.md) - v0.6 release candidate packaging
 
-## Enterprise i operativne funkcije (121–160)
+## Prompts 241-280
 
-Plugin i policy engine, organizacioni model, upgrade planeri, enterprise integracije, inventar, compliance, DR, edge/offline procene i v0.4 izdanje.
+- [241-v0-6-final-release-gate-review.md](./241-v0-6-final-release-gate-review.md) - v0.6 final release gate review
+- [242-saas-readiness-architecture-rfc.md](./242-saas-readiness-architecture-rfc.md) - SaaS-readiness architecture RFC
+- [243-tenant-isolation-enforcement-tests.md](./243-tenant-isolation-enforcement-tests.md) - Tenant isolation enforcement tests
+- [244-tenant-scoped-data-access-layer.md](./244-tenant-scoped-data-access-layer.md) - Tenant-scoped data access layer
+- [245-api-rate-limiting-and-tenant-quotas.md](./245-api-rate-limiting-and-tenant-quotas.md) - API rate limiting and tenant quotas
+- [246-usage-metering-model.md](./246-usage-metering-model.md) - Usage metering model
+- [247-usage-metering-implementation-mvp.md](./247-usage-metering-implementation-mvp.md) - Usage metering implementation MVP
+- [248-billing-integration-rfc.md](./248-billing-integration-rfc.md) - Billing integration RFC
+- [249-organization-onboarding-workflow.md](./249-organization-onboarding-workflow.md) - Organization onboarding workflow
+- [250-organization-offboarding-and-data-deletion-workflow.md](./250-organization-offboarding-and-data-deletion-workflow.md) - Organization offboarding and data deletion workflow
+- [251-customer-managed-encryption-keys-rfc.md](./251-customer-managed-encryption-keys-rfc.md) - Customer-managed encryption keys RFC
+- [254-secret-reference-broker-mvp.md](./254-secret-reference-broker-mvp.md) - Secret reference broker MVP
+- [255-kubernetes-job-runner-executor.md](./255-kubernetes-job-runner-executor.md) - Kubernetes Job runner executor
+- [256-ephemeral-runner-pools.md](./256-ephemeral-runner-pools.md) - Ephemeral runner pools
+- [257-runner-autoscaling-rfc.md](./257-runner-autoscaling-rfc.md) - Runner autoscaling RFC
+- [258-job-fairness-and-tenant-quotas.md](./258-job-fairness-and-tenant-quotas.md) - Job fairness and tenant quotas
+- [259-advanced-approval-policies.md](./259-advanced-approval-policies.md) - Advanced approval policies
+- [260-policy-exceptions-and-waivers.md](./260-policy-exceptions-and-waivers.md) - Policy exceptions and waivers
+- [261-risk-acceptance-workflow.md](./261-risk-acceptance-workflow.md) - Risk acceptance workflow
+- [262-change-advisory-board-workflow.md](./262-change-advisory-board-workflow.md) - Change Advisory Board workflow
+- [263-incident-management-integrations.md](./263-incident-management-integrations.md) - Incident management integrations
+- [264-compliance-evidence-collection.md](./264-compliance-evidence-collection.md) - Compliance evidence collection
+- [267-audit-hash-chain-implementation-mvp.md](./267-audit-hash-chain-implementation-mvp.md) - Audit hash chain implementation MVP
+- [268-scim-provisioning-rfc.md](./268-scim-provisioning-rfc.md) - SCIM provisioning RFC
+- [269-scim-provisioning-mvp.md](./269-scim-provisioning-mvp.md) - SCIM provisioning MVP
+- [270-data-residency-model.md](./270-data-residency-model.md) - Data residency model
+- [271-regional-control-plane-deployment-patterns.md](./271-regional-control-plane-deployment-patterns.md) - Regional Control Plane deployment patterns
+- [272-cluster-api-integration-rfc.md](./272-cluster-api-integration-rfc.md) - Cluster API integration RFC
+- [273-cluster-lifecycle-blueprint-model.md](./273-cluster-lifecycle-blueprint-model.md) - Cluster lifecycle blueprint model
+- [274-blueprint-registry-support.md](./274-blueprint-registry-support.md) - Blueprint registry support
+- [275-crossplane-integration-rfc.md](./275-crossplane-integration-rfc.md) - Crossplane integration RFC
+- [276-kubernetes-fleet-add-on-manager.md](./276-kubernetes-fleet-add-on-manager.md) - Kubernetes fleet add-on manager
+- [277-gitops-reconciliation-status-ingestion.md](./277-gitops-reconciliation-status-ingestion.md) - GitOps reconciliation status ingestion
+- [280-v0-7-release-candidate-packaging.md](./280-v0-7-release-candidate-packaging.md) - v0.7 release candidate packaging
 
-- [`121-v0-3-release-gate-review.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/121-v0-3-release-gate-review.md) — V0 3 release gate review
-- [`122-cli-plugin-system-mvp.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/122-cli-plugin-system-mvp.md) — CLI plugin system MVP
-- [`123-template-pack-registry-support.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/123-template-pack-registry-support.md) — Template pack registry support
-- [`124-policy-engine-v2.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/124-policy-engine-v2.md) — Policy engine v2
-- [`125-organization-and-workspace-model.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/125-organization-and-workspace-model.md) — Organization and workspace model
-- [`126-aws-multi-account-strategy.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/126-aws-multi-account-strategy.md) — AWS multi account strategy
-- [`127-multi-region-environment-strategy.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/127-multi-region-environment-strategy.md) — Multi region environment strategy
-- [`128-kubernetes-upgrade-planner.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/128-kubernetes-upgrade-planner.md) — Kubernetes upgrade planner
-- [`129-platform-add-on-upgrade-planner.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/129-platform-add-on-upgrade-planner.md) — Platform add on upgrade planner
-- [`130-terraform-opentofu-execution-profiles.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/130-terraform-opentofu-execution-profiles.md) — Terraform OpenTofu execution profiles
-- [`131-terraform-cloud-hcp-terraform-integration.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/131-terraform-cloud-hcp-terraform-integration.md) — Terraform cloud hcp Terraform integration
-- [`132-gitlab-ci-templates.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/132-gitlab-ci-templates.md) — GitLab CI templates
-- [`133-azure-and-gcp-production-hardening-docs.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/133-azure-and-gcp-production-hardening-docs.md) — Azure and gcp production hardening docs
-- [`134-nomad-production-mvp.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/134-nomad-production-mvp.md) — Nomad production MVP
-- [`135-docker-target-policy-and-lifecycle-decision.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/135-docker-target-policy-and-lifecycle-decision.md) — Docker target policy and lifecycle decision
-- [`136-slo-and-platform-health-model.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/136-slo-and-platform-health-model.md) — SLO and platform health model
-- [`137-opentelemetry-platform-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/137-opentelemetry-platform-module.md) — Opentelemetry platform module
-- [`138-incident-response-documentation.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/138-incident-response-documentation.md) — Incident response documentation
-- [`139-runbook-cli-scaffolding.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/139-runbook-cli-scaffolding.md) — Runbook CLI scaffolding
-- [`140-finops-v2-with-infracost-integration.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/140-finops-v2-with-infracost-integration.md) — FinOps v2 with Infracost integration
-- [`141-cloud-asset-inventory-export.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/141-cloud-asset-inventory-export.md) — Cloud asset inventory export
-- [`142-backstage-integration.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/142-backstage-integration.md) — Backstage integration
-- [`143-service-catalog-manifest.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/143-service-catalog-manifest.md) — Service catalog manifest
-- [`144-platform-api-rfc.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/144-platform-api-rfc.md) — Platform API RFC
-- [`145-web-dashboard-prototype-rfc.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/145-web-dashboard-prototype-rfc.md) — Web dashboard prototype RFC
-- [`146-dashboard-data-export.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/146-dashboard-data-export.md) — Dashboard data export
-- [`147-audit-event-export-and-siem-integration.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/147-audit-event-export-and-siem-integration.md) — Audit event export and SIEM integration
-- [`148-secret-rotation-workflow.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/148-secret-rotation-workflow.md) — Secret rotation workflow
-- [`149-kubernetes-admission-security-extended-pack.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/149-kubernetes-admission-security-extended-pack.md) — Kubernetes admission security extended pack
-- [`150-compliance-mapping-packs.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/150-compliance-mapping-packs.md) — Compliance mapping packs
-- [`151-backup-validation-tests.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/151-backup-validation-tests.md) — Backup validation tests
-- [`152-cross-cluster-gitops-support.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/152-cross-cluster-gitops-support.md) — Cross cluster gitops support
-- [`153-cluster-federation-rfc.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/153-cluster-federation-rfc.md) — Cluster federation RFC
-- [`154-edge-deployment-support-rfc.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/154-edge-deployment-support-rfc.md) — Edge deployment support RFC
-- [`155-air-gapped-and-offline-support.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/155-air-gapped-and-offline-support.md) — Air gapped and offline support
-- [`156-windows-containers-support-assessment.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/156-windows-containers-support-assessment.md) — Windows containers support assessment
-- [`157-migration-analyzer-for-existing-terraform-repos.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/157-migration-analyzer-for-existing-terraform-repos.md) — Migration analyzer for existing Terraform repos
-- [`158-project-scaffolding-wizard-v2.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/158-project-scaffolding-wizard-v2.md) — Project scaffolding wizard v2
-- [`159-v0-4-roadmap-and-scope.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/159-v0-4-roadmap-and-scope.md) — V0 4 roadmap and scope
-- [`160-v0-4-release-candidate-packaging.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/160-v0-4-release-candidate-packaging.md) — V0 4 release candidate packaging
+## Prompt Collections
 
-## Control Plane i v0.5 (161–200)
-
-Finalni v0.4 gate, Control Plane API/runner/dashboard, Git integracije, bezbednost, deployment, observability, testiranje i v0.5 izdanje.
-
-- [`161-v0-4-final-release-gate-review.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/161-v0-4-final-release-gate-review.md) — V0 4 final release gate review
-- [`162-clusterforge-control-plane-architecture-rfc.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/162-clusterforge-control-plane-architecture-rfc.md) — Clusterforge control plane architecture RFC
-- [`163-control-plane-api-server-scaffold.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/163-control-plane-api-server-scaffold.md) — Control plane API server scaffold
-- [`164-control-plane-database-schema-mvp.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/164-control-plane-database-schema-mvp.md) — Control plane database schema MVP
-- [`165-control-plane-rest-api-resources.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/165-control-plane-rest-api-resources.md) — Control plane rest API resources
-- [`166-control-plane-authentication-mvp.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/166-control-plane-authentication-mvp.md) — Control plane authentication MVP
-- [`167-cli-integration-with-control-plane.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/167-cli-integration-with-control-plane.md) — CLI integration with control plane
-- [`168-runner-architecture-rfc.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/168-runner-architecture-rfc.md) — Runner architecture RFC
-- [`169-runner-agent-mvp.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/169-runner-agent-mvp.md) — Runner agent MVP
-- [`170-plan-request-workflow.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/170-plan-request-workflow.md) — Plan request workflow
-- [`171-approval-workflow-mvp.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/171-approval-workflow-mvp.md) — Approval workflow MVP
-- [`172-apply-job-execution-mvp.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/172-apply-job-execution-mvp.md) — Apply job execution MVP
-- [`173-server-side-audit-trail.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/173-server-side-audit-trail.md) — Server side audit trail
-- [`174-notification-system-mvp.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/174-notification-system-mvp.md) — Notification system MVP
-- [`175-dashboard-mvp-scaffold.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/175-dashboard-mvp-scaffold.md) — Dashboard MVP scaffold
-- [`176-dashboard-inventory-pages.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/176-dashboard-inventory-pages.md) — Dashboard inventory pages
-- [`177-dashboard-operations-pages.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/177-dashboard-operations-pages.md) — Dashboard operations pages
-- [`178-service-catalog-api-and-dashboard.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/178-service-catalog-api-and-dashboard.md) — Service catalog API and dashboard
-- [`179-runbook-api-and-dashboard.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/179-runbook-api-and-dashboard.md) — Runbook API and dashboard
-- [`180-git-provider-integration-rfc.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/180-git-provider-integration-rfc.md) — Git provider integration RFC
-- [`181-github-pr-plan-comments.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/181-github-pr-plan-comments.md) — GitHub pr plan comments
-- [`182-gitlab-merge-request-plan-comments.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/182-gitlab-merge-request-plan-comments.md) — GitLab merge request plan comments
-- [`183-sarif-and-code-scanning-integration.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/183-sarif-and-code-scanning-integration.md) — SARIF and code scanning integration
-- [`184-secrets-reference-inventory.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/184-secrets-reference-inventory.md) — Secrets reference inventory
-- [`185-scheduled-drift-checks-in-control-plane.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/185-scheduled-drift-checks-in-control-plane.md) — Scheduled drift checks in control plane
-- [`186-scheduled-cost-reports-in-control-plane.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/186-scheduled-cost-reports-in-control-plane.md) — Scheduled cost reports in control plane
-- [`187-runner-deployment-on-kubernetes.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/187-runner-deployment-on-kubernetes.md) — Runner deployment on Kubernetes
-- [`188-control-plane-helm-chart.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/188-control-plane-helm-chart.md) — Control plane helm chart
-- [`189-terraform-module-for-control-plane-deployment.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/189-terraform-module-for-control-plane-deployment.md) — Terraform module for control plane deployment
-- [`190-control-plane-external-database-module.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/190-control-plane-external-database-module.md) — Control plane external database module
-- [`191-control-plane-observability.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/191-control-plane-observability.md) — Control plane observability
-- [`192-control-plane-backup-and-restore.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/192-control-plane-backup-and-restore.md) — Control plane backup and restore
-- [`193-control-plane-e2e-tests.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/193-control-plane-e2e-tests.md) — Control plane E2E tests
-- [`194-control-plane-load-and-reliability-tests.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/194-control-plane-load-and-reliability-tests.md) — Control plane load and reliability tests
-- [`195-control-plane-security-hardening.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/195-control-plane-security-hardening.md) — Control plane security hardening
-- [`196-docker-images-and-container-release.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/196-docker-images-and-container-release.md) — Docker images and container release
-- [`197-container-signing-and-provenance-plan.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/197-container-signing-and-provenance-plan.md) — Container signing and provenance plan
-- [`198-control-plane-documentation-site-section.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/198-control-plane-documentation-site-section.md) — Control plane documentation site section
-- [`199-v0-5-roadmap-and-release-plan.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/199-v0-5-roadmap-and-release-plan.md) — V0 5 roadmap and release plan
-- [`200-v0-5-release-candidate-packaging.md`](https://github.com/alekpopovic/clusterforge/blob/main/prompts/200-v0-5-release-candidate-packaging.md) — V0 5 release candidate packaging
-
-## Način korišćenja
-
-1. Otvori sledeći prompt preko GitHub linka.
-2. Proveri da li su njegovi preduslovi već implementirani.
-3. Izvrši samo nedostajući opseg i zadrži postojeće korisničke izmene.
-4. Pokreni provere propisane promptom i `AGENTS.md` dokumentom.
-5. Evidentiraj rezultat, commit i preostale blokere pre prelaska na sledeći prompt.
+- [clusterforge-prompts-241-280.md](./clusterforge-prompts-241-280.md) - ClusterForge prompts 241–280
