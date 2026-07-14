@@ -65,7 +65,7 @@ ran `terraform init -backend=false`, `terraform validate`, and available
 | `modules/cloud/aws/iam` | placeholder | none | yes | no | pass | Placeholder only; no IAM resources yet. |
 | `modules/cloud/aws/dns` | placeholder | none | yes | no | pass | Placeholder only; no Route 53 resources yet. |
 | `modules/cloud/aws/storage` | placeholder | none | yes | no | pass | Placeholder only; no S3/EBS/EFS resources yet. |
-| `modules/orchestrators/kubernetes/eks` | implemented | `hashicorp/aws` | yes | yes, `examples/aws-eks-minimal`, `live/dev/aws-eks` | pass | Creates EKS cluster, IAM roles, managed node groups, and optional add-ons; EBS CSI IRSA remains TODO. |
+| `modules/orchestrators/kubernetes/eks` | implemented | `hashicorp/aws` | yes | yes, `examples/aws-eks-minimal`, `live/dev/aws-eks` | pass | Creates EKS cluster, IAM roles, managed node groups, optional add-ons, and EBS CSI IRSA. |
 | `modules/orchestrators/kubernetes/generic` | placeholder | none | yes | no | pass | Placeholder for future generic Kubernetes integration. |
 | `modules/orchestrators/ecs/cluster` | implemented | `hashicorp/aws` | yes | yes, `examples/ecs-cluster-minimal`, `examples/ecs-fargate-app` | pass | Creates ECS cluster and Fargate capacity provider attachment. |
 | `modules/orchestrators/nomad/cluster` | placeholder | none | yes | no | pass | Placeholder only; no Nomad server/client resources yet. |

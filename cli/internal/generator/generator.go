@@ -12,6 +12,7 @@ import (
 	"text/template"
 
 	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	cfenvironment "github.com/alekpopovic/clusterforge/cli/internal/environment"
 	templateassets "github.com/alekpopovic/clusterforge/cli/templates"
 )
 
@@ -406,6 +407,5 @@ func title(value string) string {
 }
 
 func isProd(environment string) bool {
-	env := strings.ToLower(environment)
-	return env == "prod" || env == "production"
+	return cfenvironment.IsProduction(environment)
 }

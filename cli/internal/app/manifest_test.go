@@ -104,7 +104,7 @@ func TestImagePolicyWarnsForUnpinnedProdImage(t *testing.T) {
 	manifest := sampleManifest()
 	manifest.Image = "nginx"
 
-	warnings := ImagePolicyWarnings(manifest, "prod")
+	warnings := ImagePolicyWarnings(manifest, "prd")
 	if len(warnings) != 1 || !strings.Contains(warnings[0], "not pinned") {
 		t.Fatalf("warnings = %#v", warnings)
 	}

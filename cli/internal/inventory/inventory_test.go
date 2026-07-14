@@ -25,6 +25,14 @@ func TestListFallsBackToEnvironments(t *testing.T) {
 	}
 }
 
+func TestListMarksProductionLikeLegacyEnvironments(t *testing.T) {
+	cfg := &config.Config{Environments: map[string]config.Environment{"prod-eu": {Cloud: "aws", Orchestrator: "eks", Path: "live/prod-eu"}}}
+	clusters := List(cfg)
+	if len(clusters) != 1 || clusters[0].Status != "production" {
+		t.Fatalf("clusters = %#v", clusters)
+	}
+}
+
 func TestFindMissingCluster(t *testing.T) {
 	if _, err := Find(&config.Config{}, "missing"); err == nil {
 		t.Fatal("expected missing cluster error")

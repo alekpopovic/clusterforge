@@ -2,9 +2,9 @@ package policy
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	cfenvironment "github.com/alekpopovic/clusterforge/cli/internal/environment"
 	"github.com/alekpopovic/clusterforge/cli/internal/terraform/planjson"
 )
 
@@ -94,8 +94,7 @@ func CheckDestroy(op Operation) error {
 }
 
 func isProd(environment string) bool {
-	env := strings.ToLower(environment)
-	return env == "prod" || env == "production"
+	return cfenvironment.IsProduction(environment)
 }
 
 func IsProd(environment string) bool {

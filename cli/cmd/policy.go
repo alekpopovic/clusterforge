@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	cfapp "github.com/alekpopovic/clusterforge/cli/internal/app"
+	cfenvironment "github.com/alekpopovic/clusterforge/cli/internal/environment"
 	"github.com/alekpopovic/clusterforge/cli/internal/policyengine"
 	cfterraform "github.com/alekpopovic/clusterforge/cli/internal/terraform"
 	"github.com/spf13/cobra"
@@ -59,7 +60,7 @@ var policyCheckCmd = &cobra.Command{
 		}
 		if len(args) == 1 {
 			input.Environment = args[0]
-			input.Production = strings.EqualFold(args[0], "prod") || strings.EqualFold(args[0], "production")
+			input.Production = cfenvironment.IsProduction(args[0])
 			env, ok := cfg.Environments[args[0]]
 			if !ok {
 				return fmt.Errorf("environment %q not found", args[0])

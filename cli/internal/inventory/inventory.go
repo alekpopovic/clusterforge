@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/environment"
 )
 
 type Cluster struct {
@@ -29,7 +30,7 @@ func List(cfg *config.Config) []Cluster {
 	} else {
 		for name, env := range cfg.Environments {
 			status := "development"
-			if strings.EqualFold(name, "prod") || strings.EqualFold(name, "production") {
+			if environment.IsProduction(name) {
 				status = "production"
 			}
 			clusters = append(clusters, Cluster{Name: name, Environment: name, Cloud: env.Cloud, Orchestrator: env.Orchestrator, Region: env.Region, Path: env.Path, Status: status, Legacy: true})

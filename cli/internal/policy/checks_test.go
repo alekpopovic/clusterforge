@@ -20,6 +20,23 @@ func TestCheckApplyRequiresPlanFileForProd(t *testing.T) {
 	}
 }
 
+func TestCheckApplyRequiresPlanFileForProductionLikeEnvironment(t *testing.T) {
+	for _, name := range []string{"prod-eu", "prd"} {
+		t.Run(name, func(t *testing.T) {
+			err := CheckApply(Operation{
+				Environment: name,
+				ConfirmProd: true,
+				Policies: config.Policies{
+					RequirePlanFileForApply: true,
+				},
+			})
+			if err == nil {
+				t.Fatal("expected production-like apply without plan file to fail")
+			}
+		})
+	}
+}
+
 func TestCheckApplyAllowsDevWithoutPlanFile(t *testing.T) {
 	err := CheckApply(Operation{
 		Environment: "dev",
@@ -41,6 +58,18 @@ func TestCheckDestroyBlocksProdByDefault(t *testing.T) {
 	})
 	if err == nil {
 		t.Fatal("expected prod destroy to be blocked")
+	}
+}
+
+func TestCheckDestroyBlocksProductionLikeEnvironment(t *testing.T) {
+	err := CheckDestroy(Operation{
+		Environment: "prod-eu",
+		Policies: config.Policies{
+			BlockDestroyInProd: true,
+		},
+	})
+	if err == nil {
+		t.Fatal("expected production-like destroy to be blocked")
 	}
 }
 
@@ -107,7 +136,7 @@ func TestCheckApplyPlanAllowsProdDeletesWithOverride(t *testing.T) {
 }
 
 func TestEvaluatePlanWarnsForProdReplacement(t *testing.T) {
-	evaluation := EvaluatePlan("prod", planjson.Summary{Replacements: 1})
+	evaluation := EvaluatePlan("prod-eu", planjson.Summary{Replacements: 1})
 	if evaluation.Risk != RiskHigh {
 		t.Fatalf("risk = %q", evaluation.Risk)
 	}

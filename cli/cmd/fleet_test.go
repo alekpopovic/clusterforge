@@ -87,6 +87,40 @@ func TestFleetDoctorAggregatesFailuresWithoutFailingCommand(t *testing.T) {
 	}
 }
 
+func TestFleetPolicyCheckWarnsForProductionLikeEnvironment(t *testing.T) {
+	dir := t.TempDir()
+	configPath := filepath.Join(dir, "clusterforge.yaml")
+	data := `project:
+  name: demo
+policies:
+  require_plan_file_for_apply: false
+  block_destroy_in_prod: false
+environments:
+  prd:
+    path: live/prd
+clusters:
+  prd-eks:
+    environment: prd
+    path: live/prd
+    status: development
+`
+	if err := os.WriteFile(configPath, []byte(data), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	oldPath, oldFilter, oldJSON := opts.ConfigPath, fleetFilter, fleetJSON
+	opts.ConfigPath, fleetFilter, fleetJSON = configPath, fleet.Filter{}, false
+	t.Cleanup(func() { opts.ConfigPath, fleetFilter, fleetJSON = oldPath, oldFilter, oldJSON })
+	var out bytes.Buffer
+	fleetPolicyCheckCmd.SetOut(&out)
+	t.Cleanup(func() { fleetPolicyCheckCmd.SetOut(nil) })
+	if err := fleetPolicyCheckCmd.RunE(fleetPolicyCheckCmd, nil); err != nil {
+		t.Fatalf("fleet policy check: %v", err)
+	}
+	if !strings.Contains(out.String(), "prd-eks\tprd\twarn\tproduction safety gates are incomplete") {
+		t.Fatalf("output = %q", out.String())
+	}
+}
+
 func TestSafeFleetNamePreventsPathTraversal(t *testing.T) {
 	if got := safeFleetName("../../prod cluster"); strings.Contains(got, "/") || strings.Contains(got, " ") {
 		t.Fatalf("safe name = %q", got)

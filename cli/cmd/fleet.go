@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/alekpopovic/clusterforge/cli/internal/config"
+	"github.com/alekpopovic/clusterforge/cli/internal/environment"
 	"github.com/alekpopovic/clusterforge/cli/internal/fleet"
 	"github.com/alekpopovic/clusterforge/cli/internal/inventory"
 	cfterraform "github.com/alekpopovic/clusterforge/cli/internal/terraform"
@@ -108,7 +109,7 @@ var fleetPolicyCheckCmd = &cobra.Command{
 			return err
 		}
 		results, _ := fleet.Run(cmd.Context(), clusters, "policy-check", false, func(_ context.Context, cluster inventory.Cluster) (fleet.Result, error) {
-			production := strings.EqualFold(cluster.Status, "production") || strings.EqualFold(cluster.Environment, "prod") || strings.EqualFold(cluster.Environment, "production")
+			production := strings.EqualFold(cluster.Status, "production") || environment.IsProduction(cluster.Environment)
 			if production && (!cfg.Policies.RequirePlanFileForApply || !cfg.Policies.BlockDestroyInProd) {
 				return fleet.Result{Status: "warn", Message: "production safety gates are incomplete"}, nil
 			}

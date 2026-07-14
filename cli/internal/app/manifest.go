@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/alekpopovic/clusterforge/cli/internal/bindings"
+	cfenvironment "github.com/alekpopovic/clusterforge/cli/internal/environment"
 	"gopkg.in/yaml.v3"
 )
 
@@ -427,8 +428,7 @@ func imageTag(image string) (string, bool) {
 }
 
 func isProdEnvironment(environment string) bool {
-	env := strings.ToLower(strings.TrimSpace(environment))
-	return env == "prod" || env == "production"
+	return cfenvironment.IsProduction(environment)
 }
 
 func validateRawManifestYAML(data []byte) error {

@@ -304,7 +304,3 @@ resource "aws_eks_addon" "after_compute" {
     aws_eks_node_group.this
   ]
 }
-
-# TODO: Add an IAM Roles for Service Accounts role for aws-ebs-csi-driver when
-# the EBS CSI add-on is enabled. That requires OIDC provider and trust policy
-# wiring and should stay explicit rather than hidden in a shortcut.

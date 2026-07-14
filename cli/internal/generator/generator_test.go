@@ -196,11 +196,11 @@ func TestGenerateProdLocalBackendWarns(t *testing.T) {
 		Cloud:        "aws",
 		Region:       "eu-central-1",
 		Orchestrator: "eks",
-		Path:         filepath.Join(dir, "live", "prod", "aws-eks"),
+		Path:         filepath.Join(dir, "live", "prod-eu", "aws-eks"),
 	}
 	var out bytes.Buffer
 
-	if _, err := Generate("prod", env, Options{
+	if _, err := Generate("prod-eu", env, Options{
 		RootDir: dir,
 		Stdout:  &out,
 	}); err != nil {
