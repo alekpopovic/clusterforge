@@ -1,0 +1,16 @@
+.git
+.terraform
+**/.terraform
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+*.tfvars.json
+.cf
+cli/bin
+cli/cf
+cli/dist
+dist
+coverage
+.venv*
+.DS_Store

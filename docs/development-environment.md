@@ -16,7 +16,7 @@ the container after changing `.devcontainer/Dockerfile`.
 
 The image contains Go, Terraform, OpenTofu, terraform-docs, TFLint, Trivy,
 kubectl, Helm, make, and Git. Versions are pinned in the Dockerfile and stay
-within the support ranges in `VERSION_MATRIX.md`.
+within the support ranges in [`rel/VERSION_MATRIX.md`](../rel/VERSION_MATRIX.md).
 
 Checkov is intentionally not baked into the image because its Python dependency
 set adds substantial image weight. Install it only when needed:
@@ -27,6 +27,10 @@ python3 -m venv .venv-checkov
 pip install checkov
 checkov --version
 ```
+
+If `python3-venv` is unavailable on the host or base image, install Checkov
+using your platform's trusted Python tooling instead of baking credentials or
+user-specific package indexes into this repository.
 
 Do not mount or copy cloud credentials into a shared image. When a real-cloud
 test explicitly requires credentials, use a short-lived host credential flow

@@ -23,7 +23,8 @@ Add plugins for terraform-docs, TFLint, Checkov, Trivy, and pre-commit when
 available in your trusted plugin catalog. Otherwise install those tools using
 their upstream instructions. Running `asdf current` shows the selected tools.
 
-Versions are pinned for reproducibility and satisfy `VERSION_MATRIX.md`; they
-are not a claim that every listed upstream version is the newest release. When
-updating a version, update `.tool-versions`, the devcontainer where applicable,
-and CI together, then run `make ci`.
+Versions are pinned for reproducibility and satisfy
+[`rel/VERSION_MATRIX.md`](../rel/VERSION_MATRIX.md); they are not a claim that
+every listed upstream version is the newest release. When updating a version,
+update `.tool-versions`, the devcontainer where applicable, and CI together,
+then run `make ci`.

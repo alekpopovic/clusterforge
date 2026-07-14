@@ -7,11 +7,12 @@ ARG TERRAFORM_DOCS_VERSION=0.18.0
 ARG TFLINT_VERSION=0.52.0
 ARG KUBECTL_VERSION=1.30.3
 ARG HELM_VERSION=3.15.3
-ARG TRIVY_VERSION=0.53.0
+ARG TRIVY_VERSION=0.72.0
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN apt-get update \
+RUN rm -f /etc/apt/sources.list.d/yarn.list \
+    && apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl git make unzip \
     && architecture="$(dpkg --print-architecture)" \
     && case "${architecture}" in amd64) zip_arch=amd64; trivy_arch=64bit ;; arm64) zip_arch=arm64; trivy_arch=ARM64 ;; *) exit 1 ;; esac \

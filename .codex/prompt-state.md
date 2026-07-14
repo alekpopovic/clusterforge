@@ -7,10 +7,10 @@ completed or intentionally skipped.
 
 | Field | Value |
 | --- | --- |
-| Last executed prompt | `115-secret-scanning-baseline` |
-| Next prompt to execute | `116-devcontainer-and-reproducible-dev-environment` |
+| Last executed prompt | `116-devcontainer-and-reproducible-dev-environment` |
+| Next prompt to execute | `117-nix-flake-or-asdf-tool-versions` |
 | Prompt directory | `prompts/` |
-| Last updated | 2026-07-10 |
+| Last updated | 2026-07-14 |
 
 ## Rules
 
@@ -43,7 +43,8 @@ Commit: <filled after commit if useful>
 ## Notes
 
 - Prompts `000` through `080` have repository artifacts from prior execution.
-- Prompts `081` through `120` have been split into files but have not been
+- Prompts `081` through `116` have repository artifacts from prior execution.
+- Prompts `117` through `120` have been split into files but have not been
   executed as implementation prompts yet.
 
 ```text
@@ -358,5 +359,14 @@ Title: Secret scanning baseline
 Result: completed
 Validation: bash -n passed; security workflow parsed successfully as YAML; temporary checksum-verified Gitleaks v8.30.1 dir scan and 106-commit repository scan passed with no leaks; optional missing-tool mode returned success with warning and REQUIRE_GITLEAKS mode failed as designed; git diff --check passed
 Evidence: .gitleaks.toml; scripts/secret-scan.sh; Makefile secret-scan target; security workflow Gitleaks job; pre-commit integration; docs/secret-scanning.md
+Commit: pending
+```
+
+```text
+Prompt: 116-devcontainer-and-reproducible-dev-environment
+Title: Devcontainer and reproducible dev environment
+Result: completed
+Validation: jq parsed devcontainer JSON; docker buildx --check passed; docker build -f .devcontainer/Dockerfile -t clusterforge-devcontainer:prompt-116 . passed; docker run verified Go, Terraform, OpenTofu, terraform-docs, TFLint, kubectl, Helm, Trivy, make, and Git versions; git diff --check passed
+Evidence: .devcontainer/devcontainer.json; .devcontainer/Dockerfile; .dockerignore; .tool-versions; docs/development-environment.md; docs/tool-versions.md; README.md; CONTRIBUTING.md
 Commit: pending
 ```
